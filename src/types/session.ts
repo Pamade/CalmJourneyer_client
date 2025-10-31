@@ -4,17 +4,17 @@ export type Position = "SITTING" | "LYING" | "STANDING";
 export type Voice = "LUNA" | "LAUREN" | "CALEB" | "DANIEL";
 
 export type AmbientSound =
-    | "none"
-    | "ocean_waves"
-    | "forest_rain"
-    | "mountain_wind"
-    | "gentle_stream"
-    | "night_crickets"
-    | "soft_thunder"
-    | "birds_dawn"
-    | "campfire"
-    | "wind_chimes"
-    | "white_noise";
+    | "NONE"
+    | "OCEAN_WAVES"
+    | "FOREST_RAIN"
+    | "MOUNTAIN_WIND"
+    | "GENTLE_STREAM"
+    | "NIGHT_CRICKETS"
+    | "SOFT_THUNDER"
+    | "BIRDS_DAWN"
+    | "CAMPFIRE"
+    | "WIND_CHIMES"
+    | "WHITE_NOISE";
 
 type EventType = "narration" | "silence"
 
@@ -62,7 +62,7 @@ export interface SessionType {
 export interface SessionContent {
     segments: SessionSegment[];
     tts_audio_map: Record<string, string> | null;
-    ambient_sound: string;
+    ambient_sound: AmbientSound;
 }
 
 export interface SessionSegment {

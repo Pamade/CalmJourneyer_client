@@ -1,237 +1,104 @@
-@import "../../variables/variables.scss";
-@import "../../assets/fonts/fonts.scss";
+@import '../../variables/variables.scss';
+@import '../../variables/session-theme-palette.scss';
 
 .sessionContainer {
-    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-
-
-    // $global-top-padding: 5rem;
-
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background: $background;
-    color: $main-text;
-    padding-bottom: $global-top-padding;
-}
-
-.preparingContent {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    gap: 24px;
-    padding: 20px;
-}
-
-.loadingIcon {
-    animation: spin 2s linear infinite;
-    color: $accent-darker;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.preparingTitle {
-    font-size: 28px;
-    font-weight: 600;
+    min-height: 100vh;
+    width: 100%;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
     text-align: center;
-    color: $main-text;
-}
-
-.preparingSubtitle {
-    font-size: 16px;
-    opacity: 0.8;
-    text-align: center;
-    color: $text-light;
-}
-
-.loadingBar {
-    width: 200px;
-    height: 4px;
-    background: $additional-accent;
-    border-radius: 2px;
+    transition: background-color 1.5s ease-in-out;
+    position: relative;
     overflow: hidden;
-}
 
-.loadingBarFill {
-    height: 100%;
-    background: $accent-darker;
-    animation: loading 1.5s ease-in-out infinite;
-}
-
-@keyframes loading {
-    0% {
-        width: 0%;
-    }
-
-    50% {
-        width: 100%;
-    }
-
-    100% {
-        width: 0%;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0.5) 100%);
+        z-index: 1;
     }
 }
 
-.errorContent {
+.contentWrapper {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    gap: 20px;
-    padding: 20px;
+    gap: 1.5rem;
+    max-width: 600px;
+    width: 100%;
 }
 
-.errorTitle {
-    font-size: 32px;
-    font-weight: 600;
-    color: $main-text;
-}
-
-.errorMessage {
-    font-size: 16px;
-    text-align: center;
-    max-width: 400px;
-    color: $text-light;
-}
-
-.retryButton {
-    padding: 12px 32px;
-    background: $accent-darker;
-    color: $main-text;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-        background: $accent-dark;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+// --- Dynamic Theme Generation ---
+@each $sound, $theme in $sound-themes {
+    .theme-#{$sound} {
+        background-color: sound-theme($sound, background);
+        --theme-background: #{sound-theme($sound, background)};
+        --theme-accent: #{sound-theme($sound, accent)};
+        --theme-main-text: #{sound-theme($sound, main-text)};
+        --theme-additional-accent: #{sound-theme($sound, additional-accent)};
+        // Pre-calculate transparent versions for components
+        --theme-accent-t1: #{rgba(sound-theme($sound, accent), 0.2)};
+        --theme-accent-t2: #{rgba(sound-theme($sound, accent), 0.4)};
+        --theme-main-text-t1: #{rgba(sound-theme($sound, main-text), 0.7)};
+        --theme-additional-accent-t1: #{rgba(sound-theme($sound, additional-accent), 0.5)};
+        --theme-additional-accent-t2: #{rgba(sound-theme($sound, additional-accent), 0.3)};
     }
 }
 
-.sessionHeader {
+
+// --- States ---
+.loader,
+.error {
+    color: $main-text;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2rem 3rem;
+    border-radius: 16px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    border-bottom: 2px solid $additional-accent;
-    background: white;
-}
+    gap: 1rem;
+    font-size: 1.1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 
-.backButton {
-    background: $additional-accent;
-    border: none;
-    color: $main-text;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    h2 {
+        margin: 0.5rem 0 0;
+        color: $main-text;
+    }
 
-    &:hover {
-        background: $additional-accent-dark;
+    p {
+        margin: 0;
+        color: $text-light;
     }
 }
 
-.sessionTitle {
-    font-size: 24px;
-    font-weight: 600;
-    flex: 1;
-    text-align: center;
-    color: $main-text;
-}
+.error {
+    color: #c0392b;
 
-.sessionMeta {
-    display: flex;
-    gap: 12px;
-}
+    button {
+        margin-top: 1rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: $accent;
+        color: $main-text;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s ease;
 
-.duration {
-    background: $accent;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-    color: $main-text;
-}
-
-.sessionContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 24px;
-    // overflow-y: auto;
-}
-
-.playerSection {
-    background: white;
-    border: 2px solid $additional-accent;
-    border-radius: 16px;
-    padding: 24px;
-}
-
-.sessionInfo {
-    flex: 1;
-}
-
-.infoCard {
-    background: white;
-    border: 2px solid $additional-accent;
-    border-radius: 16px;
-    padding: 20px;
-}
-
-.infoTitle {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: $main-text;
-}
-
-.infoGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-}
-
-.infoItem {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.infoLabel {
-    font-size: 12px;
-    opacity: 0.8;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: $text-lighter;
-    font-weight: 500;
-}
-
-.infoValue {
-    font-size: 16px;
-    font-weight: 500;
-    color: $main-text;
-}
-
-.sessionFooter {
-    padding: 20px;
-    border-top: 2px solid $additional-accent;
-    background: white;
+        &:hover {
+            background: $accent-darker;
+        }
+    }
 }

@@ -18,13 +18,6 @@ export default function EventDisplay({ event, segment }: EventDisplayProps) {
                     {event.text}
                 </p>
             )}
-
-            {event?.user_instruction && (
-                <div className={styles.instruction}>
-                    <span className={styles.label}>Instruction:</span>
-                    <p>{event.user_instruction}</p>
-                </div>
-            )}
         </div>
     );
 }

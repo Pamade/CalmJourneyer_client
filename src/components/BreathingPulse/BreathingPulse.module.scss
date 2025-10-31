@@ -1,30 +1,130 @@
 @import '../../variables/variables.scss';
 
 .breathingContainer {
+    position: relative;
+    width: 100%;
+    /* Take full width of parent */
+    height: 100%;
+    /* Take full height of parent */
+    max-width: 210px;
+    /* Constrain to fit within displayArea's inner space (250px - 2*20px padding) */
+    max-height: 210px;
+    /* Constrain to fit within displayArea's inner space */
+    aspect-ratio: 1;
+    /* Keep it square */
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 32px;
-    width: 100%;
+    margin: 0 auto;
+    /* Center horizontally */
 }
 
 .breathingCircle {
-    width: 200px;
-    height: 200px;
+    position: relative;
+    width: 70%;
+    /* Relative to breathingContainer */
+    height: 70%;
+    /* Relative to breathingContainer */
     border-radius: 50%;
-    background: linear-gradient(135deg, $accent, $accent-dark);
-    box-shadow: 0 8px 32px rgba(215, 245, 181, 0.3);
-    transition: transform 0.1s ease-out;
+    background: var(--theme-accent-t1);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.5s linear;
+    transform: scale(1);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        /* Smaller border offset */
+        left: -15px;
+        right: -15px;
+        bottom: -15px;
+        border-radius: 50%;
+        border: 2px solid var(--theme-accent-t1);
+        transition: all 0.8s linear;
+        transform: scale(1);
+        opacity: 0.5;
+    }
 }
 
 .phaseLabel {
-    font-size: 24px;
-    font-weight: 600;
-    color: $main-text;
-    text-align: center;
-    min-height: 32px;
+    color: var(--theme-main-text);
+    font-size: 1.2rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    /* Faster label transition */
+}
+
+/* Animation States */
+.inhale {
+    transition-duration: var(--inhale-duration);
+    transform: scale(1.3);
+    /* Slightly smaller max scale to fit better */
+    background: var(--theme-accent-t2);
+
+    .phaseLabel {
+        opacity: 1;
+    }
+
+    &::before {
+        transition-duration: var(--inhale-duration);
+        transform: scale(1.1);
+        /* Adjust border scale */
+        opacity: 0.8;
+    }
+}
+
+.hold {
+    transition-duration: 0.2s;
+    /* Fast transition to hold state */
+    transform: scale(1.3);
+    /* Same scale as end of inhale */
+    background: var(--theme-accent-t2);
+
+    .phaseLabel {
+        opacity: 1;
+    }
+
+    &::before {
+        transition-duration: 0.2s;
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.exhale {
+    transition-duration: var(--exhale-duration);
+    transform: scale(1);
+    background: var(--theme-accent-t1);
+
+    .phaseLabel {
+        opacity: 1;
+    }
+
+    &::before {
+        transition-duration: var(--exhale-duration);
+        transform: scale(1);
+        opacity: 0.5;
+    }
+}
+
+.pause {
+    transition-duration: 0.5s;
+    /* Fast transition to pause state */
+
+    .phaseLabel {
+        opacity: 0;
+    }
+}
+
+.idle {
+    opacity: 0.7;
+
+    .phaseLabel {
+        opacity: 1;
+        /* Label visible when paused/idle */
+    }
 }

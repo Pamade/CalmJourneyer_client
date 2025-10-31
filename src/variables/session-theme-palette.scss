@@ -1,0 +1,56 @@
+$sound-themes: (
+    "OCEAN_WAVES": (background: #F0F8FF, // Alice Blue
+        accent: #4682B4, // Steel Blue
+        main-text: #003B61, // Deep Ocean Blue
+        additional-accent: #B0C4DE // Light Steel Blue
+    ),
+    "FOREST_RAIN": (background: #F5F5F5, // White Smoke
+        accent: #228B22, // Forest Green
+        main-text: #2F4F4F, // Dark Slate Gray
+        additional-accent: #90EE90 // Light Green
+    ),
+    "MOUNTAIN_WIND": (background: #F5F5F5, // White Smoke
+        accent: #778899, // Light Slate Gray
+        main-text: #2F4F4F, // Dark Slate Gray
+        additional-accent: #B0C4DE // Light Steel Blue
+    ),
+    "GENTLE_STREAM": (background: #F0FFFF, // Azure
+        accent: #5F9EA0, // Cadet Blue
+        main-text: #4682B4, // Steel Blue
+        additional-accent: #B0E0E6 // Powder Blue
+    ),
+    "NIGHT_CRICKETS": (background: #1C1C1E, // Almost Black
+        accent: #483D8B, // Dark Slate Blue
+        main-text: #E5E5E7, // Platinum
+        additional-accent: #6A5ACD // Slate Blue
+    ),
+    "SOFT_THUNDER": (background: #282828, // Dark Charcoal
+        accent: #708090, // Slate Gray
+        main-text: #F5F5F5, // White Smoke
+        additional-accent: #A9A9A9 // Dark Gray
+    ),
+    "BIRDS_DAWN": (background: #FFF8E7, // Cosmic Latte
+        accent: #FFDAB9, // Peach Puff
+        main-text: #8B4513, // Saddle Brown
+        additional-accent: #FFE4B5 // Moccasin
+    ),
+    "CAMPFIRE": (background: #2B2B2B, // Dark Charcoal
+        accent: #FF8C00, // Dark Orange
+        main-text: #FFFFFF, // White
+        additional-accent: #CD5C5C // Indian Red
+    ),
+    "WIND_CHIMES": (background: #FFFFFF, // White
+        accent: #87CEEB, // Sky Blue
+        main-text: #36454F, // Charcoal
+        additional-accent: #ADD8E6 // Light Blue
+    ),
+    "WHITE_NOISE": (background: #FFFFFF, // White
+        accent: #E0E0E0, // Light Gray
+        main-text: #333333, // Dark Gray
+        additional-accent: #F8F8F8 // Very Light Gray
+    )
+);
+
+@function sound-theme($sound, $property) {
+    @return map-get(map-get($sound-themes, $sound), $property);
+}
