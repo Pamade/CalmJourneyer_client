@@ -1,0 +1,183 @@
+@import '../../variables/variables.scss';
+
+.playerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    border: 2px solid $additional-accent;
+}
+
+.displayArea {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(215, 245, 181, 0.1), rgba(228, 224, 215, 0.1));
+    border-radius: 12px;
+    padding: 40px 20px;
+}
+
+.progressSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.progressBar {
+    width: 100%;
+    height: 6px;
+    background: $additional-accent;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.progressFill {
+    height: 100%;
+    background: $accent-darker;
+    transition: width 0.1s linear;
+}
+
+.timeDisplay {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: $text-lighter;
+    font-weight: 500;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.controlButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: $additional-accent;
+    border: none;
+    color: $main-text;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 20px;
+
+    &:hover {
+        background: $additional-accent-dark;
+        transform: scale(1.05);
+    }
+
+    &.active {
+        background: $accent;
+        border: 2px solid $accent-darker;
+    }
+}
+
+.playButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $accent-darker;
+    border: none;
+    color: $main-text;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(215, 245, 181, 0.3);
+
+    &:hover {
+        background: $accent-dark;
+        transform: scale(1.08);
+        box-shadow: 0 6px 24px rgba(215, 245, 181, 0.4);
+    }
+
+    &:active {
+        transform: scale(0.96);
+    }
+
+    &.playing {
+        animation: pulse 2s ease-in-out infinite;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 16px rgba(215, 245, 181, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 24px rgba(215, 245, 181, 0.5);
+    }
+}
+
+.infoSection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.infoCard {
+    padding: 16px;
+    background: $background;
+    border: 2px solid $additional-accent;
+    border-radius: 12px;
+
+    h3 {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: $accent-darker;
+        margin: 0 0 12px 0;
+    }
+}
+
+.instruction {
+    font-size: 14px;
+    color: $text-light;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.breathingInfo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.breathingItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid $additional-accent;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 500;
+    color: $text-lighter;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.value {
+    font-size: 16px;
+    font-weight: 600;
+    color: $accent-darker;
+}

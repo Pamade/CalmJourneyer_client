@@ -1,0 +1,154 @@
+@import '../../variables/variables.scss';
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease forwards;
+
+    // box-sizing: border-box;
+    // width: 100vw;
+}
+
+.modal {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 310px;
+    width: 90%;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+    transform: scale(0.95);
+    opacity: 0;
+    animation: popIn 0.3s ease forwards;
+    animation-delay: 0.1s;
+
+}
+
+.closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        color: #000;
+    }
+}
+
+.modalContent {
+    text-align: center;
+}
+
+.modalEmoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.modalDescription {
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.modalActions {
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.verifyButton {
+    background-color: $accent-darker;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: $accent;
+        color: $main-text;
+    }
+}
+
+.cancelButton {
+    background-color: #e5e7eb;
+    color: #333;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: #d1d5db;
+    }
+}
+
+
+.successEmoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

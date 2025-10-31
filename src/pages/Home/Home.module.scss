@@ -1,0 +1,540 @@
+@import '../../variables/variables.scss';
+
+/* Page Layout */
+.page {
+    min-height: 100vh;
+    background: $background;
+    overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, $background 0%, mix($accent, $background, 10%) 100%);
+}
+
+.heroContent {
+    max-width: 1400px;
+    min-width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.heroText {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.heroTitle {
+    font-size: 4rem;
+    font-weight: 300;
+    color: $main-text;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.heroSubtitle {
+    font-size: 1.5rem;
+    color: $text-light;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.heroCta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.primaryButton {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: $main-text;
+    background: $accent;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.primaryButton:hover {
+    background: $accent-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.secondaryButton {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: $main-text;
+    background: transparent;
+    border: 2px solid $additional-accent-dark;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+    background: $additional-accent;
+    border-color: $additional-accent-darker;
+}
+
+.buttonIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.heroVisual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.floatingCard {
+    background: white;
+    border-radius: 2rem;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.cardEmoji {
+    font-size: 4rem;
+}
+
+.cardText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: $main-text;
+}
+
+.cardSubtitle {
+    font-size: 1rem;
+    color: $text-light;
+}
+
+/* Features Section */
+.features {
+    padding: 6rem 2rem;
+    background: white;
+}
+
+.sectionTitle {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 300;
+    color: $main-text;
+    margin-bottom: 1rem;
+}
+
+.sectionSubtitle {
+    text-align: center;
+    font-size: 1.25rem;
+    color: $text-light;
+    margin-bottom: 4rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.featuresGrid {
+    max-width: 1400px;
+    min-width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+}
+
+.featureCard {
+    text-align: center;
+    padding: 2rem;
+}
+
+Home.module.scss Apply .featureIcon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: $accent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $main-text;
+
+    svg {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+.featureTitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: $main-text;
+    margin-bottom: 1rem;
+}
+
+.featureDescription {
+    font-size: 1.125rem;
+    color: $text-light;
+    line-height: 1.6;
+}
+
+/* Goals Section */
+.goals {
+    padding: 6rem 2rem;
+    background: $background;
+}
+
+.goalsGrid {
+    max-width: 1400px;
+    min-width: 80%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.goalCard {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.goalCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    border-color: $accent;
+}
+
+.goalEmoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.goalTitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: $main-text;
+    margin-bottom: 0.75rem;
+}
+
+.goalDescription {
+    font-size: 1rem;
+    color: $text-light;
+    line-height: 1.5;
+}
+
+.goalIcon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    color: $accent-darker;
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* CTA Section */
+.cta {
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, $accent 0%, mix($accent, white, 70%) 100%);
+}
+
+.ctaContent {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.ctaTitle {
+    font-size: 3rem;
+    font-weight: 300;
+    color: $main-text;
+    margin-bottom: 1rem;
+}
+
+.ctaSubtitle {
+    font-size: 1.25rem;
+    color: $text-light;
+    margin-bottom: 2.5rem;
+}
+
+.ctaButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 3rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: $main-text;
+    background: white;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.ctaButton:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.footer {
+    background: $main-text;
+    color: white;
+    padding: 2rem;
+}
+
+.footerContent {
+    max-width: 1400px;
+    min-width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // margin-bottom: 3rem;
+}
+
+.footerBrand {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footerLogo {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.footerTagline {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+}
+
+.footerLinks {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.footerLink {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+    white-space: nowrap;
+}
+
+.footerLink:hover {
+    color: white;
+}
+
+.footerBottom {
+    max-width: 1400px;
+    min-width: 80%;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+
+    .hero {
+        min-height: auto;
+    }
+
+    .heroContent {
+        min-width: 90%;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .heroTitle {
+        font-size: 3rem;
+    }
+
+    .heroVisual {
+        order: -1;
+    }
+
+    .featuresGrid,
+    .goalsGrid {
+        min-width: 90%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footerContent {
+        min-width: 90%;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .footerLinks {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footerBrand {
+        text-align: center;
+    }
+
+    .footerBottom {
+        min-width: 90%;
+        border-top: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        padding: 4rem 1.5rem;
+    }
+
+    .heroContent {
+        min-width: 100%;
+        gap: 2rem;
+    }
+
+    .heroTitle {
+        font-size: 2.5rem;
+    }
+
+    .heroSubtitle {
+        font-size: 1.25rem;
+    }
+
+    .heroCta {
+        flex-direction: column;
+    }
+
+    .primaryButton,
+    .secondaryButton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .floatingCard {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .cardEmoji {
+        font-size: 3rem;
+    }
+
+    .features,
+    .goals,
+    .cta {
+        padding: 4rem 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 2rem;
+    }
+
+    .sectionSubtitle {
+        font-size: 1.125rem;
+    }
+
+    .featuresGrid,
+    .goalsGrid {
+        min-width: 100%;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .ctaTitle {
+        font-size: 2rem;
+    }
+
+    .ctaSubtitle {
+        font-size: 1.125rem;
+    }
+
+    .footerContent {
+        min-width: 100%;
+    }
+
+    .footerLinks {
+        grid-template-columns: 1fr;
+    }
+
+    .footerBottom {
+        border-top: none;
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroTitle {
+        font-size: 2rem;
+    }
+
+    .heroSubtitle {
+        font-size: 1.125rem;
+    }
+
+    .footerBottom {
+        border-top: none;
+    }
+
+    .floatingCard {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sectionTitle {
+        font-size: 1.75rem;
+    }
+
+    .ctaTitle {
+        font-size: 1.75rem;
+    }
+}

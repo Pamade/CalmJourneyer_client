@@ -1,0 +1,19 @@
+@import "./variables/variables.scss";
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+// body {
+//     padding-top: $global-top-padding;
+// }
+
+.extra_padding_for_wrapped_nav {
+    padding-top: $global-top-padding;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

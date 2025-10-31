@@ -1,0 +1,22 @@
+// Base Colors
+$background: #FAF9F6;
+$accent: #d7f5b5;
+$main-text: #3A3A3A;
+$additional-accent: #E4E0D7;
+
+// Text Variations
+$text-light: mix(white, $main-text, 20%);
+$text-lighter: mix(white, $main-text, 30%);
+$text-lightest: mix(white, $main-text, 40%);
+
+// Accent Variations
+$accent-dark: mix(black, $accent, 5%);
+$accent-darker: mix(black, $accent, 20%);
+
+// Additional Accent Variations
+$additional-accent-light: mix(white, $additional-accent, 5%);
+$additional-accent-dark: mix(black, $additional-accent, 5%);
+$additional-accent-darker: mix(black, $additional-accent, 10%);
+
+
+$global-top-padding: 5rem;

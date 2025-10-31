@@ -1,0 +1,24 @@
+@import '../../variables/variables.scss';
+
+.loadingContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $background;
+}
+
+.spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid $additional-accent;
+    border-top-color: $accent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

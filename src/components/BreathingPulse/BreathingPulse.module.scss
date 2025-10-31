@@ -1,0 +1,30 @@
+@import '../../variables/variables.scss';
+
+.breathingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+}
+
+.breathingCircle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $accent, $accent-dark);
+    box-shadow: 0 8px 32px rgba(215, 245, 181, 0.3);
+    transition: transform 0.1s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.phaseLabel {
+    font-size: 24px;
+    font-weight: 600;
+    color: $main-text;
+    text-align: center;
+    min-height: 32px;
+}

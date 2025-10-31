@@ -1,0 +1,100 @@
+@import '../../variables/variables.scss';
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $background;
+    padding: 2rem;
+}
+
+.card {
+    background: $background;
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    max-width: 400px;
+    width: 100%;
+    border: 1px solid $additional-accent;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.loadingState,
+.successState,
+.errorState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid $additional-accent;
+    border-top-color: $accent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.successEmoji,
+.errorEmoji {
+    font-size: 3rem;
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $main-text;
+    margin: 0;
+}
+
+.description {
+    color: $text-light;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.button {
+    background-color: $accent;
+    color: $main-text;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1rem;
+
+    &:hover {
+        background-color: $accent-dark;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}

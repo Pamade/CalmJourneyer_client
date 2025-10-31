@@ -1,0 +1,467 @@
+@import '../../variables/variables.scss';
+
+/* Page Layout */
+.page {
+    min-height: 100vh;
+    background: $background;
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.menuButton:hover {
+    color: $main-text;
+}
+
+/* Main Content */
+.main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    box-sizing: border-box;
+}
+
+/* Greeting */
+.greeting {
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.greetingTitle {
+    font-size: 2.25rem;
+    font-weight: 300;
+    color: $main-text;
+    margin-bottom: 0.75rem;
+    text-wrap: break-word;
+}
+
+.streakBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: $additional-accent;
+    border-radius: 9999px;
+}
+
+.streakEmoji {
+    font-size: 1.5rem;
+}
+
+.streakText {
+    color: $main-text;
+    font-weight: 500;
+}
+
+/* Layout */
+.layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+
+.mainColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Start Button */
+.startButton {
+    width: 100%;
+    background: $accent;
+    color: $main-text;
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.startButton:hover {
+    background: $accent-dark;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+}
+
+.playIcon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.startButtonText {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+/* Sessions Section */
+.sessionsSection {
+    display: flex;
+    flex-direction: column;
+    // width: 100%;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: $text-light;
+    margin-bottom: 1.5rem;
+}
+
+.sessionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.emptyState {
+    background: $additional-accent;
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 3rem;
+    text-align: center;
+    border: 1px solid $additional-accent-dark;
+}
+
+.emptyEmoji {
+    font-size: 3.75rem;
+    margin-bottom: 1rem;
+}
+
+.emptyText {
+    color: $text-light;
+    font-size: 1.125rem;
+}
+
+/* Session Card */
+.sessionCard {
+    box-sizing: border-box;
+    background: $background;
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid $additional-accent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sessionCard:hover {
+    border-color: $additional-accent-darker;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.sessionContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // flex-wrap: wrap;
+}
+
+.sessionLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.goalEmoji {
+    font-size: 2.25rem;
+}
+
+.sessionInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.sessionGoal {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: $main-text;
+    margin-bottom: 0.25rem;
+}
+
+.sessionMeta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: $text-lightest;
+}
+
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.metaIcon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.sessionRight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.feedbackEmoji {
+    font-size: 1.5rem;
+}
+
+.repeatButton {
+    padding: 0.5rem 1rem;
+    background-color: $additional-accent;
+    color: $main-text;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    opacity: 1;
+    transition: all 0.2s;
+}
+
+.sessionCard:hover .repeatButton {
+    opacity: 1;
+}
+
+.repeatButton:hover {
+    background-color: $additional-accent-dark;
+}
+
+/* Card (Sidebar) */
+.card {
+    background: $background;
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid $additional-accent;
+    box-sizing: border-box;
+}
+
+.cardTitle {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: $main-text;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardTitleIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Quote Card */
+.quoteEmoji {
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.quoteText {
+    color: $text-light;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.quoteAuthor {
+    color: $text-lightest;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* Calendar */
+.calendarWrapper {
+    margin-bottom: 1rem;
+}
+
+.calendarDayLabels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.dayLabel {
+    font-size: 0.75rem;
+    color: $text-lightest;
+    text-align: center;
+}
+
+.calendarGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.calendarWeek {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+.calendarDay {
+    aspect-ratio: 1;
+    border-radius: 0.25rem;
+}
+
+.dayFuture {
+    background-color: $additional-accent-light;
+}
+
+.dayInactive {
+    background-color: $additional-accent;
+}
+
+.dayActive {
+    background: $accent;
+}
+
+.calendarLegend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: $text-lightest;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.legendBox {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 0.125rem;
+}
+
+.legendInactive {
+    background-color: $additional-accent;
+}
+
+.legendActive {
+    background: $accent;
+}
+
+/* Stats */
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.statItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statLabel {
+    color: $text-lighter;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $main-text;
+}
+
+.statStreak {
+    color: $accent-darker;
+}
+
+
+@media (max-width:500px) {
+
+    .sessionsList {
+        // flex-direction: row wrap;
+
+    }
+
+    .sessionCard {
+        // flex-direction: row;
+        // box-sizing: border-box;
+        // width: 30   %;
+
+    }
+
+    .sessionContent {
+        // display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        flex-direction: row;
+    }
+
+    .card {
+        width: 30%;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .greetingTitle {
+        font-size: 1.875rem;
+    }
+
+    .startButtonText {
+        font-size: 1.25rem;
+    }
+
+    .sessionMeta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .repeatButton {
+        opacity: 1;
+    }
+}
+
+@media (min-width: 1280px) {
+    .layout {
+        flex-direction: row;
+    }
+
+    .mainColumn {
+        flex: 2;
+    }
+
+    .sidebar {
+        flex: 1;
+    }
+
+    .sidebar {
+        flex-direction: column;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+}

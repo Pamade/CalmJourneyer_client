@@ -1,0 +1,237 @@
+@import "../../variables/variables.scss";
+@import "../../assets/fonts/fonts.scss";
+
+.sessionContainer {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+
+    // $global-top-padding: 5rem;
+
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: $background;
+    color: $main-text;
+    padding-bottom: $global-top-padding;
+}
+
+.preparingContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 24px;
+    padding: 20px;
+}
+
+.loadingIcon {
+    animation: spin 2s linear infinite;
+    color: $accent-darker;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.preparingTitle {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    color: $main-text;
+}
+
+.preparingSubtitle {
+    font-size: 16px;
+    opacity: 0.8;
+    text-align: center;
+    color: $text-light;
+}
+
+.loadingBar {
+    width: 200px;
+    height: 4px;
+    background: $additional-accent;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.loadingBarFill {
+    height: 100%;
+    background: $accent-darker;
+    animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+    0% {
+        width: 0%;
+    }
+
+    50% {
+        width: 100%;
+    }
+
+    100% {
+        width: 0%;
+    }
+}
+
+.errorContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 20px;
+    padding: 20px;
+}
+
+.errorTitle {
+    font-size: 32px;
+    font-weight: 600;
+    color: $main-text;
+}
+
+.errorMessage {
+    font-size: 16px;
+    text-align: center;
+    max-width: 400px;
+    color: $text-light;
+}
+
+.retryButton {
+    padding: 12px 32px;
+    background: $accent-darker;
+    color: $main-text;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: $accent-dark;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.sessionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 2px solid $additional-accent;
+    background: white;
+}
+
+.backButton {
+    background: $additional-accent;
+    border: none;
+    color: $main-text;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: $additional-accent-dark;
+    }
+}
+
+.sessionTitle {
+    font-size: 24px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    color: $main-text;
+}
+
+.sessionMeta {
+    display: flex;
+    gap: 12px;
+}
+
+.duration {
+    background: $accent;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $main-text;
+}
+
+.sessionContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    // overflow-y: auto;
+}
+
+.playerSection {
+    background: white;
+    border: 2px solid $additional-accent;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.sessionInfo {
+    flex: 1;
+}
+
+.infoCard {
+    background: white;
+    border: 2px solid $additional-accent;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.infoTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: $main-text;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.infoLabel {
+    font-size: 12px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $text-lighter;
+    font-weight: 500;
+}
+
+.infoValue {
+    font-size: 16px;
+    font-weight: 500;
+    color: $main-text;
+}
+
+.sessionFooter {
+    padding: 20px;
+    border-top: 2px solid $additional-accent;
+    background: white;
+}
