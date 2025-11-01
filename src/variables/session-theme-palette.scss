@@ -1,54 +1,58 @@
 $sound-themes: (
     "OCEAN_WAVES": (background: #F0F8FF, // Alice Blue
-        accent: #4682B4, // Steel Blue
-        main-text: #003B61, // Deep Ocean Blue
-        additional-accent: #B0C4DE // Light Steel Blue
-    ),
+        accent: #6A8EAE,
+        main-text: #2C3E50,
+        additional-accent: #B0C4DE, // Light Steel Blue
+        gradient-start: #a1c4fd,
+        gradient-end: #c2e9fb),
     "FOREST_RAIN": (background: #F5F5F5, // White Smoke
-        accent: #228B22, // Forest Green
-        main-text: #2F4F4F, // Dark Slate Gray
-        additional-accent: #90EE90 // Light Green
-    ),
+        accent: #556B2F,
+        main-text: #2F4F4F,
+        additional-accent: #90EE90, // Light Green
+        gradient-start: #d4e2d4,
+        gradient-end: #a2b2a2),
     "MOUNTAIN_WIND": (background: #F5F5F5, // White Smoke
-        accent: #778899, // Light Slate Gray
-        main-text: #2F4F4F, // Dark Slate Gray
-        additional-accent: #B0C4DE // Light Steel Blue
-    ),
+        accent: #778899,
+        main-text: #2F4F4F,
+        additional-accent: #B0C4DE, // Light Steel Blue
+        gradient-start: #f5f7fa,
+        gradient-end: #c3cfe2),
     "GENTLE_STREAM": (background: #F0FFFF, // Azure
         accent: #5F9EA0, // Cadet Blue
         main-text: #4682B4, // Steel Blue
-        additional-accent: #B0E0E6 // Powder Blue
-    ),
+        additional-accent: #B0E0E6, // Powder Blue
+        gradient-start: #e0c3fc,
+        gradient-end: #8ec5fc),
     "NIGHT_CRICKETS": (background: #1C1C1E, // Almost Black
         accent: #483D8B, // Dark Slate Blue
         main-text: #E5E5E7, // Platinum
-        additional-accent: #6A5ACD // Slate Blue
-    ),
+        additional-accent: #6A5ACD, // Slate Blue
+        gradient-start: #f5f7fa,
+        gradient-end: #c3cfe2),
     "SOFT_THUNDER": (background: #282828, // Dark Charcoal
         accent: #708090, // Slate Gray
         main-text: #F5F5F5, // White Smoke
-        additional-accent: #A9A9A9 // Dark Gray
-    ),
+        additional-accent: #A9A9A9, // Dark Gray
+        gradient-start: #f5b700,
+        gradient-end: #f25c05),
     "BIRDS_DAWN": (background: #FFF8E7, // Cosmic Latte
         accent: #FFDAB9, // Peach Puff
         main-text: #8B4513, // Saddle Brown
-        additional-accent: #FFE4B5 // Moccasin
-    ),
-    "CAMPFIRE": (background: #2B2B2B, // Dark Charcoal
-        accent: #FF8C00, // Dark Orange
-        main-text: #FFFFFF, // White
-        additional-accent: #CD5C5C // Indian Red
-    ),
-    "WIND_CHIMES": (background: #FFFFFF, // White
-        accent: #87CEEB, // Sky Blue
-        main-text: #36454F, // Charcoal
-        additional-accent: #ADD8E6 // Light Blue
-    ),
-    "WHITE_NOISE": (background: #FFFFFF, // White
-        accent: #E0E0E0, // Light Gray
-        main-text: #333333, // Dark Gray
-        additional-accent: #F8F8F8 // Very Light Gray
-    )
+        additional-accent: #FFE4B5, // Moccasin
+        gradient-start: #e0c3fc,
+        gradient-end: #8ec5fc),
+    "CAMPFIRE": (background: #FFF8E1,
+        accent: #E67E22,
+        main-text: #4E342E,
+        additional-accent: #FFAB91,
+        gradient-start: #f5b700,
+        gradient-end: #f25c05),
+    "WHITE_NOISE": (background: #F2F2F2,
+        accent: #607D8B,
+        main-text: #212121,
+        additional-accent: #B0BEC5,
+        gradient-start: #e2e2e2,
+        gradient-end: #c9d6ff)
 );
 
 @function sound-theme($sound, $property) {

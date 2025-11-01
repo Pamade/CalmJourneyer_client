@@ -38,4 +38,16 @@
     line-height: 1.7;
     font-weight: 400;
     max-width: 90%;
+
+    @media (max-width:425px) {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        max-width: 100%;
+    }
+
+    @media (max-width:425px) {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        max-width: 100%;
+    }
 }

@@ -1,12 +1,22 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Rewind, FastForward, Palette, Waves, Mic, MicOff } from 'lucide-react';
 import styles from './SessionPlayer.module.scss';
 import type { SessionType, SessionEvent, AmbientSound, SessionSegment, BreathingPattern } from '../../types/session';
 import BreathingPulse from '../BreathingPulse/BreathingPulse';
 import EventDisplay from '../EventDisplay/EventDisplay';
+import SessionTimeline from '../SessionTimeline/SessionTimeline';
 
 interface SessionPlayerProps {
     session: SessionType;
+    onSessionComplete: () => void;
+    onOpenThemeSwitcher: () => void;
+    onOpenAmbientSwitcher: () => void;
+    ambientVolume: number;
+    isAmbientMuted: boolean;
+    currentAmbientSound: AmbientSound;
+    isNarrationMuted: boolean;
+    onNarrationMuteToggle: () => void;
+    onAmbientMuteToggle: () => void;
 }
 
 // Define a unified type for our timeline
@@ -15,10 +25,9 @@ type TimelineItem =
     | { type: 'breathing'; data: BreathingPattern; startTime: number; duration: number; segment: SessionSegment };
 
 
-export default function SessionPlayer({ session }: SessionPlayerProps) {
+export default function SessionPlayer({ session, onSessionComplete, onOpenThemeSwitcher, onOpenAmbientSwitcher, ambientVolume, isAmbientMuted, currentAmbientSound, isNarrationMuted, onNarrationMuteToggle, onAmbientMuteToggle }: SessionPlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const [isMuted, setIsMuted] = useState(false);
     const [currentItemIndex, setCurrentItemIndex] = useState(0);
 
     const narrationAudioRef = useRef<HTMLAudioElement>(null);
@@ -152,35 +161,81 @@ export default function SessionPlayer({ session }: SessionPlayerProps) {
         const ambientAudio = ambientAudioRef.current;
         if (!ambientAudio) return;
 
-        if (isPlaying && session.ambientSound !== 'NONE') {
+        if (isPlaying && currentAmbientSound !== 'NONE') {
             ambientAudio.play().catch(e => console.error("Ambient play failed:", e));
         } else {
             ambientAudio.pause();
         }
-    }, [isPlaying, session.ambientSound]);
+    }, [isPlaying, currentAmbientSound]);
 
-    // 5. Handle muting
+    // 5. Handle muting for narration
     useEffect(() => {
-        if (narrationAudioRef.current) narrationAudioRef.current.muted = isMuted;
-        if (ambientAudioRef.current) ambientAudioRef.current.muted = isMuted;
-    }, [isMuted]);
+        if (narrationAudioRef.current) narrationAudioRef.current.muted = isNarrationMuted;
+    }, [isNarrationMuted]);
+
+    // 6. Handle ambient volume and muting
+    useEffect(() => {
+        const ambientAudio = ambientAudioRef.current;
+        if (ambientAudio) {
+            ambientAudio.volume = ambientVolume;
+            ambientAudio.muted = isAmbientMuted;
+        }
+    }, [ambientVolume, isAmbientMuted]);
+
+    // 7. Update ambient audio source when the sound changes
+    useEffect(() => {
+        const ambientAudio = ambientAudioRef.current;
+        if (!ambientAudio) return;
+
+        const newSrc = getAmbientSoundUrl(currentAmbientSound);
+        if (ambientAudio.src !== newSrc) {
+            ambientAudio.src = newSrc;
+            if (isPlaying && currentAmbientSound !== 'NONE') {
+                ambientAudio.play().catch(e => console.error("Ambient play after source change failed:", e));
+            }
+        }
+    }, [currentAmbientSound, isPlaying]);
+
+    // New effect to check for session completion
+    useEffect(() => {
+        if (currentTime >= totalDuration && totalDuration > 0) {
+            setIsPlaying(false);
+            onSessionComplete();
+        }
+    }, [currentTime, totalDuration, onSessionComplete]);
 
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
     };
 
-    const handleMute = () => {
-        setIsMuted(!isMuted);
+    // Removed: const handleBreathingToggle = () => { setShowBreathingGuide(!showBreathingGuide); };
+
+    const handleSkip = (seconds: number) => {
+        const newTime = Math.max(0, Math.min(totalDuration, currentTime + seconds));
+        handleSeek(null, newTime);
     };
 
 
     // 6. Handle seeking on the progress bar
-    const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-        const progressBar = e.currentTarget;
-        const rect = progressBar.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const newTime = Math.floor((clickX / progressBar.offsetWidth) * totalDuration);
+    const handleSeek = (e: React.MouseEvent<HTMLDivElement> | null, directTime?: number) => {
+        const narrationAudio = narrationAudioRef.current;
+        if (!narrationAudio) return;
+
+        narrationAudio.pause();
+
+        let newTime: number;
+        if (directTime !== undefined) {
+            newTime = directTime;
+        } else if (e) {
+            const progressBar = e.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            newTime = Math.floor((clickX / progressBar.offsetWidth) * totalDuration);
+        } else {
+            return;
+        }
+
 
         const targetItemIndex = timeline.findIndex(item => newTime >= item.startTime && newTime < item.startTime + item.duration);
 
@@ -189,12 +244,16 @@ export default function SessionPlayer({ session }: SessionPlayerProps) {
             setCurrentItemIndex(targetItemIndex);
         }
         narrationAudioRef.current?.pause();
+        handleSeekPauseMoment();
+    };
+
+    const handleSeekPauseMoment = () => {
         setIsPlaying(false);
         setTimeout(() => {
             narrationAudioRef.current?.play();
             setIsPlaying(true);
         }, 100);
-    };
+    }
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -204,7 +263,7 @@ export default function SessionPlayer({ session }: SessionPlayerProps) {
 
     const getAmbientSoundUrl = (sound: AmbientSound) => {
         if (sound === 'NONE') return '';
-        return `/sounds/ambient/${sound.toLowerCase()}.mp3`;
+        return `/sound_themes/${sound}.wav`;
     };
 
     // Determine what to display - now solely based on currentItem type
@@ -228,61 +287,104 @@ export default function SessionPlayer({ session }: SessionPlayerProps) {
     }, [currentItem]);
 
     return (
-        <div className={styles.playerContainer}>
-            <audio ref={narrationAudioRef} />
-            <audio ref={ambientAudioRef} src={getAmbientSoundUrl(session.ambientSound)} loop />
+        <div className={styles.playerWrapper}>
 
-            <div className={styles.displayArea}>
-                {displayBreathingPulse ? (
-                    <BreathingPulse
-                        pattern={currentItem.data as BreathingPattern}
-                        isActive={isPlaying}
-                        timeIntoSegment={timeIntoSegment}
-                    />
-                ) : (
-                    <EventDisplay
-                        event={currentItem?.type === 'narration' ? currentItem.data : undefined}
-                        segment={currentItem?.segment}
-                    />
-                )}
-            </div>
+            <div className={styles.playerContainer}>
+                <audio ref={narrationAudioRef} />
+                <audio ref={ambientAudioRef} src={getAmbientSoundUrl(currentAmbientSound)} loop />
 
-            <div className={styles.progressSection}>
-                <div className={styles.progressBar} onClick={handleSeek}>
-                    <div
-                        className={styles.progressFill}
-                        style={{ width: `${progress}%` }}
-                    />
+                <div className={styles.displayArea}>
+                    {displayBreathingPulse ? (
+                        <BreathingPulse
+                            pattern={currentItem.data as BreathingPattern}
+                            isActive={isPlaying}
+                            timeIntoSegment={timeIntoSegment}
+                        />
+                    ) : (
+                        <EventDisplay
+                            event={currentItem?.type === 'narration' ? currentItem.data : undefined}
+                            segment={currentItem?.segment}
+                        />
+                    )}
                 </div>
-                <div className={styles.timeDisplay}>
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{formatTime(totalDuration)}</span>
+
+                <div className={styles.progressSection}>
+                    <div className={styles.progressBar} onClick={handleSeek}>
+                        <div
+                            className={styles.progressFill}
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+                    <div className={styles.timeDisplay}>
+                        <span>{formatTime(currentTime)}</span>
+                        <span>{formatTime(totalDuration)}</span>
+                    </div>
                 </div>
-            </div>
 
-            <div className={styles.controls}>
-                <button
-                    className={styles.controlButton}
-                    onClick={handleMute}
-                    title={isMuted ? 'Unmute' : 'Mute'}
-                >
-                    {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-                </button>
-
-                <button
-                    className={styles.playButton}
-                    onClick={handlePlayPause}
-                >
-                    {isPlaying ? <Pause size={32} /> : <Play size={32} />}
-                </button>
-            </div>
-
-            <div className={styles.infoSection}>
-                <div className={styles.instruction}>
-                    <h3>Current Instruction</h3>
-                    <p>{instructionText}</p>
+                <div className={styles.controls}>
+                    <button
+                        className={`${styles.controlButton} ${styles.skipButton}`}
+                        onClick={() => handleSkip(-10)}
+                        title="Rewind 10s"
+                    >
+                        <Rewind size={22} />
+                    </button>
+                    <button
+                        className={styles.playButton}
+                        onClick={handlePlayPause}
+                    >
+                        {isPlaying ? <Pause size={32} /> : <Play size={32} />}
+                    </button>
+                    <button
+                        className={`${styles.controlButton} ${styles.skipButton}`}
+                        onClick={() => handleSkip(15)}
+                        title="Forward 15s"
+                    >
+                        <FastForward size={22} />
+                    </button>
                 </div>
+                <div className={styles.secondaryControls}>
+                    <button
+                        className={styles.controlButton}
+                        onClick={onNarrationMuteToggle}
+                        title={isNarrationMuted ? 'Unmute Narrator' : 'Mute Narrator'}
+                    >
+                        {isNarrationMuted ? <MicOff size={24} /> : <Mic size={24} />}
+                    </button>
+                    <button
+                        className={styles.controlButton}
+                        onClick={onAmbientMuteToggle}
+                        title={isAmbientMuted ? 'Unmute Ambient' : 'Mute Ambient'}
+                    >
+                        {isAmbientMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                    </button>
+                    <button
+                        className={styles.controlButton}
+                        onClick={onOpenAmbientSwitcher}
+                        title="Ambient Sound"
+                    >
+                        <Waves size={24} />
+                    </button>
+                    <button
+                        className={styles.controlButton}
+                        onClick={onOpenThemeSwitcher}
+                        title="Change Theme"
+                    >
+                        <Palette size={24} />
+                    </button>
+                </div>
+                <div className={styles.infoSection}>
+                    <div className={styles.instruction}>
+                        <h3>Current Instruction</h3>
+                        <p>{instructionText}</p>
+                    </div>
+                </div>
+
             </div>
+            <SessionTimeline
+                segments={session.sessionData.segments}
+                currentSegmentId={currentItem?.segment.segment_id}
+            />
         </div>
     );
 }

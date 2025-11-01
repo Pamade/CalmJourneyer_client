@@ -1,5 +1,19 @@
 @import '../../variables/variables.scss';
 
+
+.playerWrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+    align-items: start;
+
+    @media (min-width: 1024px) {
+        grid-template-columns: 2fr 1fr;
+        gap: 3rem;
+    }
+}
+
 .playerContainer {
     display: flex;
     flex-direction: column;
@@ -25,6 +39,8 @@
     padding: 20px;
     transition: all 0.5s ease;
     box-sizing: border-box;
+    text-wrap: wrap;
+
     /* Ensure padding is included in height */
 }
 
@@ -62,7 +78,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(1rem, 5vw, 2rem);
+    gap: clamp(0.5rem, 4vw, 1.5rem);
     /* More responsive gap */
     padding: 0 1rem;
     /* Add some horizontal padding for smaller screens */
@@ -78,15 +94,22 @@
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: clamp(1.2rem, 4vw, 1.5rem); // Make icon size responsive
+    padding: 10px; // Add padding to increase click area
+    border-radius: 50%;
 
     &:hover {
         color: var(--theme-main-text);
+        background-color: var(--theme-additional-accent-t2);
         transform: scale(1.1);
     }
 
     &.active {
         color: var(--theme-accent);
     }
+}
+
+.skipButton {
+    color: var(--theme-main-text-t1);
 }
 
 .playButton {
@@ -115,6 +138,15 @@
         filter: brightness(1.1);
         transform: scale(1.05);
     }
+}
+
+.secondaryControls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
 }
 
 .infoSection {

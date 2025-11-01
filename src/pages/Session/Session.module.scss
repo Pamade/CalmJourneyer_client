@@ -1,5 +1,6 @@
 @import '../../variables/variables.scss';
 @import '../../variables/session-theme-palette.scss';
+@import "../../assets/fonts/fonts.scss";
 
 .sessionContainer {
     display: flex;
@@ -11,9 +12,10 @@
     padding: 2rem 1rem;
     box-sizing: border-box;
     text-align: center;
-    transition: background-color 1.5s ease-in-out;
+    transition: background 1.5s ease-in-out;
     position: relative;
     overflow: hidden;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     &::before {
         content: '';
@@ -27,6 +29,41 @@
     }
 }
 
+.exitButton {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 10;
+    background: var(--theme-accent);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--theme-main-text, $main-text);
+    backdrop-filter: blur(10px);
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.5);
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    @media (max-width: 768px) {
+        top: 1rem;
+        left: 1rem;
+        width: 40px;
+        height: 40px;
+    }
+}
+
 .contentWrapper {
     position: relative;
     z-index: 2;
@@ -37,12 +74,19 @@
     gap: 1.5rem;
     max-width: 600px;
     width: 100%;
+
+    @media (min-width: 1024px) {
+        max-width: 1100px;
+        /* Give more space on desktop */
+    }
 }
 
 // --- Dynamic Theme Generation ---
 @each $sound, $theme in $sound-themes {
     .theme-#{$sound} {
-        background-color: sound-theme($sound, background);
+        // Mix the background and gradient-end colors for a much more subtle effect
+        $subtle-gradient-end: mix(sound-theme($sound, background), sound-theme($sound, gradient-end), 25%);
+        background: linear-gradient(180deg, #{sound-theme($sound, background)} 0%, #{$subtle-gradient-end} 100%);
         --theme-background: #{sound-theme($sound, background)};
         --theme-accent: #{sound-theme($sound, accent)};
         --theme-main-text: #{sound-theme($sound, main-text)};

@@ -1,11 +1,14 @@
 import { useLocation, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Loader } from 'lucide-react';
+import { Loader, X } from 'lucide-react';
 import styles from './Session.module.scss';
 import type { OnboardingData, SessionType, AmbientSound, GenerateSessionResponse } from '../../types/session';
 import SessionPlayer from '../../components/SessionPlayer/SessionPlayer';
-
+import SessionComplete from '../../components/SessionComplete/SessionComplete';
+import ThemeSwitcher from '../../components/ThemeSwitcher/ThemeSwitcher';
+import AmbientSoundSwitcher from '../../components/AmbientSoundSwitcher/AmbientSoundSwitcher';
+import ExitConfirmationModal from '../../components/ExitConfirmationModal/ExitConfirmationModal';
 // interface SessionResponse {
 //     id: string;
 //     audioUrl: string;
@@ -35,7 +38,7 @@ function Session() {
             voice: "LUNA",
             position: "SITTING",
             eyes: "CLOSED",
-            ambientSound: "CAMPFIRE",
+            ambientSound: "MOUNTAIN_WIND",
             createdAt: "2025-10-31T14:29:59.369991367",
             expiresAt: "2026-01-29T14:29:59.370008768",
             sessionData: {
@@ -192,9 +195,22 @@ function Session() {
         },
         timestamp: "2025-10-31T14:29:59.442095019"
     }
-    const [isLoading, setIsLoading] = useState(false);
-    const [sessionResponse, setSessionResponse] = useState<SessionType | null>(sample_session.data);
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [sessionResponse, setSessionResponse] = useState<SessionType | null>(null);
+    const [isComplete, setIsComplete] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isThemeSwitcherOpen, setIsThemeSwitcherOpen] = useState(false);
+    const [isAmbientSwitcherOpen, setIsAmbientSwitcherOpen] = useState(false);
+    const [ambientVolume, setAmbientVolume] = useState(0.5); // Default 50%
+    const [isAmbientMuted, setIsAmbientMuted] = useState(false);
+    const [isNarrationMuted, setIsNarrationMuted] = useState(false);
+    const [currentAmbientSound, setCurrentAmbientSound] = useState<AmbientSound | null>(null);
+    const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+
+    const handleSessionComplete = () => {
+        setIsComplete(true);
+    };
 
     useEffect(() => {
         // if (!sessionData) {
@@ -203,8 +219,9 @@ function Session() {
         // }
 
         const generateSession = async () => {
+            // setIsLoading(true);
             try {
-                // setIsLoading(true);
+
                 setError(null);
 
                 const response = await axios.post<GenerateSessionResponse>(`${import.meta.env.VITE_BACKEND_URL}/api/sessions/generate`, {
@@ -225,28 +242,31 @@ function Session() {
                 console.error('Error generating session:', err);
                 setError('Failed to prepare your session. Please try again.');
             } finally {
-                // setIsLoading(false);
+                setIsLoading(false);
             }
         };
 
-        // generateSession();
+        generateSession();
     }, [sessionData]);
+
+
+    const handleThemeSelect = (newTheme: AmbientSound) => {
+        if (sessionResponse) {
+            setSessionResponse({ ...sessionResponse, ambientSound: newTheme });
+        }
+    };
+
+    const handleAmbientSoundSelect = (newSound: AmbientSound) => {
+        // Only update the playing ambient sound, not the theme
+        setCurrentAmbientSound(newSound);
+    };
+
+    const handleExitSession = () => {
+        navigate('/dashboard');
+    };
 
     const getThemeClass = (ambientSound: AmbientSound) => {
         return styles[`theme-${ambientSound}`] || '';
-    };
-
-    const getBackgroundClass = (ambientSound: AmbientSound) => {
-        switch (ambientSound) {
-            case 'OCEAN_WAVES':
-                return styles.oceanBg;
-            case 'FOREST_RAIN':
-                return styles.forestBg;
-            case 'MOUNTAIN_WIND':
-                return styles.mountainBg;
-            default:
-                return styles.defaultBg;
-        }
     };
 
     if (isLoading) {
@@ -283,9 +303,52 @@ function Session() {
 
     return (
         <div className={`${styles.sessionContainer} ${getThemeClass(sessionResponse.ambientSound)}`}>
+            <button
+                className={styles.exitButton}
+                onClick={() => setIsExitModalOpen(true)}
+                title="Exit Session"
+            >
+                <X size={24} />
+            </button>
             <div className={styles.contentWrapper}>
-                <SessionPlayer session={sessionResponse} />
+                {isComplete ? (
+                    <SessionComplete />
+                ) : (
+                    <SessionPlayer
+                        session={sessionResponse}
+                        onSessionComplete={handleSessionComplete}
+                        onOpenThemeSwitcher={() => setIsThemeSwitcherOpen(true)}
+                        onOpenAmbientSwitcher={() => setIsAmbientSwitcherOpen(true)}
+                        ambientVolume={ambientVolume}
+                        isAmbientMuted={isAmbientMuted}
+                        currentAmbientSound={currentAmbientSound ?? sessionResponse.ambientSound}
+                        isNarrationMuted={isNarrationMuted}
+                        onNarrationMuteToggle={() => setIsNarrationMuted(!isNarrationMuted)}
+                        onAmbientMuteToggle={() => setIsAmbientMuted(!isAmbientMuted)}
+                    />
+                )}
             </div>
+            <ThemeSwitcher
+                isOpen={isThemeSwitcherOpen}
+                onClose={() => setIsThemeSwitcherOpen(false)}
+                onThemeSelect={handleThemeSelect}
+                currentTheme={sessionResponse.ambientSound}
+            />
+            <AmbientSoundSwitcher
+                isOpen={isAmbientSwitcherOpen}
+                onClose={() => setIsAmbientSwitcherOpen(false)}
+                onSoundSelect={handleAmbientSoundSelect}
+                currentSound={currentAmbientSound ?? sessionResponse.ambientSound}
+                volume={ambientVolume}
+                onVolumeChange={setAmbientVolume}
+                isAmbientMuted={isAmbientMuted}
+                onAmbientMuteToggle={() => setIsAmbientMuted(!isAmbientMuted)}
+            />
+            <ExitConfirmationModal
+                isOpen={isExitModalOpen}
+                onCancel={() => setIsExitModalOpen(false)}
+                onConfirm={handleExitSession}
+            />
         </div>
     );
 }

@@ -1,0 +1,87 @@
+@import '../../variables/variables.scss';
+
+.timelineContainer {
+    padding: 1.5rem;
+    background: var(--theme-additional-accent-t1);
+    border-radius: 24px;
+    border: 1px solid var(--theme-additional-accent-t2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    height: fit-content;
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--theme-main-text-t1);
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+.segmentList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        background-color: var(--theme-additional-accent-t2);
+        transform: translateX(-50%);
+    }
+}
+
+.segmentItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding-left: 24px;
+    transition: all 0.3s ease;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--theme-additional-accent);
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+    border: 2px solid var(--theme-background);
+}
+
+.segmentTitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--theme-main-text-t1);
+    transition: all 0.3s ease;
+}
+
+.segmentItem.active {
+    .dot {
+        background-color: var(--theme-accent);
+        transform: translateY(-50%) scale(1.2);
+    }
+
+    .segmentTitle {
+        color: var(--theme-main-text);
+        font-weight: 600;
+    }
+}

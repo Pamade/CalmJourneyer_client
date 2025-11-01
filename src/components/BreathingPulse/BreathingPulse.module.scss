@@ -45,7 +45,7 @@
         border: 2px solid var(--theme-accent-t1);
         transition: all 0.8s linear;
         transform: scale(1);
-        opacity: 0.5;
+        opacity: 0.85;
     }
 }
 
@@ -116,7 +116,7 @@
     /* Fast transition to pause state */
 
     .phaseLabel {
-        opacity: 0;
+        opacity: 0.3;
     }
 }
 
