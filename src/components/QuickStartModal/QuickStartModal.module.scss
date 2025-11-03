@@ -1,0 +1,361 @@
+@import '../../variables/variables.scss';
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    max-width: 550px;
+    width: 90%;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    opacity: 0;
+    animation: popIn 0.3s ease forwards;
+    animation-delay: 0.1s;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+
+    &:hover {
+        color: #000;
+    }
+}
+
+.modalContent {
+    text-align: center;
+}
+
+.modalTitle {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: $main-text;
+}
+
+.quotaDisplay {
+    background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.quotaText {
+    display: block;
+}
+
+.loading {
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.section {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.sectionLabel {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $main-text;
+    margin-bottom: 1rem;
+}
+
+.goalsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+}
+
+.goalCard {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+
+    &:hover {
+        border-color: $accent;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &.selected {
+        background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+        border-color: $accent-darker;
+        color: white;
+
+        .goalEmoji {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.goalEmoji {
+    font-size: 2rem;
+    transition: transform 0.3s;
+}
+
+.goalLabel {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.voicesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.voiceCard {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    text-align: left;
+
+    &:hover:not(.disabled) {
+        border-color: $accent;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &.selected {
+        background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+        border-color: $accent-darker;
+        color: white;
+
+        .voiceLabel,
+        .voiceDescription {
+            color: white;
+        }
+
+        .premiumBadge {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+        }
+    }
+}
+
+.voiceHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.voiceLabel {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $main-text;
+}
+
+.voiceDescription {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.premiumBadge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+    color: white;
+}
+
+.optionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.optionCard {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+
+    &:hover {
+        border-color: $accent;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &.selected {
+        background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+        border-color: $accent-darker;
+        color: white;
+
+        .optionEmoji {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.optionEmoji {
+    font-size: 2rem;
+    transition: transform 0.3s;
+}
+
+.optionLabel {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #e5e7eb;
+    outline: none;
+    -webkit-appearance: none;
+    margin: 1rem 0 0.5rem 0;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: $accent-darker;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+            background: $accent;
+            transform: scale(1.1);
+        }
+    }
+
+    &::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: $accent-darker;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+
+        &:hover {
+            background: $accent;
+            transform: scale(1.1);
+        }
+    }
+}
+
+.sliderLabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.startButton {
+    width: 100%;
+    background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 1rem;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($accent-darker, 0.4);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.footerText {
+    color: #666;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

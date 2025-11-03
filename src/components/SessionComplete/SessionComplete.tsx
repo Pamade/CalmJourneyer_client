@@ -1,18 +1,32 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import axiosInstance from '../../utils/axios';
 import styles from './SessionComplete.module.scss';
-
+import publicAxiosInstance from '../../utils/publicAxiosInstance';
 type Feeling = 'CALM' | 'OKAY' | 'NOT_GREAT';
 
-export default function SessionComplete() {
+interface SessionCompleteProps {
+    sessionId: string;
+    userId?: string | null;
+}
+
+export default function SessionComplete({ sessionId, userId }: SessionCompleteProps) {
     const [feedbackSent, setFeedbackSent] = useState(false);
     const navigate = useNavigate();
 
-    const handleFeedback = (feeling: Feeling) => {
+    const handleFeedback = async (feeling: Feeling) => {
         console.log('Feedback submitted:', feeling);
         setFeedbackSent(true);
 
-        // Navigate back to the home page after a short delay
+        try {
+            await publicAxiosInstance.post('/api/sessions/complete', {
+                sessionId,
+                feelingFeedback: feeling
+            });
+        } catch (err) {
+            console.error('Failed to save feedback:', err);
+        }
+
         setTimeout(() => {
             navigate('/');
         }, 1500);

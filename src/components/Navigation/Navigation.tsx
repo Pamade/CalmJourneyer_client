@@ -25,7 +25,7 @@ export default function Navigation({ type }: NavigationProps) {
     // Public navigation (not logged in)
     const renderPublicLinks = () => (
         <>
-            <Link to="/#pricing" className={styles.link}>
+            <Link to="/pricing" className={styles.link}>
                 Pricing
             </Link>
             <Link to="/login" className={styles.signInButton}>
@@ -37,7 +37,7 @@ export default function Navigation({ type }: NavigationProps) {
     // Logged navigation (logged in but not on dashboard)
     const renderLoggedLinks = () => (
         <>
-            <Link to="/#pricing" className={styles.link}>
+            <Link to="/pricing" className={styles.link}>
                 Pricing
             </Link>
             <Link to="/dashboard" className={styles.dashboardButton}>
@@ -61,6 +61,9 @@ export default function Navigation({ type }: NavigationProps) {
             <Link to="/dashboard" className={styles.profileButton}>
                 Profile
             </Link>
+            <Link to="/preferences" className={styles.link} onClick={closeMenu}>
+                Preferences
+            </Link>
             <Link onClick={logout} to="/login" className={styles.link}>
                 Logout
             </Link>
@@ -70,7 +73,7 @@ export default function Navigation({ type }: NavigationProps) {
     // Mobile versions
     const renderPublicMobileLinks = () => (
         <>
-            <Link to="/#pricing" className={styles.mobileLink} onClick={closeMenu}>
+            <Link to="/pricing" className={styles.mobileLink} onClick={closeMenu}>
                 Pricing
             </Link>
             <Link to="/login" className={styles.mobileSignInButton} onClick={closeMenu}>
@@ -81,7 +84,7 @@ export default function Navigation({ type }: NavigationProps) {
 
     const renderLoggedMobileLinks = () => (
         <>
-            <Link to="/#pricing" className={styles.mobileLink} onClick={closeMenu}>
+            <Link to="/pricing" className={styles.mobileLink} onClick={closeMenu}>
                 Pricing
             </Link>
             <Link to="/dashboard" className={styles.mobileDashboardButton} onClick={closeMenu}>
@@ -101,9 +104,13 @@ export default function Navigation({ type }: NavigationProps) {
             <Link to="/settings" className={styles.mobileLink} onClick={closeMenu}>
                 Settings
             </Link>
+            <Link to="/preferences" className={styles.mobileLink} onClick={closeMenu}>
+                Preferences
+            </Link>
             <Link to="/dashboard" className={styles.mobileProfileButton} onClick={closeMenu}>
                 Profile
             </Link>
+
         </>
     );
 

@@ -180,6 +180,7 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
             ambientAudio.volume = ambientVolume;
             ambientAudio.muted = isAmbientMuted;
         }
+        console.log(ambientVolume)
     }, [ambientVolume, isAmbientMuted]);
 
     // 7. Update ambient audio source when the sound changes

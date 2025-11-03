@@ -102,10 +102,69 @@
 
 
 // --- States ---
-.loader,
+.loadingBg {
+    background: linear-gradient(135deg,
+            $background 0%,
+            mix($accent, $background, 30%) 50%,
+            mix($additional-accent, $background, 40%) 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+}
+
+.loader {
+    color: $main-text;
+    background: rgba(255, 255, 255, 0.7);
+    padding: clamp(2rem, 5vw, 4rem) clamp(2rem, 6vw, 5rem);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    font-size: 1.1rem;
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba($main-text, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 90%;
+    box-sizing: border-box;
+
+    h2 {
+        margin: 0;
+        color: $main-text;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 600;
+        letter-spacing: -0.5px;
+    }
+}
+
+.loaderSpinner {
+    position: relative;
+
+    .spinnerIcon {
+        animation: spin 2s linear infinite;
+        filter: drop-shadow(0 0 20px rgba($accent, 0.6));
+        color: $accent-darker;
+    }
+}
+
+.quote {
+    margin: 0;
+    color: $text-light;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.8;
+    font-style: italic;
+    text-align: center;
+    max-width: 500px;
+    min-height: 4em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
 .error {
     color: $main-text;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(231, 76, 60, 0.08);
     padding: 2rem 3rem;
     border-radius: 16px;
     display: flex;
@@ -114,35 +173,74 @@
     gap: 1rem;
     font-size: 1.1rem;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(231, 76, 60, 0.2);
 
     h2 {
         margin: 0.5rem 0 0;
-        color: $main-text;
+        color: #c0392b;
     }
 
     p {
         margin: 0;
         color: $text-light;
     }
-}
-
-.error {
-    color: #c0392b;
 
     button {
         margin-top: 1rem;
         padding: 0.75rem 1.5rem;
         border: none;
-        background: $accent;
+        background: $accent-darker;
         color: $main-text;
         border-radius: 8px;
         cursor: pointer;
         font-weight: 600;
-        transition: background 0.2s ease;
+        transition: all 0.2s ease;
 
         &:hover {
-            background: $accent-darker;
+            background: $accent-dark;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($accent, 0.3);
         }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Animations
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

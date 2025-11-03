@@ -1,0 +1,112 @@
+@import '../../variables/variables.scss';
+
+.page {
+    min-height: 100vh;
+    background: $background;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin-top: $global-top-padding;
+}
+
+.card {
+    background: white;
+    border: 2px solid $additional-accent;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.icon {
+    width: 64px;
+    height: 64px;
+    color: $accent-darker;
+    margin: 0 auto 2rem;
+
+    &.canceled {
+        color: #f87171;
+    }
+}
+
+h1 {
+    font-size: 2rem;
+    color: $main-text;
+    margin-bottom: 1rem;
+    font-weight: 600;
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+    }
+}
+
+p {
+    font-size: 1.125rem;
+    color: $text-light;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+    }
+}
+
+.redirect {
+    font-size: 0.9375rem;
+    color: $text-lighter;
+    font-style: italic;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.button {
+    padding: 1rem 2rem;
+    background: $accent;
+    color: $main-text;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0.5rem;
+
+    &:hover {
+        background: $accent-darker;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &.secondary {
+        background: $additional-accent;
+
+        &:hover {
+            background: $additional-accent-dark;
+        }
+    }
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2rem;
+
+    @media (min-width: 480px) {
+        flex-direction: row;
+        justify-content: center;
+    }
+}

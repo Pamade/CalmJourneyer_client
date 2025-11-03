@@ -8,11 +8,14 @@ export interface ApiResponse<T> {
 
 export interface UserResponse {
     id: string;
-    name: string;
+    name?: string;
+    username?: string;
     email: string;
-    emailVerified: boolean;
-    createdAt: string;
+    emailVerified?: boolean;
+    onboardingCompleted?: boolean;
+    createdAt?: string;
     lastLoginAt?: string;
+    provider?: string;
 }
 
 export interface AuthResponse {

@@ -1,10 +1,20 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { authApi } from '../utils/AuthApi';
-import type { UserResponse } from "../types/auth";
+import axios from 'axios';
+
+export interface User {
+    id: string;
+    email: string;
+    username?: string;
+    name?: string;
+    emailVerified?: boolean;
+    onboardingCompleted?: boolean;
+    provider?: string; // 'google' or 'local'
+}
 
 interface AuthContextType {
-    user: UserResponse | null;
+    user: User | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     register: (name: string, email: string, password: string, repeatPassword: string) => Promise<void>;
@@ -24,18 +34,31 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [user, setUser] = useState<UserResponse | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         checkAuth();
     }, []);
 
-    async function checkAuth() {
+    const checkAuth = async () => {
         try {
-            const response = await authApi.getCurrentUser();
-            if (response.success && response.data) {
-                setUser(response.data);
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+                withCredentials: true
+            });
+
+            if (response.data.success && response.data.data) {
+                const userData = response.data.data;
+                setUser({
+                    id: userData.id,
+                    email: userData.email,
+                    name: userData.name,
+                    emailVerified: userData.emailVerified || false,
+                    onboardingCompleted: userData.onboardingCompleted || false,
+                    provider: userData.provider || 'local'
+                });
+            } else {
+                setUser(null);
             }
         } catch (error) {
             setUser(null);
@@ -44,17 +67,41 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
-    async function login(email: string, password: string) {
-        const response = await authApi.login({ email, password });
-        if (response.success && response.data) {
-            setUser(response.data.user);
+    const login = async (email: string, password: string) => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
+                email,
+                password
+            }, { withCredentials: true });
+
+            if (response.data.success && response.data.data) {
+                const userData = response.data.data.user;
+                setUser({
+                    id: userData.id,
+                    email: userData.email,
+                    name: userData.name,
+                    emailVerified: userData.emailVerified || false,
+                    onboardingCompleted: userData.onboardingCompleted || false,
+                    provider: userData.provider || 'local'
+                });
+            }
+        } catch (error) {
+            throw error;
         }
     }
 
     async function register(name: string, email: string, password: string, repeatPassword: string) {
         const response = await authApi.register({ name, email, password, repeatPassword });
         if (response.success && response.data) {
-            setUser(response.data.user);
+            const userData = response.data.user;
+            setUser({
+                id: userData.id,
+                email: userData.email,
+                name: userData.name,
+                emailVerified: userData.emailVerified || false,
+                onboardingCompleted: userData.onboardingCompleted || false,
+                provider: userData.provider || 'local'
+            });
         }
     }
 
@@ -66,7 +113,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async function resetPassword(token: string, newPassword: string, confirmPassword: string) {
         const response = await authApi.resetPassword(token, { newPassword, confirmPassword });
         if (response.success && response.data) {
-            setUser(response.data.user);
+            const userData = response.data.user;
+            setUser({
+                id: userData.id,
+                email: userData.email,
+                name: userData.name,
+                emailVerified: userData.emailVerified || false,
+                onboardingCompleted: userData.onboardingCompleted || false,
+                provider: userData.provider || 'local'
+            });
         }
     }
 

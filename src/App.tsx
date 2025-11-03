@@ -11,6 +11,10 @@ import VerifyEmail from './pages/VerifyEmail/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import LoggedRoute from './components/ProtectedRoute/LoggedRoute'
 import Session from './pages/Session/Session'
+import Pricing from './pages/Pricing/Pricing'
+import Preferences from './pages/Preferences/Preferences'
+import SubscriptionSuccess from './pages/Subscription/SubscriptionSuccess'
+import SubscriptionCanceled from './pages/Subscription/SubscriptionCanceled'
 function App() {
 
   return (
@@ -25,13 +29,17 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/pricing" element={<Pricing />} />
 
           <Route path="/login" element={<LoggedRoute> <Login /></LoggedRoute>} />
           <Route path="/forgot-password" element={<LoggedRoute> <ForgotPassword /></LoggedRoute>} />
 
           <Route path="/verify-email" element={<ProtectedRoute> <VerifyEmail /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute> <HomeLoggedUser /></ProtectedRoute>} />
+          <Route path="/preferences" element={<ProtectedRoute> <Preferences /></ProtectedRoute>} />
           <Route path="/session" element={<Session />} />
+          <Route path="/subscription/success" element={<ProtectedRoute> <SubscriptionSuccess /></ProtectedRoute>} />
+          <Route path="/subscription/canceled" element={<ProtectedRoute> <SubscriptionCanceled /></ProtectedRoute>} />
         </Routes>
 
       </BrowserRouter>

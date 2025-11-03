@@ -4,9 +4,11 @@ import { Sparkles, Brain, Heart, Zap, Moon, Play, Loader, Square } from "lucide-
 import styles from "./Onboarding.module.scss";
 import type { SessionData, OnboardingData, Voice, Eyes, Position, Goal, VoiceOption } from "../../types/session";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 const Onboarding: React.FC = () => {
 
     const navigate = useNavigate();
+    const { user } = useAuth(); // Get user from auth context
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<OnboardingData>({
         name: '',
@@ -21,6 +23,30 @@ const Onboarding: React.FC = () => {
     const [loadingVoice, setLoadingVoice] = useState<Voice | null>(null);
     const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
 
+    // Helper function to read cookies
+    const getCookie = (name: string): string | null => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+        return null;
+    };
+
+    // Guard: Prevent access if onboarding already completed
+    useEffect(() => {
+        // For logged-in users, check backend value from auth context
+        if (user?.onboardingCompleted) {
+            navigate('/dashboard', { replace: true });
+            return;
+        }
+
+        // For guest users, check onboarding_completed cookie from backend
+        const onboardingCookie = getCookie('onboarding_completed');
+        if (!user && onboardingCookie === 'true') {
+            navigate('/login', { replace: true });
+            return;
+        }
+    }, [user, navigate]);
+
     console.log(formData)
 
     const totalSteps = 5;
@@ -31,7 +57,7 @@ const Onboarding: React.FC = () => {
         { id: 'ENERGY' as Goal, label: 'Energy Boost', icon: Zap, pattern: '4-0-4-0' },
         { id: 'SLEEP' as Goal, label: 'Better Sleep', icon: Moon, pattern: '4-7-8-0' },
         { id: 'ANXIETY' as Goal, label: 'Manage Anxiety', icon: Heart, pattern: '4-0-6-0' },
-        { id: 'MINDFULNESS' as Goal, label: 'Daily Mindfulness', icon: Sparkles, pattern: '4-4-4-4' },
+        { id: 'SILENCE' as Goal, label: 'Silence.', icon: Sparkles, pattern: '4-4-4-4' },
     ];
 
     const voices: VoiceOption[] = [
@@ -132,14 +158,6 @@ const Onboarding: React.FC = () => {
             console.error('Error submitting onboarding:', error);
         }
     };
-
-    // const canProceed = () => {
-    //     switch (step) {
-    //         case 1:
-    //             return formData.name.trim().length > 0;
-
-    //     }
-    // };
 
     return (
         <div className={styles.onboardingContainer}>

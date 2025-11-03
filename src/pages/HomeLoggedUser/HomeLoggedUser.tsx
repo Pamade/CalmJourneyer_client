@@ -5,6 +5,8 @@ import Navigation from '../../components/Navigation/Navigation';
 import { useAuth } from '../../context/AuthContext';
 import { setWithExpiry, getWithExpiry } from '../../utils/storage';
 import EmailVerificationModal from '../../components/EmailVerificationModal/EmailVerificationModal';
+import QuickStartModal from '../../components/QuickStartModal/QuickStartModal';
+
 export default function HomeLoggedUser() {
 
     const [streak] = useState(5);
@@ -12,6 +14,8 @@ export default function HomeLoggedUser() {
     const { user, sendVerificationEmail } = useAuth();
     // const [userName] = useState(user?.name || "");
     const [showVerifyModal, setShowVerifyModal] = useState(false);
+    const [showQuickStartModal, setShowQuickStartModal] = useState(false);
+    console.log(user)
 
     useEffect(() => {
         if (user && !user.emailVerified) {
@@ -159,11 +163,6 @@ export default function HomeLoggedUser() {
     return (
         <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
             <Navigation type="dashboard" />
-            <EmailVerificationModal
-                isOpen={showVerifyModal}
-                onVerify={handleVerifyClick}
-                onCancel={handleCancelClick}
-            />
             {/* Header */}
             {/* <header className={styles.header}>
                 <div className={styles.headerContainer}>
@@ -203,7 +202,7 @@ export default function HomeLoggedUser() {
                     {/* Left Column - Main Content */}
                     <div className={styles.mainColumn}>
                         {/* Start Session Button */}
-                        <button className={styles.startButton}>
+                        <button className={styles.startButton} onClick={() => setShowQuickStartModal(true)}>
                             <Play className={styles.playIcon} fill="white" />
                             <span className={styles.startButtonText}>Rozpocznij sesję</span>
                         </button>
@@ -345,6 +344,17 @@ export default function HomeLoggedUser() {
                     </div>
                 </div>
             </main>
+
+            {/* Modals */}
+            <EmailVerificationModal
+                isOpen={showVerifyModal}
+                onVerify={handleVerifyClick}
+                onCancel={handleCancelClick}
+            />
+            <QuickStartModal
+                isOpen={showQuickStartModal}
+                onClose={() => setShowQuickStartModal(false)}
+            />
         </div>
     );
 }
