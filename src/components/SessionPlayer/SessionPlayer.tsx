@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Play, Pause, Volume2, VolumeX, Rewind, FastForward, Palette, Waves, Mic, MicOff } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Rewind, FastForward, Palette, Waves, Mic, MicOff, AudioLines } from 'lucide-react';
 import styles from './SessionPlayer.module.scss';
 import type { SessionType, SessionEvent, AmbientSound, SessionSegment, BreathingPattern } from '../../types/session';
 import BreathingPulse from '../BreathingPulse/BreathingPulse';
@@ -34,11 +34,12 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
     const ambientAudioRef = useRef<HTMLAudioElement>(null);
     const timerRef = useRef<number | null>(null);
 
+
     // 1. Create a unified timeline including both narration and breathing sections
     const timeline = useMemo(() => {
         const items: TimelineItem[] = [];
         let cumulativeTime = 0;
-
+        console.log(session)
         session.sessionData.segments.forEach(segment => {
             // Add narration events from the segment
             segment.events.forEach(event => {
@@ -88,7 +89,29 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
 
         if (currentItem.type === 'narration') {
             const audio = narrationAudioRef.current;
-            if (audio) {
+
+            // Check if this is a silence event (no audio URL)
+            if (!currentItem.data.audioUrl || currentItem.data.event_type === 'silence') {
+                // Handle silence with a timer, just like breathing
+                narrationAudioRef.current?.pause();
+                timerRef.current = setInterval(() => {
+                    setCurrentTime(prevTime => {
+                        const newTime = prevTime + 1;
+                        if (newTime >= currentItem.startTime + currentItem.duration) {
+                            if (timerRef.current) clearInterval(timerRef.current);
+                            // Advance to the next item
+                            if (currentItemIndex < timeline.length - 1) {
+                                setCurrentItemIndex(currentItemIndex + 1);
+                            } else {
+                                setIsPlaying(false); // End of session
+                            }
+                            return currentItem.startTime + currentItem.duration;
+                        }
+                        return newTime;
+                    });
+                }, 1000);
+            } else if (audio) {
+                // Handle normal narration with audio
                 if (audio.src !== currentItem.data.audioUrl) {
                     audio.src = currentItem.data.audioUrl;
                 }
@@ -131,13 +154,15 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
         if (!audio) return;
 
         const handleTimeUpdate = () => {
-            if (currentItem?.type === 'narration' && !audio.paused) {
+            // Only update time for narration events that have audio
+            if (currentItem?.type === 'narration' && currentItem.data.audioUrl && !audio.paused) {
                 setCurrentTime(currentItem.startTime + audio.currentTime);
             }
         };
 
         const handleAudioEnded = () => {
-            if (currentItem?.type === 'narration') {
+            // Only handle ended event for narration with audio
+            if (currentItem?.type === 'narration' && currentItem.data.audioUrl) {
                 if (currentItemIndex < timeline.length - 1) {
                     setCurrentItemIndex(currentItemIndex + 1);
                 } else {
@@ -364,7 +389,7 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
                         onClick={onOpenAmbientSwitcher}
                         title="Ambient Sound"
                     >
-                        <Waves size={24} />
+                        <AudioLines size={24} />
                     </button>
                     <button
                         className={styles.controlButton}

@@ -168,7 +168,11 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        color: var(--theme-main-text-t1);
+        color: $main-text;
         margin: 0 0 0.5rem 0;
+    }
+
+    & p {
+        color: $main-text;
     }
 }

@@ -28,7 +28,7 @@ export default function SessionComplete({ sessionId, userId }: SessionCompletePr
         }
 
         setTimeout(() => {
-            navigate('/');
+            userId ? navigate('/dashboard') : navigate('/');
         }, 1500);
     };
 

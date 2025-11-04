@@ -1,13 +1,27 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Heart, Brain, Zap, Moon, Sparkles, Armchair, BedSingle, UserSquare, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import axios from '../../utils/axios';
 import styles from './QuickStartModal.module.scss';
-import type { Subscription } from '../../utils/planCases/planTypes';
-import { maxDuration } from '../../utils/planCases/maxTime';
+import { GOALS, VOICES, POSITIONS, EYES } from '../../utils/sessionOptions';
+
+const goalIcons: Record<string, typeof Heart> = {
+    'STRESS_RELIEF': Heart,
+    'FOCUS': Brain,
+    'ENERGY': Zap,
+    'SLEEP': Moon,
+    'SILENCE': Sparkles,
+};
+
 interface QuickStartModalProps {
     isOpen: boolean;
     onClose: () => void;
+}
+
+interface SubscriptionModal {
+    plan: string;
+    remainingFreeSessions?: number;
+
 }
 
 interface SessionFormData {
@@ -18,35 +32,9 @@ interface SessionFormData {
     eyes: string;
 }
 
-const GOALS = [
-    { id: 'STRESS_RELIEF', label: 'Redukcja stresu', emoji: '🧘' },
-    { id: 'FOCUS', label: 'Koncentracja', emoji: '🎯' },
-    { id: 'SLEEP', label: 'Sen', emoji: '😴' },
-    { id: 'ENERGY', label: 'Energia', emoji: '⚡' },
-    { id: 'SILENCE', label: 'Cisza', emoji: '🌸' }
-];
-
-const VOICES = [
-    { id: 'LUNA', label: 'Luna', description: 'Kobiecy - miękki, kojący', free: true },
-    { id: 'LAUREN', label: 'Lauren', description: 'Kobiecy - uspokajający', free: true },
-    { id: 'CALEB', label: 'Caleb', description: 'Męski - kojący, łagodny', free: false },
-    { id: 'DANIEL', label: 'Daniel', description: 'Męski - silny, pewny siebie', free: false }
-];
-
-const POSITIONS = [
-    { id: 'SITTING', label: 'Siedząca', emoji: '🪑' },
-    { id: 'LYING', label: 'Leżąca', emoji: '🛏️' },
-    { id: 'STANDING', label: 'Stojąca', emoji: '🧍' }
-];
-
-const EYES = [
-    { id: 'CLOSED', label: 'Zamknięte', emoji: '👁️' },
-    { id: 'OPEN', label: 'Otwarte', emoji: '👀' }
-];
-
 export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProps) {
     const navigate = useNavigate();
-    const [subscription, setSubscription] = useState<Subscription | null>(null);
+    const [subscription, setSubscription] = useState<SubscriptionModal | null>(null);
     const [formData, setFormData] = useState<SessionFormData>({
         goal: 'STRESS_RELIEF',
         duration: 5,
@@ -92,7 +80,7 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
             setLoadingData(false);
         }
     };
-
+    console.log(formData)
     const handleStartSession = () => {
         // Navigate to session page with form data
         // The Session page will handle calling the generate API
@@ -114,60 +102,71 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                 </button>
 
                 <div className={styles.modalContent}>
-                    <h2 className={styles.modalTitle}>Rozpocznij sesję meditacji</h2>
+                    <h2 className={styles.modalTitle}>Start a meditation session</h2>
 
-                    {subscription?.plan === 'FREE' && (
+                    {subscription?.plan.toUpperCase() === 'FREE' && (
                         <div className={styles.quotaDisplay}>
                             <span className={styles.quotaText}>
-                                {subscription.remainingFreeSessions}/3 darmowych sesji pozostało
+                                {subscription.remainingFreeSessions}/3 free sessions remaining
                             </span>
                         </div>
                     )}
 
                     {loadingData ? (
-                        <div className={styles.loading}>Ładowanie...</div>
+                        <div className={styles.loading}>Loading...</div>
                     ) : (
                         <>
                             <div className={styles.section}>
-                                <label className={styles.sectionLabel}>Wybierz cel</label>
+                                <label className={styles.sectionLabel}>Choose a goal</label>
                                 <div className={styles.goalsGrid}>
-                                    {GOALS.map(goal => (
-                                        <button
-                                            key={goal.id}
-                                            className={`${styles.goalCard} ${formData.goal === goal.id ? styles.selected : ''}`}
-                                            onClick={() => setFormData({ ...formData, goal: goal.id })}
-                                        >
-                                            <span className={styles.goalEmoji}>{goal.emoji}</span>
-                                            <span className={styles.goalLabel}>{goal.label}</span>
-                                        </button>
-                                    ))}
+                                    {GOALS.map(goal => {
+                                        const IconComponent = goalIcons[goal.id] || Heart;
+                                        return (
+                                            <button
+                                                key={goal.id}
+                                                className={`${styles.goalCard} ${formData.goal === goal.id ? styles.selected : ''}`}
+                                                onClick={() => setFormData({ ...formData, goal: goal.id })}
+                                            >
+                                                <IconComponent className={styles.goalIcon} size={28} />
+                                                <span className={styles.goalLabel}>{goal.label}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
                             <div className={styles.section}>
-                                <label className={styles.sectionLabel}>
-                                    Czas trwania: {formData.duration} min
-                                </label>
-                                <input
-                                    type="range"
-                                    min="5"
-                                    max={maxDuration(subscription)}
-                                    step="5"
-                                    value={formData.duration}
-                                    onChange={(e) => setFormData({ ...formData, duration: Number(e.target.value) })}
-                                    className={styles.slider}
-                                />
-                                <div className={styles.sliderLabels}>
-                                    <span>5 min</span>
-                                    <span>{maxDuration(subscription)} min</span>
+                                <label className={styles.sectionLabel}>Duration</label>
+                                <div className={styles.optionsGrid}>
+                                    {[5, 10, 15, 20, 25, 30].map(duration => {
+                                        const isDisabled =
+                                            (subscription?.plan.toLowerCase() === 'free' && duration > 5) ||
+                                            (subscription?.plan.toLowerCase() === 'standard' && duration > 15);
+
+                                        return (
+                                            <button
+                                                key={duration}
+                                                className={`${styles.optionCard} ${formData.duration === duration ? styles.selected : ''} ${isDisabled ? styles.disabled : ''}`}
+                                                onClick={() => !isDisabled && setFormData({ ...formData, duration: duration })}
+                                                disabled={isDisabled}
+                                            >
+                                                <span className={styles.optionLabel}>{duration} min</span>
+                                                {isDisabled && subscription?.plan.toLowerCase() !== 'premium' && (
+                                                    <span className={styles.premiumBadge}>
+                                                        {subscription?.plan.toLowerCase() === 'free' && duration <= 15 ? 'Standard' : 'Premium'}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
                             <div className={styles.section}>
-                                <label className={styles.sectionLabel}>Wybierz głos</label>
+                                <label className={styles.sectionLabel}>Choose a voice</label>
                                 <div className={styles.voicesGrid}>
                                     {VOICES.map(voice => {
-                                        const isDisabled = !voice.free && subscription?.plan === 'FREE';
+                                        const isDisabled = !voice.free && subscription?.plan.toUpperCase() === 'FREE';
                                         return (
                                             <button
                                                 key={voice.id}
@@ -178,7 +177,7 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                                                 <div className={styles.voiceHeader}>
                                                     <span className={styles.voiceLabel}>{voice.label}</span>
                                                     {!voice.free && (
-                                                        <span className={styles.premiumBadge}>Premium</span>
+                                                        <span className={styles.premiumBadge}>Standard</span>
                                                     )}
                                                 </div>
                                                 <span className={styles.voiceDescription}>{voice.description}</span>
@@ -189,34 +188,42 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                             </div>
 
                             <div className={styles.section}>
-                                <label className={styles.sectionLabel}>Pozycja</label>
+                                <label className={styles.sectionLabel}>Position</label>
                                 <div className={styles.optionsGrid}>
-                                    {POSITIONS.map(position => (
-                                        <button
-                                            key={position.id}
-                                            className={`${styles.optionCard} ${formData.position === position.id ? styles.selected : ''}`}
-                                            onClick={() => setFormData({ ...formData, position: position.id })}
-                                        >
-                                            <span className={styles.optionEmoji}>{position.emoji}</span>
-                                            <span className={styles.optionLabel}>{position.label}</span>
-                                        </button>
-                                    ))}
+                                    {POSITIONS.map(position => {
+                                        const PositionIcon = position.id === 'SITTING' ? Armchair :
+                                            position.id === 'LYING' ? BedSingle :
+                                                UserSquare;
+                                        return (
+                                            <button
+                                                key={position.id}
+                                                className={`${styles.optionCard} ${formData.position === position.id ? styles.selected : ''}`}
+                                                onClick={() => setFormData({ ...formData, position: position.id })}
+                                            >
+                                                <PositionIcon size={24} className={styles.optionIcon} />
+                                                <span className={styles.optionLabel}>{position.label}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
                             <div className={styles.section}>
-                                <label className={styles.sectionLabel}>Oczy</label>
+                                <label className={styles.sectionLabel}>Eyes</label>
                                 <div className={styles.optionsGrid}>
-                                    {EYES.map(eyes => (
-                                        <button
-                                            key={eyes.id}
-                                            className={`${styles.optionCard} ${formData.eyes === eyes.id ? styles.selected : ''}`}
-                                            onClick={() => setFormData({ ...formData, eyes: eyes.id })}
-                                        >
-                                            <span className={styles.optionEmoji}>{eyes.emoji}</span>
-                                            <span className={styles.optionLabel}>{eyes.label}</span>
-                                        </button>
-                                    ))}
+                                    {EYES.map(eyes => {
+                                        const EyeIcon = eyes.id === 'CLOSED' ? EyeOff : Eye;
+                                        return (
+                                            <button
+                                                key={eyes.id}
+                                                className={`${styles.optionCard} ${formData.eyes === eyes.id ? styles.selected : ''}`}
+                                                onClick={() => setFormData({ ...formData, eyes: eyes.id })}
+                                            >
+                                                <EyeIcon size={24} className={styles.optionIcon} />
+                                                <span className={styles.optionLabel}>{eyes.label}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
@@ -224,11 +231,11 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                                 className={styles.startButton}
                                 onClick={handleStartSession}
                             >
-                                Rozpocznij
+                                Start
                             </button>
 
                             <p className={styles.footerText}>
-                                Używane ustawienia: Twoje preferencje
+                                Using preferences: Your settings
                             </p>
                         </>
                     )}

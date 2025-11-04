@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Save, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
+import { GOALS, VOICES, POSITIONS, EYES } from '../../utils/sessionOptions';
 import Navigation from '../../components/Navigation/Navigation';
 import styles from './Preferences.module.scss';
 import axios from '../../utils/axios';
+
 
 interface UserPreferences {
     preferredVoice: string;
@@ -16,32 +18,6 @@ interface UserPreferences {
 interface Subscription {
     plan: string;
 }
-
-const GOALS = [
-    { id: 'STRESS_RELIEF', label: 'Redukcja stresu', emoji: '🧘' },
-    { id: 'FOCUS', label: 'Koncentracja', emoji: '🎯' },
-    { id: 'SLEEP', label: 'Sen', emoji: '😴' },
-    { id: 'ENERGY', label: 'Energia', emoji: '⚡' },
-    { id: 'SILENCE', label: 'Cisza', emoji: '🌸' }
-];
-
-const VOICES = [
-    { id: 'LUNA', label: 'Luna', description: 'Kojący, kobiecy głos', free: true },
-    { id: 'MILO', label: 'Milo', description: 'Spokojny, męski głos', free: true },
-    { id: 'ARIA', label: 'Aria', description: 'Delikatny, melodyjny głos', free: false },
-    { id: 'ZEN', label: 'Zen', description: 'Głęboki, medytacyjny głos', free: false }
-];
-
-const POSITIONS = [
-    { id: 'SITTING', label: 'Pozycja siedząca', emoji: '🪑' },
-    { id: 'LYING', label: 'Pozycja leżąca', emoji: '🛏️' },
-    { id: 'STANDING', label: 'Pozycja stojąca', emoji: '🧍' }
-];
-
-const EYES = [
-    { id: 'CLOSED', label: 'Zamknięte oczy', emoji: '👁️' },
-    { id: 'OPEN', label: 'Otwarte oczy', emoji: '👀' }
-];
 
 export default function Preferences() {
     const navigate = useNavigate();
@@ -104,19 +80,17 @@ export default function Preferences() {
 
     const isVoiceDisabled = (voiceId: string) => {
         const voice = VOICES.find(v => v.id === voiceId);
-        return !voice?.free && subscription?.plan === 'FREE';
+        return !voice?.free && subscription?.plan === 'FREE'.toLowerCase();
     };
 
     if (loading) {
         return (
             <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
                 <Navigation type="dashboard" />
-                <div className={styles.loading}>Ładowanie...</div>
+                <div className={styles.loading}>Loading...</div>
             </div>
         );
     }
-
-    const maxDuration = subscription?.plan === 'PRO' ? 30 : 15;
 
     return (
         <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
@@ -126,41 +100,45 @@ export default function Preferences() {
                 <div className={styles.header}>
                     <button className={styles.backButton} onClick={() => navigate('/dashboard')}>
                         <ArrowLeft size={20} />
-                        <span>Powrót do panelu</span>
+                        Back to dashboard
                     </button>
-                    <h1 className={styles.title}>Preferencje meditacji</h1>
+                    <h1 className={styles.title}>Meditation Preferences</h1>
                     <p className={styles.subtitle}>
-                        Ustaw swoje domyślne preferencje dla szybkiego startu sesji
+                        Set your default preferences for quick session starts
                     </p>
                 </div>
 
                 {showSuccess && (
                     <div className={styles.successBanner}>
-                        ✓ Preferencje zapisane pomyślnie!
+                        <CheckCircle size={20} />
+                        Preferences saved successfully!
                     </div>
                 )}
 
                 <div className={styles.sections}>
                     {/* Goal Section */}
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Domyślny cel</h2>
+                        <h2 className={styles.sectionTitle}>Default Goal</h2>
                         <div className={styles.grid}>
-                            {GOALS.map(goal => (
-                                <button
-                                    key={goal.id}
-                                    className={`${styles.card} ${preferences.preferredGoal === goal.id ? styles.selected : ''}`}
-                                    onClick={() => setPreferences({ ...preferences, preferredGoal: goal.id })}
-                                >
-                                    <span className={styles.emoji}>{goal.emoji}</span>
-                                    <span className={styles.label}>{goal.label}</span>
-                                </button>
-                            ))}
+                            {GOALS.map(goal => {
+                                const IconComponent = goal.icon;
+                                return (
+                                    <button
+                                        key={goal.id}
+                                        className={`${styles.card} ${preferences.preferredGoal === goal.id ? styles.selected : ''}`}
+                                        onClick={() => setPreferences({ ...preferences, preferredGoal: goal.id })}
+                                    >
+                                        <IconComponent className={styles.icon} size={28} />
+                                        <span className={styles.label}>{goal.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* Voice Section */}
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Preferowany głos</h2>
+                        <h2 className={styles.sectionTitle}>Preferred Voice</h2>
                         <div className={styles.grid}>
                             {VOICES.map(voice => (
                                 <button
@@ -171,7 +149,7 @@ export default function Preferences() {
                                 >
                                     <span className={styles.voiceName}>{voice.label}</span>
                                     <span className={styles.voiceDescription}>{voice.description}</span>
-                                    {!voice.free && subscription?.plan === 'FREE' && (
+                                    {!voice.free && subscription?.plan.toUpperCase() === 'FREE' && (
                                         <span className={styles.badge}>Premium</span>
                                     )}
                                 </button>
@@ -181,55 +159,69 @@ export default function Preferences() {
 
                     {/* Duration Section */}
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>
-                            Domyślny czas trwania: {preferences.preferredDuration} min
-                        </h2>
-                        <input
-                            type="range"
-                            min="5"
-                            max={maxDuration}
-                            step="5"
-                            value={preferences.preferredDuration}
-                            onChange={(e) => setPreferences({ ...preferences, preferredDuration: Number(e.target.value) })}
-                            className={styles.slider}
-                        />
-                        <div className={styles.sliderLabels}>
-                            <span>5 min</span>
-                            <span>{maxDuration} min</span>
+                        <h2 className={styles.sectionTitle}>Default Duration</h2>
+                        <div className={styles.grid}>
+                            {[5, 10, 15, 20, 25, 30].map(duration => {
+                                const isDisabled =
+                                    (subscription?.plan.toLowerCase() === 'free' && duration > 5) ||
+                                    (subscription?.plan.toLowerCase() === 'standard' && duration > 15);
+
+                                return (
+                                    <button
+                                        key={duration}
+                                        className={`${styles.card} ${preferences.preferredDuration === duration ? styles.selected : ''} ${isDisabled ? styles.disabled : ''}`}
+                                        onClick={() => !isDisabled && setPreferences({ ...preferences, preferredDuration: duration })}
+                                        disabled={isDisabled}
+                                    >
+                                        <span className={styles.durationLabel}>{duration} min</span>
+                                        {isDisabled && subscription?.plan.toLowerCase() !== 'premium' && (
+                                            <span className={styles.badge}>
+                                                {subscription?.plan.toLowerCase() === 'free' && duration <= 15 ? 'Standard' : 'Premium'}
+                                            </span>
+                                        )}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* Position Section */}
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Preferowana pozycja</h2>
+                        <h2 className={styles.sectionTitle}>Preferred Position</h2>
                         <div className={styles.grid}>
-                            {POSITIONS.map(position => (
-                                <button
-                                    key={position.id}
-                                    className={`${styles.card} ${preferences.preferredPosition === position.id ? styles.selected : ''}`}
-                                    onClick={() => setPreferences({ ...preferences, preferredPosition: position.id })}
-                                >
-                                    <span className={styles.emoji}>{position.emoji}</span>
-                                    <span className={styles.label}>{position.label}</span>
-                                </button>
-                            ))}
+                            {POSITIONS.map(position => {
+                                const PositionIcon = position.icon;
+                                return (
+                                    <button
+                                        key={position.id}
+                                        className={`${styles.card} ${preferences.preferredPosition === position.id ? styles.selected : ''}`}
+                                        onClick={() => setPreferences({ ...preferences, preferredPosition: position.id })}
+                                    >
+                                        <PositionIcon size={24} className={styles.icon} />
+                                        <span className={styles.label}>{position.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* Eyes Section */}
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Preferowane oczy</h2>
+                        <h2 className={styles.sectionTitle}>Preferred Eyes</h2>
                         <div className={styles.grid}>
-                            {EYES.map(eyes => (
-                                <button
-                                    key={eyes.id}
-                                    className={`${styles.card} ${preferences.preferredEyes === eyes.id ? styles.selected : ''}`}
-                                    onClick={() => setPreferences({ ...preferences, preferredEyes: eyes.id })}
-                                >
-                                    <span className={styles.emoji}>{eyes.emoji}</span>
-                                    <span className={styles.label}>{eyes.label}</span>
-                                </button>
-                            ))}
+                            {EYES.map(eyes => {
+                                const EyeIcon = eyes.icon;
+                                return (
+                                    <button
+                                        key={eyes.id}
+                                        className={`${styles.card} ${preferences.preferredEyes === eyes.id ? styles.selected : ''}`}
+                                        onClick={() => setPreferences({ ...preferences, preferredEyes: eyes.id })}
+                                    >
+                                        <EyeIcon size={24} className={styles.icon} />
+                                        <span className={styles.label}>{eyes.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
@@ -240,7 +232,7 @@ export default function Preferences() {
                     disabled={saving}
                 >
                     <Save size={20} />
-                    {saving ? 'Zapisywanie...' : 'Zapisz preferencje'}
+                    {saving ? 'Saving...' : 'Save Preferences'}
                 </button>
             </main>
         </div>

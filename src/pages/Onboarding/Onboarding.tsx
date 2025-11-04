@@ -56,7 +56,7 @@ const Onboarding: React.FC = () => {
         { id: 'FOCUS' as Goal, label: 'Focus & Clarity', icon: Brain, pattern: '4-4-4-4' },
         { id: 'ENERGY' as Goal, label: 'Energy Boost', icon: Zap, pattern: '4-0-4-0' },
         { id: 'SLEEP' as Goal, label: 'Better Sleep', icon: Moon, pattern: '4-7-8-0' },
-        { id: 'ANXIETY' as Goal, label: 'Manage Anxiety', icon: Heart, pattern: '4-0-6-0' },
+        // { id: 'ANXIETY' as Goal, label: 'Manage Anxiety', icon: Heart, pattern: '4-0-6-0' },
         { id: 'SILENCE' as Goal, label: 'Silence.', icon: Sparkles, pattern: '4-4-4-4' },
     ];
 

@@ -1,21 +1,111 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Play, Clock, Calendar } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Heart, Sparkles, Flame, Clock, Calendar, Play, ArrowRight } from 'lucide-react';
+import { getGoalById } from '../../utils/sessionOptions';
 import styles from './HomeLoggedUser.module.scss';
 import Navigation from '../../components/Navigation/Navigation';
 import { useAuth } from '../../context/AuthContext';
 import { setWithExpiry, getWithExpiry } from '../../utils/storage';
 import EmailVerificationModal from '../../components/EmailVerificationModal/EmailVerificationModal';
 import QuickStartModal from '../../components/QuickStartModal/QuickStartModal';
+import StatsCards from '../../components/StatsCards/StatsCards';
+import GoalBreakdownChart from '../../components/GoalBreakdownChart/GoalBreakdownChart';
+import axios from '../../utils/axios';
+import { useNavigate } from 'react-router';
+
+interface SessionResponse {
+    id: string;
+    goal: string;
+    durationMinutes: number;
+    voice: string;
+    position: string;
+    eyes: string;
+    ambientSound: string;
+    createdAt: string;
+    completedAt?: string;
+}
+
+interface AnalyticsOverview {
+    totalSessions: number;
+    totalMinutes: number;
+    currentStreak: number;
+    longestStreak: number;
+    lastSessionDate: string | null;
+}
+
+interface GoalBreakdown {
+    goalCounts: Record<string, number>;
+}
+
+const sessionCountFetchLimit = 6 as const;
 
 export default function HomeLoggedUser() {
-
-    const [streak] = useState(5);
+    const navigate = useNavigate();
 
     const { user, sendVerificationEmail } = useAuth();
-    // const [userName] = useState(user?.name || "");
     const [showVerifyModal, setShowVerifyModal] = useState(false);
     const [showQuickStartModal, setShowQuickStartModal] = useState(false);
-    console.log(user)
+    const [recentSessions, setRecentSessions] = useState<SessionResponse[]>([]);
+    const [loadingSessions, setLoadingSessions] = useState(true);
+    const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
+    const [goalBreakdown, setGoalBreakdown] = useState<GoalBreakdown | null>(null);
+    const [loadingAnalytics, setLoadingAnalytics] = useState(true);
+
+    useEffect(() => {
+        fetchRecentSessions();
+        fetchAnalytics();
+        fetchGoalBreakdown();
+    }, []);
+
+    useEffect(() => {
+        console.log('Analytics state updated:', analytics);
+        console.log('Loading analytics:', loadingAnalytics);
+    }, [analytics, loadingAnalytics]);
+
+    useEffect(() => {
+        console.log('Goal breakdown state updated:', goalBreakdown);
+    }, [goalBreakdown]);
+
+    const fetchAnalytics = async () => {
+        try {
+            const response = await axios.get('/analytics/overview');
+
+            console.log(response)
+
+            console.log('Analytics response:', response.data);
+            console.log('Full response:', response);
+            console.log('Success field:', response.data.success);
+            console.log('Data field:', response.data.data);
+
+            if (response.data.success) {
+                setAnalytics(response.data.data);
+                console.log('Analytics data set:', response.data.data);
+            } else {
+                console.error('Analytics request succeeded but success=false:', response.data);
+            }
+        } catch (error: any) {
+            console.error('Error fetching analytics:', error);
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+            }
+        } finally {
+            setLoadingAnalytics(false);
+        }
+    };
+
+    const fetchGoalBreakdown = async () => {
+        try {
+            const response = await axios.get('/analytics/by-goal');
+            console.log('Goal breakdown response:', response.data);
+
+            if (response.data.success) {
+                setGoalBreakdown(response.data.data);
+                console.log('Goal breakdown data set:', response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching goal breakdown:', error);
+        }
+    };
 
     useEffect(() => {
         if (user && !user.emailVerified) {
@@ -40,95 +130,41 @@ export default function HomeLoggedUser() {
         setShowVerifyModal(false);
     };
 
-    const [recentSessions] = useState([
-        {
-            id: 1,
-            date: '2025-10-26',
-            time: '20:30',
-            duration: 10,
-            goal: 'Lepiej spać',
-            feedback: 'calm',
-            voice: 'Anna'
-        },
-        {
-            id: 2,
-            date: '2025-10-25',
-            time: '19:15',
-            duration: 15,
-            goal: 'Zmniejszyć stres',
-            feedback: 'calm',
-            voice: 'Michał'
-        },
-        {
-            id: 3,
-            date: '2025-10-24',
-            time: '07:00',
-            duration: 5,
-            goal: 'Dodać energii',
-            feedback: 'okay',
-            voice: 'Anna'
-        },
-        {
-            id: 4,
-            date: '2025-10-23',
-            time: '21:00',
-            duration: 10,
-            goal: 'Lepiej spać',
-            feedback: 'calm',
-            voice: 'Anna'
-        },
-        {
-            id: 5,
-            date: '2025-10-22',
-            time: '08:30',
-            duration: 15,
-            goal: 'Poprawić koncentrację',
-            feedback: 'calm',
-            voice: 'Michał'
+    const fetchRecentSessions = async () => {
+        try {
+            const response = await axios.get('/sessions/user?limit=' + sessionCountFetchLimit);
+            console.log('Recent sessions response:', response.data);
+
+            if (response.data.success) {
+                setRecentSessions(response.data.data);
+                console.log('Recent sessions set:', response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching sessions:', error);
+        } finally {
+            setLoadingSessions(false);
         }
-    ]);
+    };
 
-    const quotes = [
-        { text: "Spokój umysłu to najcenniejszy skarb.", author: "Budda" },
-        { text: "W ciszy odnajdujesz swoją prawdziwą siłę.", author: "Lao Tzu" },
-        { text: "Medytacja to podróż od dźwięku do ciszy.", author: "Rumi" },
-        { text: "Oddech jest mostem łączącym ciało z umysłem.", author: "Thích Nhất Hạnh" },
-        { text: "Spokój zaczyna się od jednego oddechu.", author: "Anonimowy" }
-    ];
-
-    const [dailyQuote] = useState(quotes[Math.floor(Math.random() * quotes.length)]);
+    const handleSessionClick = (sessionId: string) => {
+        navigate(`/session/${sessionId}`);
+    };
 
     const getTimeGreeting = () => {
         const hour = new Date().getHours();
-        if (hour < 12) return 'Dzień dobry';
-        if (hour < 18) return 'Dzień dobry';
-        return 'Dobry wieczór';
+        if (hour < 12) return 'Good morning';
+        if (hour < 18) return 'Good afternoon';
+        return 'Good evening';
     };
-
-    const getFeedbackEmoji = (feedback: string) => {
-        switch (feedback) {
-            case 'calm': return '😌';
-            case 'okay': return '🙂';
-            case 'not_great': return '😐';
-            default: return '🙂';
-        }
-    };
-
-    const getGoalEmoji = (goal: string) => {
-        switch (goal) {
-            case 'Zmniejszyć stres': return '🧘';
-            case 'Lepiej spać': return '😴';
-            case 'Poprawić koncentrację': return '🎯';
-            case 'Dodać energii': return '⚡';
-            case 'Po prostu usiąść w ciszy': return '🤫';
-            default: return '🧘';
-        }
-    };
-
+    console.log(recentSessions)
     const calendarData = useMemo(() => {
         const today = new Date();
         const weeks = [];
-        const sessionDates = new Set(recentSessions.map(s => s.date));
+        const sessionDates = new Set(
+            recentSessions
+                .filter(s => s.createdAt)
+                .map(s => new Date(s.createdAt).toISOString().split('T')[0])
+        );
 
         const startDate = new Date(today);
         startDate.setDate(startDate.getDate() - 56);
@@ -163,130 +199,112 @@ export default function HomeLoggedUser() {
     return (
         <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
             <Navigation type="dashboard" />
-            {/* Header */}
-            {/* <header className={styles.header}>
-                <div className={styles.headerContainer}>
-                    <div className={styles.headerLeft}>
-                        <div className={styles.avatar}>
-                            {userName[0]}
-                        </div>
-                        <div className={styles.logo}>
-                            CalmJourneyer
-                        </div>
-                    </div>
-                    <button className={styles.menuButton}>
-                        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="1" />
-                            <circle cx="12" cy="5" r="1" />
-                            <circle cx="12" cy="19" r="1" />
-                        </svg>
-                    </button>
-                </div>
-            </header> */}
 
-            {/* Main Content */}
             <main className={styles.main}>
                 {/* Greeting Section */}
                 <div className={styles.greeting}>
                     <h1 className={styles.greetingTitle}>
                         {getTimeGreeting()}, {user?.name || 'User'}
                     </h1>
-                    <div className={styles.streakBadge}>
-                        <span className={styles.streakEmoji}>🔥</span>
-                        <span className={styles.streakText}>{streak} dni z rzędu</span>
-                    </div>
                 </div>
 
-                {/* Two Column Layout */}
+                {/* Analytics Stats Cards */}
+                {!loadingAnalytics && analytics && (
+                    <StatsCards
+                        currentStreak={analytics.currentStreak}
+                        totalSessions={analytics.totalSessions}
+                        totalMinutes={analytics.totalMinutes}
+                        longestStreak={analytics.longestStreak}
+                    />
+                )}
+
                 <div className={styles.layout}>
-                    {/* Left Column - Main Content */}
                     <div className={styles.mainColumn}>
-                        {/* Start Session Button */}
                         <button className={styles.startButton} onClick={() => setShowQuickStartModal(true)}>
-                            <Play className={styles.playIcon} fill="white" />
-                            <span className={styles.startButtonText}>Rozpocznij sesję</span>
+                            <Play className={styles.playIcon} />
+                            <span className={styles.startButtonText}>Start Session</span>
                         </button>
 
-                        {/* Recent Sessions */}
                         <div className={styles.sessionsSection}>
-                            <h2 className={styles.sectionTitle}>Ostatnie sesje</h2>
+                            <div className={styles.sectionHeader}>
+                                <h2 className={styles.sectionTitle}>Recent Sessions</h2>
+                                <button
+                                    className={styles.viewAllButton}
+                                    onClick={() => navigate('/history')}
+                                >
+                                    View All
+                                    <ArrowRight size={16} />
+                                </button>
+                            </div>
 
-                            {recentSessions.length === 0 ? (
+                            {loadingSessions ? (
+                                <div className={styles.loading}>Loading sessions...</div>
+                            ) : recentSessions.length === 0 ? (
                                 <div className={styles.emptyState}>
-                                    <div className={styles.emptyEmoji}>🧘</div>
-                                    <p className={styles.emptyText}>Rozpocznij swoją pierwszą sesję medytacji</p>
+                                    <Sparkles className={styles.emptyEmoji} size={60} />
+                                    <p className={styles.emptyText}>Start your first meditation session</p>
                                 </div>
                             ) : (
                                 <div className={styles.sessionsList}>
-                                    {recentSessions.map((session) => (
-                                        <div key={session.id} className={styles.sessionCard}>
-                                            <div className={styles.sessionContent}>
-                                                <div className={styles.sessionLeft}>
-                                                    <div className={styles.goalEmoji}>
-                                                        {getGoalEmoji(session.goal)}
-                                                    </div>
-                                                    <div className={styles.sessionInfo}>
-                                                        <h3 className={styles.sessionGoal}>
-                                                            {session.goal}
-                                                        </h3>
-                                                        <div className={styles.sessionMeta}>
-                                                            <span className={styles.metaItem}>
-                                                                <Clock className={styles.metaIcon} />
-                                                                {session.duration} min
-                                                            </span>
-                                                            <span className={styles.metaItem}>
-                                                                <Calendar className={styles.metaIcon} />
-                                                                {new Date(session.date).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })}
-                                                            </span>
+                                    {recentSessions.map((session) => {
+                                        const goal = getGoalById(session.goal);
+                                        const GoalIcon = goal?.icon || Heart;
+
+                                        return (
+                                            <div
+                                                key={session.id}
+                                                className={styles.sessionCard}
+                                                onClick={() => handleSessionClick(session.id)}
+                                            >
+                                                <div className={styles.sessionContent}>
+                                                    <div className={styles.sessionLeft}>
+                                                        <GoalIcon className={styles.goalIcon} size={24} />
+                                                        <div className={styles.sessionInfo}>
+                                                            <h3 className={styles.sessionGoal}>
+                                                                {goal?.label || session.goal}
+                                                            </h3>
+                                                            <div className={styles.sessionMeta}>
+                                                                <span className={styles.metaItem}>
+                                                                    <Clock className={styles.metaIcon} />
+                                                                    {session.durationMinutes} min
+                                                                </span>
+                                                                <span className={styles.metaItem}>
+                                                                    {new Date(session.createdAt).toLocaleDateString()}
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div className={styles.sessionRight}>
-                                                    <div className={styles.feedbackEmoji}>
-                                                        {getFeedbackEmoji(session.feedback)}
+                                                    <div className={styles.sessionRight}>
+                                                        {/* Optional: Add a repeat button or feedback here */}
                                                     </div>
-                                                    <button className={styles.repeatButton}>
-                                                        Powtórz
-                                                    </button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Right Column - Sidebar */}
                     <div className={styles.sidebar}>
-                        {/* Daily Quote */}
-                        <div className={styles.card}>
-                            <div className={styles.quoteEmoji}>✨</div>
-                            <blockquote className={styles.quoteText}>
-                                "{dailyQuote.text}"
-                            </blockquote>
-                            <p className={styles.quoteAuthor}>— {dailyQuote.author}</p>
-                        </div>
+                        {/* Goal Breakdown Chart */}
+                        {goalBreakdown && (
+                            <GoalBreakdownChart goalCounts={goalBreakdown.goalCounts} />
+                        )}
 
-                        {/* Session Calendar */}
                         <div className={styles.card}>
                             <h3 className={styles.cardTitle}>
                                 <Calendar className={styles.cardTitleIcon} />
-                                Twoja aktywność
+                                Your Activity
                             </h3>
 
                             <div className={styles.calendarWrapper}>
-                                {/* Day labels */}
                                 <div className={styles.calendarDayLabels}>
-                                    {['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'].map(day => (
-                                        <div key={day} className={styles.dayLabel}>
-                                            {day}
-                                        </div>
+                                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+                                        <div key={day} className={styles.dayLabel}>{day}</div>
                                     ))}
                                 </div>
 
-                                {/* Calendar grid */}
                                 <div className={styles.calendarGrid}>
                                     {calendarData.map((week, weekIndex) => (
                                         <div key={weekIndex} className={styles.calendarWeek}>
@@ -299,7 +317,7 @@ export default function HomeLoggedUser() {
                                                             ? styles.dayActive
                                                             : styles.dayInactive
                                                         }`}
-                                                    title={day.dateStr}
+                                                    title={!day.isPast ? 'Future date' : day.hasSession ? `Session on ${day.date.toLocaleDateString()}` : 'No session'}
                                                 />
                                             ))}
                                         </div>
@@ -310,34 +328,11 @@ export default function HomeLoggedUser() {
                             <div className={styles.calendarLegend}>
                                 <div className={styles.legendItem}>
                                     <div className={`${styles.legendBox} ${styles.legendInactive}`}></div>
-                                    <span>Brak sesji</span>
+                                    <span>No session</span>
                                 </div>
                                 <div className={styles.legendItem}>
                                     <div className={`${styles.legendBox} ${styles.legendActive}`}></div>
-                                    <span>Sesja</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Stats Summary */}
-                        <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>Podsumowanie</h3>
-                            <div className={styles.stats}>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statLabel}>Wszystkich sesji</span>
-                                    <span className={styles.statValue}>{recentSessions.length}</span>
-                                </div>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statLabel}>Łącznie minut</span>
-                                    <span className={styles.statValue}>
-                                        {recentSessions.reduce((sum, s) => sum + s.duration, 0)}
-                                    </span>
-                                </div>
-                                <div className={styles.statItem}>
-                                    <span className={styles.statLabel}>Najdłuższa passa</span>
-                                    <span className={`${styles.statValue} ${styles.statStreak}`}>
-                                        {streak} 🔥
-                                    </span>
+                                    <span>Session</span>
                                 </div>
                             </div>
                         </div>
@@ -345,7 +340,6 @@ export default function HomeLoggedUser() {
                 </div>
             </main>
 
-            {/* Modals */}
             <EmailVerificationModal
                 isOpen={showVerifyModal}
                 onVerify={handleVerifyClick}

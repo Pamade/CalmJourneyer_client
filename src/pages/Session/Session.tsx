@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios';
 import { Loader, X } from 'lucide-react';
@@ -9,12 +9,12 @@ import SessionComplete from '../../components/SessionComplete/SessionComplete';
 import ThemeSwitcher from '../../components/ThemeSwitcher/ThemeSwitcher';
 import AmbientSoundSwitcher from '../../components/AmbientSoundSwitcher/AmbientSoundSwitcher';
 import ExitConfirmationModal from '../../components/ExitConfirmationModal/ExitConfirmationModal';
-import publicAxiosInstance from '../../utils/publicAxiosInstance';
 import { useAuth } from '../../context/AuthContext';
 
 function Session() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { sessionId } = useParams<{ sessionId: string }>();
     const { user } = useAuth();
     const sessionData = location.state?.sessionData as OnboardingData;
 
@@ -46,25 +46,6 @@ function Session() {
         setIsComplete(true);
     };
 
-    // Save session to backend
-    const saveSessionToBackend = async (session: SessionType) => {
-        try {
-            await publicAxiosInstance.post('/api/sessions/create', {
-                sessionId: session.id,
-                goal: sessionData.goal,
-                durationMinutes: sessionData.duration,
-                voice: sessionData.voice,
-                position: sessionData.position,
-                eyes: sessionData.eyes,
-                ambientSound: session.ambientSound,
-            });
-
-            console.log('Session created in backend successfully');
-        } catch (err) {
-            console.error('Failed to save session to backend:', err);
-        }
-    };
-
     // Rotate quotes every 10 seconds while loading
     useEffect(() => {
         if (!isLoading) return;
@@ -77,44 +58,82 @@ function Session() {
     }, [isLoading, meditationQuotes.length]);
 
     useEffect(() => {
+        // Mode 1: Replay existing session (has sessionId in URL)
+        if (sessionId) {
+            fetchExistingSession();
+            return;
+        }
+
+        // Mode 2: Generate new session (has sessionData in state)
         if (!sessionData) {
             navigate('/onboarding');
             return;
         }
 
-        const generateSession = async () => {
-            try {
-                setError(null);
+        generateNewSession();
+    }, [sessionId, sessionData]);
 
-                const response = await axiosInstance.post<GenerateSessionResponse>('/sessions/generate', {
-                    goal: sessionData.goal,
-                    duration: sessionData.duration,
-                    voice: sessionData.voice,
-                    position: sessionData.position,
-                    eyes: sessionData.eyes,
-                });
+    // Fetch existing session for replay
+    const fetchExistingSession = async () => {
+        try {
+            setError(null);
+            const response = await axiosInstance.get<GenerateSessionResponse>(`/sessions/${sessionId}`);
 
-                if (response.data.success) {
-                    const session = response.data.data;
-                    setSessionResponse(session);
+            if (response.data.success) {
+                console.log(response.data)
+                const session = response.data.data;
 
-                    // Save session to backend after successful generation
-                    await saveSessionToBackend(session);
-                } else {
-                    setError(response.data.message || 'Failed to prepare your session.');
+                // Parse sessionData if it's a string (from DB)
+                if (typeof session.sessionData === 'string') {
+                    session.sessionData = JSON.parse(session.sessionData);
                 }
-                console.log(response)
 
-            } catch (err) {
-                console.error('Error generating session:', err);
-                setError('Failed to prepare your session. Please try again.');
-            } finally {
-                setIsLoading(false);
+                setSessionResponse(session);
+            } else {
+                setError(response.data.message || 'Failed to load session.');
             }
-        };
+        } catch (err) {
+            console.error('Error fetching session:', err);
+            setError('Failed to load session. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-        generateSession();
-    }, [sessionData]);
+    // Generate new session from sessionData
+    const generateNewSession = async () => {
+        const isOnBoardingCompleted = localStorage.getItem('is_onboarding_completed');
+        try {
+            setError(null);
+            if (!user && isOnBoardingCompleted === 'true') {
+                return setError('Please log in to generate a new session.');
+            }
+
+            const response = await axiosInstance.post<GenerateSessionResponse>('/sessions/generate', {
+                goal: sessionData.goal,
+                duration: sessionData.duration,
+                voice: sessionData.voice,
+                position: sessionData.position,
+                eyes: sessionData.eyes,
+            });
+
+            if (response.data.success) {
+                const session = response.data.data;
+                setSessionResponse(session);
+                if (!user && !isOnBoardingCompleted) {
+                    localStorage.setItem('is_onboarding_completed', 'true');
+                }
+                // Note: Session is already saved to DB by /sessions/generate endpoint
+            } else {
+                setError(response.data.message || 'Failed to prepare your session.');
+            }
+        } catch (err) {
+            console.error('Error generating session:', err);
+            setError('Failed to prepare your session. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     const handleThemeSelect = (newTheme: AmbientSound) => {
@@ -155,6 +174,39 @@ function Session() {
     }
 
     if (error) {
+        const token = localStorage.getItem('is_onboarding_completed');
+        // const isUserLoggedIn = !user;
+
+        // Not logged in + onboarding completed = redirect to login
+        if (!user && token === 'true') {
+            return (
+                <div className={`${styles.sessionContainer} ${styles.defaultBg}`}>
+                    <div className={styles.contentWrapper}>
+                        <div className={styles.error}>
+                            <h2>Login Required</h2>
+                            <p>Please log in to generate a new meditation session.</p>
+                            <button onClick={() => navigate('/login')}>Log In</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        if (!user && token !== 'true') {
+            return (
+                <div className={`${styles.sessionContainer} ${styles.defaultBg}`}>
+                    <div className={styles.contentWrapper}>
+                        <div className={styles.error}>
+                            <h2>Oops! Something wehnt wrong.</h2>
+
+                            <button onClick={() => navigate('/onboarding')}>Try Again</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Default error or not logged in + not onboarded = go to onboarding
         return (
             <div className={`${styles.sessionContainer} ${styles.defaultBg}`}>
                 <div className={styles.contentWrapper}>
@@ -174,13 +226,14 @@ function Session() {
 
     return (
         <div className={`${styles.sessionContainer} ${getThemeClass(sessionResponse.ambientSound)}`}>
-            <button
+            {!isComplete && <button
                 className={styles.exitButton}
                 onClick={() => setIsExitModalOpen(true)}
                 title="Exit Session"
             >
                 <X size={24} />
             </button>
+            }
             <div className={styles.contentWrapper}>
                 {isComplete ? (
                     <SessionComplete

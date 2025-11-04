@@ -1,6 +1,7 @@
 @import '../../variables/variables.scss';
 
 .modalOverlay {
+    // font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     position: fixed;
     top: 0;
     left: 0;
@@ -29,6 +30,29 @@
     animation-delay: 0.1s;
     max-height: 90vh;
     overflow-y: auto;
+
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: $accent #f1f1f1;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $accent;
+        border-radius: 10px;
+        transition: background 0.3s;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: darken($accent, 10%);
+    }
 }
 
 .closeButton {
@@ -117,19 +141,24 @@
     }
 
     &.selected {
-        background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
-        border-color: $accent-darker;
+        background: linear-gradient(135deg, #7CB342 0%, #9CCC65 100%);
+        border-color: #7CB342;
         color: white;
 
-        .goalEmoji {
+        .goalIcon {
             transform: scale(1.1);
+            color: white;
+        }
+
+        .goalLabel {
+            color: white;
         }
     }
 }
 
-.goalEmoji {
-    font-size: 2rem;
-    transition: transform 0.3s;
+.goalIcon {
+    color: $accent-darker;
+    transition: all 0.3s;
 }
 
 .goalLabel {
@@ -163,8 +192,8 @@
     }
 
     &.selected {
-        background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
-        border-color: $accent-darker;
+        background: linear-gradient(135deg, #7CB342 0%, #9CCC65 100%);
+        border-color: #7CB342;
         color: white;
 
         .voiceLabel,
@@ -210,7 +239,7 @@
     font-weight: 600;
     padding: 0.25rem 0.5rem;
     border-radius: 6px;
-    background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+    background: linear-gradient(135deg, $accent-darker 90%, $accent 100%);
     color: white;
 }
 
@@ -239,19 +268,35 @@
     }
 
     &.selected {
-        background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
-        border-color: $accent-darker;
+        background: linear-gradient(135deg, #7CB342 0%, #9CCC65 100%);
+        border-color: #7CB342;
         color: white;
 
-        .optionEmoji {
+        .optionIcon {
             transform: scale(1.1);
+            color: white;
+        }
+
+        .optionLabel {
+            color: white;
+        }
+    }
+
+    &.disabled {
+        opacity: 0.9;
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #e5e7eb;
         }
     }
 }
 
-.optionEmoji {
-    font-size: 2rem;
-    transition: transform 0.3s;
+.optionIcon {
+    color: $accent-darker;
+    transition: all 0.3s;
 }
 
 .optionLabel {
@@ -310,7 +355,7 @@
 
 .startButton {
     width: 100%;
-    background: linear-gradient(135deg, $accent-darker 0%, $accent 100%);
+    background: linear-gradient(135deg, #7CB342 0%, #9CCC65 100%);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -323,7 +368,7 @@
 
     &:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba($accent-darker, 0.4);
+        box-shadow: 0 6px 20px rgba(#7CB342, 0.4);
     }
 
     &:disabled {

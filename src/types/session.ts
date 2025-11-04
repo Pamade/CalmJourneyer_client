@@ -1,4 +1,4 @@
-export type Goal = "STRESS_RELIEF" | "FOCUS" | "ENERGY" | "SLEEP" | "ANXIETY";
+export type Goal = "STRESS_RELIEF" | "FOCUS" | "ENERGY" | "SLEEP" | "SILENCE";
 export type Eyes = "CLOSED" | "OPEN";
 export type Position = "SITTING" | "LYING" | "STANDING";
 export type Voice = "LUNA" | "LAUREN" | "CALEB" | "DANIEL";

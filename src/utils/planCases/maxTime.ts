@@ -1,10 +1,8 @@
-import type { Subscription } from '../planCases/planTypes';
-
-export const maxDuration = (subscription: Subscription | null): number => {
+export const maxDuration = (subscription: string | null): number => {
 
 
     let maxDuration: number;
-    switch (subscription?.plan) {
+    switch (subscription) {
         case 'free'.toLowerCase():
             maxDuration = 5;
             break;

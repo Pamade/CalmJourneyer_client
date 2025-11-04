@@ -2,9 +2,23 @@
 
 /* Page Layout */
 .page {
+    font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     min-height: 100vh;
     background: $background;
     box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+
+}
+
+@keyframes slow-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Header */
@@ -19,6 +33,21 @@
     margin: 0 auto;
     padding: 3rem 2rem;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Greeting */
@@ -35,17 +64,9 @@
     text-wrap: break-word;
 }
 
-.streakBadge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: $additional-accent;
-    border-radius: 9999px;
-}
 
-.streakEmoji {
-    font-size: 1.5rem;
+.streakIcon {
+    color: #ff6b35;
 }
 
 .streakText {
@@ -76,24 +97,60 @@
 /* Start Button */
 .startButton {
     width: 100%;
-    background: $accent;
-    color: $main-text;
+    background: linear-gradient(135deg, #7CB342 0%, #9CCC65 100%);
+    color: white;
     border-radius: 1rem;
-    padding: 1.5rem 2rem;
+    padding: 1.75rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
     border: none;
     cursor: pointer;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s;
+    box-shadow:
+        0 10px 25px -5px rgba(124, 179, 66, 0.3),
+        0 2px 8px rgba(124, 179, 66, 0.1),
+        0 0 0 2px rgba(124, 179, 66, 0.05);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        transform: translateX(-100%) rotate(45deg);
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 15px 30px -5px rgba(124, 179, 66, 0.4),
+            0 5px 15px rgba(124, 179, 66, 0.15),
+            0 0 0 3px rgba(124, 179, 66, 0.1);
+
+        &::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+
+        .playIcon {
+            transform: scale(1.1) rotate(10deg);
+        }
+    }
 }
 
-.startButton:hover {
-    background: $accent-dark;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    transform: scale(1.02);
+.playIcon {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.startButton:active {
+    transform: translateY(0);
 }
 
 .playIcon {
@@ -103,7 +160,7 @@
 
 .startButtonText {
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 /* Sessions Section */
@@ -113,16 +170,44 @@
     // width: 100%;
 }
 
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
 .sectionTitle {
     font-size: 1.5rem;
     font-weight: 300;
     color: $text-light;
-    margin-bottom: 1.5rem;
+    margin: 0;
+}
+
+.viewAllButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid $additional-accent-dark;
+    border-radius: 0.5rem;
+    color: $text-light;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    // transition: all 0.2s;
+
+    &:hover {
+        background: $additional-accent;
+        color: $main-text;
+        // transform: translateX(2px);
+    }
 }
 
 .sessionsList {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
 
@@ -148,25 +233,28 @@
 /* Session Card */
 .sessionCard {
     box-sizing: border-box;
-    background: $background;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     backdrop-filter: blur(12px);
     border-radius: 1rem;
     padding: 1.5rem;
-    border: 1px solid $additional-accent;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #9CCC65;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    // width: 100%;
 }
 
 .sessionCard:hover {
-    border-color: $additional-accent-darker;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+    border-left-color: #7CB342;
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
 }
 
 .sessionContent {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    // flex-wrap: wrap;
 }
 
 .sessionLeft {
@@ -176,8 +264,14 @@
     flex: 1;
 }
 
-.goalEmoji {
-    font-size: 2.25rem;
+.goalIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #7CB342;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 2px 4px rgba(124, 179, 66, 0.2));
 }
 
 .sessionInfo {
@@ -188,8 +282,8 @@
 .sessionGoal {
     font-size: 1.125rem;
     font-weight: 500;
-    color: $main-text;
     margin-bottom: 0.25rem;
+    color: $main-text;
 }
 
 .sessionMeta {
@@ -197,7 +291,7 @@
     align-items: center;
     gap: 1rem;
     font-size: 0.875rem;
-    color: $text-lightest;
+    color: $text-lighter;
 }
 
 .metaItem {
@@ -243,12 +337,23 @@
 
 /* Card (Sidebar) */
 .card {
-    background: $background;
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 1rem;
     padding: 1.5rem;
-    border: 1px solid $additional-accent;
+    border: 1px solid rgba(124, 179, 66, 0.1);
     box-sizing: border-box;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.02),
+        0 1px 3px rgba(124, 179, 66, 0.1);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        box-shadow:
+            0 6px 8px rgba(0, 0, 0, 0.03),
+            0 1px 4px rgba(124, 179, 66, 0.15);
+        transform: translateY(-2px);
+    }
 }
 
 .cardTitle {
@@ -267,10 +372,12 @@
 }
 
 /* Quote Card */
-.quoteEmoji {
-    font-size: 2.25rem;
-    margin-bottom: 1rem;
-    text-align: center;
+.quoteIcon {
+    color: $accent-dark;
+    margin: 0 auto 1rem;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(124, 179, 66, 0.2));
+    // animation: float 3s ease-in-out infinite;
 }
 
 .quoteText {
@@ -279,12 +386,63 @@
     font-style: italic;
     margin-bottom: 0.75rem;
     line-height: 1.6;
+    position: relative;
+
+    &::before,
+    &::after {
+        content: '"';
+        position: absolute;
+        font-size: 2.5em;
+        opacity: 0.1;
+        font-family: Georgia, serif;
+        color: $accent;
+    }
+
+    &::before {
+        left: -0.5em;
+        top: -0.2em;
+    }
+
+    &::after {
+        right: -0.5em;
+        bottom: -0.5em;
+    }
 }
 
 .quoteAuthor {
     color: $text-lightest;
     font-size: 0.875rem;
     text-align: center;
+    position: relative;
+    padding-top: 0.5rem;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2rem;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(124, 179, 66, 0.3),
+                transparent);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 /* Calendar */
@@ -387,40 +545,65 @@
 }
 
 .statStreak {
-    color: $accent-darker;
+    color: $main-text;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.statStreakIcon {
+    color: #ff6b35;
 }
 
 
 @media (max-width:500px) {
-
-    .sessionsList {
-        // flex-direction: row wrap;
-
-    }
-
-    .sessionCard {
-        // flex-direction: row;
-        // box-sizing: border-box;
-        // width: 30   %;
-
-    }
-
     .sessionContent {
-        // display: flex;
         flex-direction: column;
+        align-items: stretch;
         gap: 1rem;
     }
-}
 
-@media (min-width: 768px) {
-    .sidebar {
-        flex-direction: row;
+    .sessionsList {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1rem;
     }
 
-    .card {
-        width: 30%;
+    .sessionLeft {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .goalIcon {
+        display: none;
     }
 }
+
+// @media (min-width: 768px) {
+//     .sidebar {
+//         flex-direction: row;
+//     }
+
+//     .card {
+//         width: 30%;
+//     }
+
+//     .sessionsList {
+//         grid-template-columns: repeat(3, 1fr);
+//     }
+// }
+
+// @media (min-width: 1024px) {
+//     .sessionsList {
+//         grid-template-columns: repeat(4, 1fr);
+//     }
+// }
+
+// @media (min-width: 1200px) {
+//     .sessionsList {
+//         grid-template-columns: repeat(5, 1fr);
+//     }
+// }
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
@@ -436,11 +619,25 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 0.25rem;
+        // box-sizing: border-box;
     }
 
     .repeatButton {
         opacity: 1;
     }
+}
+
+@media (min-width: 640px) {
+    .sessionCard {
+        padding: 0.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .sessionCard {
+        padding: 1.5rem;
+    }
+
 }
 
 @media (min-width: 1280px) {
@@ -459,6 +656,7 @@
     .sidebar {
         flex-direction: column;
     }
+
 
     .card {
         width: 100%;

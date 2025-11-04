@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.scss'
 import HomeLoggedUser from './pages/HomeLoggedUser/HomeLoggedUser'
 import { BrowserRouter, Routes, Route } from 'react-router'
@@ -15,6 +14,7 @@ import Pricing from './pages/Pricing/Pricing'
 import Preferences from './pages/Preferences/Preferences'
 import SubscriptionSuccess from './pages/Subscription/SubscriptionSuccess'
 import SubscriptionCanceled from './pages/Subscription/SubscriptionCanceled'
+import SessionHistory from './pages/SessionHistory/SessionHistory'
 function App() {
 
   return (
@@ -37,7 +37,9 @@ function App() {
           <Route path="/verify-email" element={<ProtectedRoute> <VerifyEmail /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute> <HomeLoggedUser /></ProtectedRoute>} />
           <Route path="/preferences" element={<ProtectedRoute> <Preferences /></ProtectedRoute>} />
+          <Route path="/history" element={<ProtectedRoute> <SessionHistory /></ProtectedRoute>} />
           <Route path="/session" element={<Session />} />
+          <Route path="/session/:sessionId" element={<Session />} />
           <Route path="/subscription/success" element={<ProtectedRoute> <SubscriptionSuccess /></ProtectedRoute>} />
           <Route path="/subscription/canceled" element={<ProtectedRoute> <SubscriptionCanceled /></ProtectedRoute>} />
         </Routes>
