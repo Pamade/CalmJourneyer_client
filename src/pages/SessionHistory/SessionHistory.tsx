@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { Filter, Clock, Calendar, ChevronDown } from 'lucide-react';
 import { GOALS, POSITIONS, EYES, getGoalById, getVoiceById, getPositionById, getEyeById } from '../../utils/sessionOptions';
@@ -23,20 +23,53 @@ const SessionHistory = () => {
     const navigate = useNavigate();
     const [sessions, setSessions] = useState<SessionResponse[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [selectedGoal, setSelectedGoal] = useState<string>('');
     const [selectedStatus, setSelectedStatus] = useState<string>('');
     const [selectedPosition, setSelectedPosition] = useState<string>('');
     const [selectedEyes, setSelectedEyes] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(1);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const loaderRef = useRef<HTMLDivElement>(null);
     const pageSize = 20;
+
+    useEffect(() => {
+        // Set up Intersection Observer for infinite scroll
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
+                    setCurrentPage((p) => p + 1);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [hasMore, loadingMore, loading]);
+
+    useEffect(() => {
+        // Reset when filters change
+        setSessions([]);
+        setCurrentPage(1);
+        setHasMore(true);
+    }, [selectedGoal, selectedStatus, selectedPosition, selectedEyes]);
 
     useEffect(() => {
         fetchSessions();
     }, [selectedGoal, selectedStatus, selectedPosition, selectedEyes, currentPage]);
 
     const fetchSessions = async () => {
-        setLoading(true);
+        if (currentPage === 1) {
+            setLoading(true);
+        } else {
+            setLoadingMore(true);
+        }
+
         try {
             const params = new URLSearchParams();
             if (selectedGoal) params.append('goal', selectedGoal);
@@ -52,12 +85,17 @@ const SessionHistory = () => {
             );
 
             if (response.data.success) {
-                setSessions(response.data.data);
+                const newSessions = response.data.data;
+                // Accumulate sessions instead of replacing
+                setSessions((prevSessions) => [...prevSessions, ...newSessions]);
+                // If we got fewer sessions than the page size, there are no more pages
+                setHasMore(newSessions.length === pageSize);
             }
         } catch (error) {
             console.error('Error fetching session history:', error);
         } finally {
             setLoading(false);
+            setLoadingMore(false);
         }
     };
 
@@ -70,7 +108,9 @@ const SessionHistory = () => {
         setSelectedStatus('');
         setSelectedPosition('');
         setSelectedEyes('');
+        setSessions([]);
         setCurrentPage(1);
+        setHasMore(true);
     };
 
     return (
@@ -271,25 +311,19 @@ const SessionHistory = () => {
                             })}
                         </div>
 
-                        {/* Pagination */}
-                        {/* {sessions.length === pageSize && (
-                            <div className={styles.pagination}>
-                                <button
-                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                                    disabled={currentPage === 1}
-                                    className={styles.paginationButton}
-                                >
-                                    Previous
-                                </button>
-                                <span className={styles.pageNumber}>Page {currentPage}</span>
-                                <button
-                                    onClick={() => setCurrentPage((p) => p + 1)}
-                                    className={styles.paginationButton}
-                                >
-                                    Next
-                                </button>
+                        {/* Infinite Scroll Loader */}
+                        {hasMore && (
+                            <div ref={loaderRef} className={styles.loader}>
+                                {loadingMore && (
+                                    <>
+                                        <div className={styles.spinnerContainer}>
+                                            <div className={styles.spinner}></div>
+                                        </div>
+                                        <p className={styles.loadingText}>Loading more sessions...</p>
+                                    </>
+                                )}
                             </div>
-                        )} */}
+                        )}
                     </>
                 )}
             </main>
