@@ -88,6 +88,7 @@ export default function Login() {
 
         try {
             await login(loginData.email, loginData.password);
+            // After successful login, ProtectedRoute will handle redirection to /verify-email if needed
             navigate('/dashboard');
         } catch (error) {
             console.log('Error:', error);
@@ -118,6 +119,7 @@ export default function Login() {
                 registerData.password,
                 registerData.repeatPassword
             );
+            // After successful registration, ProtectedRoute will handle redirection to /verify-email
             navigate('/dashboard');
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {

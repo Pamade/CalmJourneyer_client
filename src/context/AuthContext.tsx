@@ -140,7 +140,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 
     async function sendVerificationEmail(email: string) {
+
         await authApi.sendVerificationEmail(email);
+
     }
 
     const value = {

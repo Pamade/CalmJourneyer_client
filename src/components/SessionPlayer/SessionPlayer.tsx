@@ -1,7 +1,16 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Play, Pause, Volume2, VolumeX, Rewind, FastForward, Palette, Waves, Mic, MicOff, AudioLines } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Rewind, FastForward, Palette, Mic, MicOff, AudioLines } from 'lucide-react';
 import styles from './SessionPlayer.module.scss';
-import type { SessionType, SessionEvent, AmbientSound, SessionSegment, BreathingPattern } from '../../types/session';
+import type {
+    SessionType,
+    SessionEvent,
+    AmbientSound,
+    SessionSegment,
+    BreathingPattern,
+    BreathingEvent,
+    NarrationEvent,
+    SilenceEvent
+} from '../../types/session';
 import BreathingPulse from '../BreathingPulse/BreathingPulse';
 import EventDisplay from '../EventDisplay/EventDisplay';
 import SessionTimeline from '../SessionTimeline/SessionTimeline';
@@ -19,13 +28,25 @@ interface SessionPlayerProps {
     onAmbientMuteToggle: () => void;
 }
 
-// Define a unified type for our timeline
-type TimelineItem =
-    | { type: 'narration'; data: SessionEvent; startTime: number; duration: number; segment: SessionSegment }
-    | { type: 'breathing'; data: BreathingPattern; startTime: number; duration: number; segment: SessionSegment };
+// Simplified timeline - just events with their metadata
+type TimelineItem = {
+    event: SessionEvent;
+    startTime: number;
+    segment: SessionSegment;
+};
 
-
-export default function SessionPlayer({ session, onSessionComplete, onOpenThemeSwitcher, onOpenAmbientSwitcher, ambientVolume, isAmbientMuted, currentAmbientSound, isNarrationMuted, onNarrationMuteToggle, onAmbientMuteToggle }: SessionPlayerProps) {
+export default function SessionPlayer({
+    session,
+    onSessionComplete,
+    onOpenThemeSwitcher,
+    onOpenAmbientSwitcher,
+    ambientVolume,
+    isAmbientMuted,
+    currentAmbientSound,
+    isNarrationMuted,
+    onNarrationMuteToggle,
+    onAmbientMuteToggle
+}: SessionPlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [currentItemIndex, setCurrentItemIndex] = useState(0);
@@ -34,107 +55,71 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
     const ambientAudioRef = useRef<HTMLAudioElement>(null);
     const timerRef = useRef<number | null>(null);
 
-
-    // 1. Create a unified timeline including both narration and breathing sections
+    // Build timeline from all events in all segments
     const timeline = useMemo(() => {
         const items: TimelineItem[] = [];
         let cumulativeTime = 0;
-        console.log(session)
+
         session.sessionData.segments.forEach(segment => {
-            // Add narration events from the segment
             segment.events.forEach(event => {
                 items.push({
-                    type: 'narration',
-                    data: event,
+                    event,
                     startTime: cumulativeTime,
-                    duration: event.duration_seconds,
                     segment,
                 });
                 cumulativeTime += event.duration_seconds;
             });
-
-            // Add breathing exercise from the segment if it exists
-            const bp = segment.breathing_pattern;
-            if (bp && bp.total_cycles > 0) {
-                const cycleDuration = bp.inhale_seconds + bp.hold_seconds + bp.exhale_seconds + bp.pause_seconds;
-                const breathingDuration = cycleDuration * bp.total_cycles;
-                if (breathingDuration > 0) {
-                    items.push({
-                        type: 'breathing',
-                        data: bp,
-                        startTime: cumulativeTime,
-                        duration: breathingDuration,
-                        segment,
-                    });
-                    cumulativeTime += breathingDuration;
-                }
-            }
         });
+
         return items;
     }, [session.sessionData.segments]);
 
     const totalDuration = session.actualDurationSeconds;
     const currentItem = timeline[currentItemIndex];
+    const currentEvent = currentItem?.event;
     const progress = totalDuration > 0 ? (currentTime / totalDuration) * 100 : 0;
 
-    // 2. Main effect to handle playback logic based on the current timeline item
+    // Main playback effect
     useEffect(() => {
-        // Clear any existing timers when state changes
         if (timerRef.current) clearInterval(timerRef.current);
 
-        if (!isPlaying || !currentItem) {
+        if (!isPlaying || !currentEvent) {
             narrationAudioRef.current?.pause();
             return;
         }
 
-        if (currentItem.type === 'narration') {
-            const audio = narrationAudioRef.current;
+        const audio = narrationAudioRef.current;
 
-            // Check if this is a silence event (no audio URL)
-            if (!currentItem.data.audioUrl || currentItem.data.event_type === 'silence') {
-                // Handle silence with a timer, just like breathing
-                narrationAudioRef.current?.pause();
-                timerRef.current = setInterval(() => {
-                    setCurrentTime(prevTime => {
-                        const newTime = prevTime + 1;
-                        if (newTime >= currentItem.startTime + currentItem.duration) {
-                            if (timerRef.current) clearInterval(timerRef.current);
-                            // Advance to the next item
-                            if (currentItemIndex < timeline.length - 1) {
-                                setCurrentItemIndex(currentItemIndex + 1);
-                            } else {
-                                setIsPlaying(false); // End of session
-                            }
-                            return currentItem.startTime + currentItem.duration;
-                        }
-                        return newTime;
-                    });
-                }, 1000);
-            } else if (audio) {
-                // Handle normal narration with audio
-                if (audio.src !== currentItem.data.audioUrl) {
-                    audio.src = currentItem.data.audioUrl;
-                }
-                // Sync audio time with the overall session time
-                const timeIntoEvent = currentTime - currentItem.startTime;
+        // Handle different event types
+        if (currentEvent.event_type === 'narration' && currentEvent.audioUrl) {
+            // Narration with audio
+            if (audio && audio.src !== currentEvent.audioUrl) {
+                audio.src = currentEvent.audioUrl;
+            }
+            const timeIntoEvent = currentTime - currentItem.startTime;
+            if (audio) {
                 audio.currentTime = timeIntoEvent;
                 audio.play().catch(e => console.error("Narration play failed:", e));
             }
-        } else if (currentItem.type === 'breathing') {
+        } else {
+            // Silence or breathing - use timer
             narrationAudioRef.current?.pause();
-            // Use a timer for the silent breathing part
+
             timerRef.current = setInterval(() => {
                 setCurrentTime(prevTime => {
                     const newTime = prevTime + 1;
-                    if (newTime >= currentItem.startTime + currentItem.duration) {
+                    const eventEndTime = currentItem.startTime + currentEvent.duration_seconds;
+
+                    if (newTime >= eventEndTime) {
                         if (timerRef.current) clearInterval(timerRef.current);
-                        // Advance to the next item
+
+                        // Move to next item
                         if (currentItemIndex < timeline.length - 1) {
                             setCurrentItemIndex(currentItemIndex + 1);
                         } else {
-                            setIsPlaying(false); // End of session
+                            setIsPlaying(false);
                         }
-                        return currentItem.startTime + currentItem.duration;
+                        return eventEndTime;
                     }
                     return newTime;
                 });
@@ -144,25 +129,21 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
+    }, [isPlaying, currentItemIndex, timeline, currentEvent, currentItem, currentTime]);
 
-    }, [isPlaying, currentItemIndex, timeline]);
-
-
-    // 3. Audio event listeners for narration tracks
+    // Audio event listeners for narration
     useEffect(() => {
         const audio = narrationAudioRef.current;
         if (!audio) return;
 
         const handleTimeUpdate = () => {
-            // Only update time for narration events that have audio
-            if (currentItem?.type === 'narration' && currentItem.data.audioUrl && !audio.paused) {
+            if (currentEvent?.event_type === 'narration' && currentEvent.audioUrl && !audio.paused) {
                 setCurrentTime(currentItem.startTime + audio.currentTime);
             }
         };
 
         const handleAudioEnded = () => {
-            // Only handle ended event for narration with audio
-            if (currentItem?.type === 'narration' && currentItem.data.audioUrl) {
+            if (currentEvent?.event_type === 'narration' && currentEvent.audioUrl) {
                 if (currentItemIndex < timeline.length - 1) {
                     setCurrentItemIndex(currentItemIndex + 1);
                 } else {
@@ -178,37 +159,37 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
             audio.removeEventListener('timeupdate', handleTimeUpdate);
             audio.removeEventListener('ended', handleAudioEnded);
         };
-    }, [currentItemIndex, timeline, currentItem]);
+    }, [currentItemIndex, timeline, currentEvent, currentItem]);
 
-
-    // 4. Control ambient sound playback
+    // Ambient sound control
     useEffect(() => {
         const ambientAudio = ambientAudioRef.current;
         if (!ambientAudio) return;
 
-        if (isPlaying && currentAmbientSound !== 'NONE') {
+        if (isPlaying) {
             ambientAudio.play().catch(e => console.error("Ambient play failed:", e));
         } else {
             ambientAudio.pause();
         }
     }, [isPlaying, currentAmbientSound]);
 
-    // 5. Handle muting for narration
+    // Narration muting
     useEffect(() => {
-        if (narrationAudioRef.current) narrationAudioRef.current.muted = isNarrationMuted;
+        if (narrationAudioRef.current) {
+            narrationAudioRef.current.muted = isNarrationMuted;
+        }
     }, [isNarrationMuted]);
 
-    // 6. Handle ambient volume and muting
+    // Ambient volume and muting
     useEffect(() => {
         const ambientAudio = ambientAudioRef.current;
         if (ambientAudio) {
             ambientAudio.volume = ambientVolume;
             ambientAudio.muted = isAmbientMuted;
         }
-        console.log(ambientVolume)
     }, [ambientVolume, isAmbientMuted]);
 
-    // 7. Update ambient audio source when the sound changes
+    // Update ambient source
     useEffect(() => {
         const ambientAudio = ambientAudioRef.current;
         if (!ambientAudio) return;
@@ -216,13 +197,13 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
         const newSrc = getAmbientSoundUrl(currentAmbientSound);
         if (ambientAudio.src !== newSrc) {
             ambientAudio.src = newSrc;
-            if (isPlaying && currentAmbientSound !== 'NONE') {
+            if (isPlaying) {
                 ambientAudio.play().catch(e => console.error("Ambient play after source change failed:", e));
             }
         }
     }, [currentAmbientSound, isPlaying]);
 
-    // New effect to check for session completion
+    // Session completion check
     useEffect(() => {
         if (currentTime >= totalDuration && totalDuration > 0) {
             setIsPlaying(false);
@@ -230,20 +211,15 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
         }
     }, [currentTime, totalDuration, onSessionComplete]);
 
-
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
     };
-
-    // Removed: const handleBreathingToggle = () => { setShowBreathingGuide(!showBreathingGuide); };
 
     const handleSkip = (seconds: number) => {
         const newTime = Math.max(0, Math.min(totalDuration, currentTime + seconds));
         handleSeek(null, newTime);
     };
 
-
-    // 6. Handle seeking on the progress bar
     const handleSeek = (e: React.MouseEvent<HTMLDivElement> | null, directTime?: number) => {
         const narrationAudio = narrationAudioRef.current;
         if (!narrationAudio) return;
@@ -262,24 +238,21 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
             return;
         }
 
-
-        const targetItemIndex = timeline.findIndex(item => newTime >= item.startTime && newTime < item.startTime + item.duration);
+        const targetItemIndex = timeline.findIndex(
+            item => newTime >= item.startTime && newTime < item.startTime + item.event.duration_seconds
+        );
 
         if (targetItemIndex !== -1) {
             setCurrentTime(newTime);
             setCurrentItemIndex(targetItemIndex);
         }
-        narrationAudioRef.current?.pause();
-        handleSeekPauseMoment();
-    };
 
-    const handleSeekPauseMoment = () => {
+        // Brief pause before resuming
         setIsPlaying(false);
         setTimeout(() => {
-            narrationAudioRef.current?.play();
             setIsPlaying(true);
         }, 100);
-    }
+    };
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -288,47 +261,56 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
     };
 
     const getAmbientSoundUrl = (sound: AmbientSound) => {
-        if (sound === 'NONE') return '';
+        if (!sound) return '';
         return `/sound_themes/${sound}.wav`;
     };
 
-    // Determine what to display - now solely based on currentItem type
-    const displayBreathingPulse = currentItem?.type === 'breathing' && currentItem.data.total_cycles > 0;
-    const timeIntoSegment = currentItem ? currentTime - currentItem.startTime : 0;
+    // Determine what to display based on event type
+    const displayBreathingPulse = currentEvent?.event_type === 'breathing';
+    const timeIntoEvent = currentItem ? currentTime - currentItem.startTime : 0;
 
-    // Logic for instruction text
+    // Type guard helpers
+    const isBreathingEvent = (event: SessionEvent): event is BreathingEvent => {
+        return event.event_type === 'breathing';
+    };
+
+    const isNarrationEvent = (event: SessionEvent): event is NarrationEvent => {
+        return event.event_type === 'narration';
+    };
+
+    // Instruction text based on current event
     const instructionText = useMemo(() => {
-        if (currentItem?.type === 'narration') {
-            return currentItem.data.user_instruction || 'Listen to the meditation.';
-        } else if (currentItem?.type === 'breathing') {
-            const bp = currentItem.data;
+        if (!currentEvent) return 'Begin your meditation...';
+
+        if (isBreathingEvent(currentEvent)) {
+            const bp = currentEvent.breathing_pattern;
             let pattern = [];
             if (bp.inhale_seconds > 0) pattern.push(`Inhale: ${bp.inhale_seconds}s`);
             if (bp.hold_seconds > 0) pattern.push(`Hold: ${bp.hold_seconds}s`);
             if (bp.exhale_seconds > 0) pattern.push(`Exhale: ${bp.exhale_seconds}s`);
             if (bp.pause_seconds > 0) pattern.push(`Pause: ${bp.pause_seconds}s`);
-            return pattern.length > 0 ? `Breathing Pattern: ${pattern.join(', ')}` : 'Focus on your breath.';
+            return pattern.length > 0 ? pattern.join(' • ') : 'Follow your breath';
         }
-        return 'Begin your meditation...';
-    }, [currentItem]);
+
+        return currentEvent.user_instruction || 'Listen to the guidance';
+    }, [currentEvent]);
 
     return (
         <div className={styles.playerWrapper}>
-
             <div className={styles.playerContainer}>
                 <audio ref={narrationAudioRef} />
                 <audio ref={ambientAudioRef} src={getAmbientSoundUrl(currentAmbientSound)} loop />
 
                 <div className={styles.displayArea}>
-                    {displayBreathingPulse ? (
+                    {displayBreathingPulse && isBreathingEvent(currentEvent) ? (
                         <BreathingPulse
-                            pattern={currentItem.data as BreathingPattern}
+                            pattern={currentEvent.breathing_pattern}
                             isActive={isPlaying}
-                            timeIntoSegment={timeIntoSegment}
+                            timeIntoSegment={timeIntoEvent}
                         />
                     ) : (
                         <EventDisplay
-                            event={currentItem?.type === 'narration' ? currentItem.data : undefined}
+                            event={isNarrationEvent(currentEvent) ? currentEvent : undefined}
                             segment={currentItem?.segment}
                         />
                     )}
@@ -369,6 +351,7 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
                         <FastForward size={22} />
                     </button>
                 </div>
+
                 <div className={styles.secondaryControls}>
                     <button
                         className={styles.controlButton}
@@ -399,14 +382,15 @@ export default function SessionPlayer({ session, onSessionComplete, onOpenThemeS
                         <Palette size={24} />
                     </button>
                 </div>
+
                 <div className={styles.infoSection}>
                     <div className={styles.instruction}>
                         <h3>Current Instruction</h3>
                         <p>{instructionText}</p>
                     </div>
                 </div>
-
             </div>
+
             <SessionTimeline
                 segments={session.sessionData.segments}
                 currentSegmentId={currentItem?.segment.segment_id}

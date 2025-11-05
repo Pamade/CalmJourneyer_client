@@ -34,7 +34,7 @@ function App() {
           <Route path="/login" element={<LoggedRoute> <Login /></LoggedRoute>} />
           <Route path="/forgot-password" element={<LoggedRoute> <ForgotPassword /></LoggedRoute>} />
 
-          <Route path="/verify-email" element={<ProtectedRoute> <VerifyEmail /></ProtectedRoute>} />
+          <Route path="/verify-email" element={<ProtectedRoute requireVerification={false}> <VerifyEmail /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute> <HomeLoggedUser /></ProtectedRoute>} />
           <Route path="/preferences" element={<ProtectedRoute> <Preferences /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute> <SessionHistory /></ProtectedRoute>} />

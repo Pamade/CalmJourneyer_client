@@ -49,14 +49,11 @@ export default function Navigation({ type }: NavigationProps) {
     // Dashboard navigation (on home-logged page)
     const renderDashboardLinks = () => (
         <>
-            <Link to="/sessions" className={styles.link}>
-                Sessions
-            </Link>
             <Link to="/history" className={styles.link}>
                 History
             </Link>
-            <Link to="/settings" className={styles.link}>
-                Settings
+            <Link to="/account" className={styles.link}>
+                Account
             </Link>
             <Link to="/dashboard" className={styles.profileButton}>
                 Profile
@@ -95,14 +92,11 @@ export default function Navigation({ type }: NavigationProps) {
 
     const renderDashboardMobileLinks = () => (
         <>
-            <Link to="/sessions" className={styles.mobileLink} onClick={closeMenu}>
-                Sessions
-            </Link>
             <Link to="/history" className={styles.mobileLink} onClick={closeMenu}>
                 History
             </Link>
-            <Link to="/settings" className={styles.mobileLink} onClick={closeMenu}>
-                Settings
+            <Link to="/account" className={styles.mobileLink} onClick={closeMenu}>
+                Account
             </Link>
             <Link to="/preferences" className={styles.mobileLink} onClick={closeMenu}>
                 Preferences

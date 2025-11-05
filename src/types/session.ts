@@ -4,7 +4,6 @@ export type Position = "SITTING" | "LYING" | "STANDING";
 export type Voice = "LUNA" | "LAUREN" | "CALEB" | "DANIEL";
 
 export type AmbientSound =
-    | "NONE"
     | "OCEAN_WAVES"
     | "FOREST_RAIN"
     | "MOUNTAIN_WIND"
@@ -13,10 +12,10 @@ export type AmbientSound =
     | "SOFT_THUNDER"
     | "BIRDS_DAWN"
     | "CAMPFIRE"
-    | "WIND_CHIMES"
     | "WHITE_NOISE";
 
-type EventType = "narration" | "silence"
+// FIX: Add "breathing" as event type
+export type EventType = "narration" | "silence" | "breathing";
 
 export interface VoiceOption {
     id: Voice;
@@ -41,9 +40,8 @@ export interface GenerateSessionResponse {
     success: boolean;
     message: string;
     data: SessionType;
-    timestamp: string; // ISO string
+    timestamp: string;
 }
-
 
 export interface SessionType {
     id: string;
@@ -54,8 +52,8 @@ export interface SessionType {
     position: Position;
     eyes: Eyes;
     ambientSound: AmbientSound;
-    createdAt: string;  // ISO string
-    expiresAt: string;  // ISO string
+    createdAt: string;
+    expiresAt: string;
     sessionData: SessionContent;
 }
 
@@ -69,18 +67,41 @@ export interface SessionSegment {
     title: string;
     events: SessionEvent[];
     segment_id: string;
-    breathing_pattern: BreathingPattern;
 }
 
-export interface SessionEvent {
-    text: string;
-    ssml: string;
-    audioUrl: string;
+// FIX: SessionEvent is now a union type to handle different event types
+export type SessionEvent = NarrationEvent | SilenceEvent | BreathingEvent;
+
+// Base properties shared by all events
+interface BaseEvent {
     event_id: string;
-    event_type: EventType; // can extend later
     duration_seconds: number;
     user_instruction: string;
-    start_time_seconds: number | null;
+}
+
+// Narration event (has audio)
+export interface NarrationEvent extends BaseEvent {
+    event_type: "narration";
+    text: string;
+    ssml: string | null;
+    audioUrl: string;
+}
+
+// Silence event (no audio, just pause)
+export interface SilenceEvent extends BaseEvent {
+    event_type: "silence";
+    text: null;
+    ssml: null;
+    audioUrl: null;
+}
+
+// Breathing event (shows breathing circle)
+export interface BreathingEvent extends BaseEvent {
+    event_type: "breathing";
+    text: string | null; // Optional intro text like "Follow this rhythm"
+    ssml: string | null;
+    audioUrl: string | null; // Could have intro audio
+    breathing_pattern: BreathingPattern;
 }
 
 export interface BreathingPattern {

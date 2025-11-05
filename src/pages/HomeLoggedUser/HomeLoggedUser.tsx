@@ -4,8 +4,6 @@ import { getGoalById } from '../../utils/sessionOptions';
 import styles from './HomeLoggedUser.module.scss';
 import Navigation from '../../components/Navigation/Navigation';
 import { useAuth } from '../../context/AuthContext';
-import { setWithExpiry, getWithExpiry } from '../../utils/storage';
-import EmailVerificationModal from '../../components/EmailVerificationModal/EmailVerificationModal';
 import QuickStartModal from '../../components/QuickStartModal/QuickStartModal';
 import StatsCards from '../../components/StatsCards/StatsCards';
 import GoalBreakdownChart from '../../components/GoalBreakdownChart/GoalBreakdownChart';
@@ -38,11 +36,20 @@ interface GoalBreakdown {
 
 const sessionCountFetchLimit = 6 as const;
 
+const quotes = [
+    { text: "Peace of mind is the most precious treasure.", author: "Buddha" },
+    { text: "In silence, you find your true strength.", author: "Lao Tzu" },
+    { text: "Meditation is a journey from sound to silence.", author: "Rumi" },
+    { text: "The breath is the bridge connecting body and mind.", author: "Thích Nhất Hạnh" },
+    { text: "Calm begins with a single breath.", author: "Anonymous" }
+] as const;
+
+
+
 export default function HomeLoggedUser() {
     const navigate = useNavigate();
-
-    const { user, sendVerificationEmail } = useAuth();
-    const [showVerifyModal, setShowVerifyModal] = useState(false);
+    const [dailyQuote] = useState(quotes[Math.floor(Math.random() * quotes.length)]);
+    const { user } = useAuth();
     const [showQuickStartModal, setShowQuickStartModal] = useState(false);
     const [recentSessions, setRecentSessions] = useState<SessionResponse[]>([]);
     const [loadingSessions, setLoadingSessions] = useState(true);
@@ -107,29 +114,6 @@ export default function HomeLoggedUser() {
         }
     };
 
-    useEffect(() => {
-        if (user && !user.emailVerified) {
-            const verificationPromptShown = getWithExpiry('email_verification_prompt_shown');
-
-            if (!verificationPromptShown || verificationPromptShown.userEmail !== user.email) {
-                setWithExpiry('email_verification_prompt_shown', 48, user.email);
-                setTimeout(() => {
-                    setShowVerifyModal(true);
-                }, 5000);
-            }
-        }
-    }, [user]);
-
-    const handleVerifyClick = async () => {
-        // Navigate to verification or send email
-        setShowVerifyModal(false);
-        await sendVerificationEmail(user!.email);
-    };
-
-    const handleCancelClick = () => {
-        setShowVerifyModal(false);
-    };
-
     const fetchRecentSessions = async () => {
         try {
             const response = await axios.get('/sessions/user?limit=' + sessionCountFetchLimit);
@@ -163,15 +147,17 @@ export default function HomeLoggedUser() {
         const sessionDates = new Set(
             recentSessions
                 .filter(s => s.createdAt)
-                .map(s => new Date(s.createdAt).toISOString().split('T')[0])
+                .map(s => new Date(s.createdAt).toLocaleDateString('en-CA')) // 'YYYY-MM-DD'
+
         );
-
+        console.log('Session dates for calendar:', sessionDates);
         const startDate = new Date(today);
-        startDate.setDate(startDate.getDate() - 56);
 
+        // Align the *end* of the calendar to today, not the start
         while (startDate.getDay() !== 1) {
             startDate.setDate(startDate.getDate() - 1);
         }
+        startDate.setDate(startDate.getDate() - 7 * (8 - 1));
 
         for (let week = 0; week < 8; week++) {
             const weekDays = [];
@@ -179,7 +165,8 @@ export default function HomeLoggedUser() {
                 const currentDate = new Date(startDate);
                 currentDate.setDate(startDate.getDate() + (week * 7) + day);
 
-                const dateStr = currentDate.toISOString().split('T')[0];
+                const dateStr = currentDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+
                 const isPast = currentDate <= today;
                 const hasSession = sessionDates.has(dateStr);
 
@@ -192,9 +179,14 @@ export default function HomeLoggedUser() {
             }
             weeks.push(weekDays);
         }
-
+        console.log(
+            'Session dates:',
+            sessionDates
+        );
         return weeks;
     }, [recentSessions]);
+
+
 
     return (
         <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
@@ -288,9 +280,16 @@ export default function HomeLoggedUser() {
 
                     <div className={styles.sidebar}>
                         {/* Goal Breakdown Chart */}
-                        {goalBreakdown && (
+                        {/* {goalBreakdown && (
                             <GoalBreakdownChart goalCounts={goalBreakdown.goalCounts} />
-                        )}
+                        )} */}
+                        <div className={styles.card}>
+                            <div className={styles.quoteIcon}><Sparkles /></div>
+                            <blockquote className={styles.quoteText}>
+                                "{dailyQuote.text}"
+                            </blockquote>
+                            <p className={styles.quoteAuthor}>— {dailyQuote.author}</p>
+                        </div>
 
                         <div className={styles.card}>
                             <h3 className={styles.cardTitle}>
@@ -340,11 +339,6 @@ export default function HomeLoggedUser() {
                 </div>
             </main>
 
-            <EmailVerificationModal
-                isOpen={showVerifyModal}
-                onVerify={handleVerifyClick}
-                onCancel={handleCancelClick}
-            />
             <QuickStartModal
                 isOpen={showQuickStartModal}
                 onClose={() => setShowQuickStartModal(false)}

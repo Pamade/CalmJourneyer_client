@@ -373,7 +373,7 @@
 
 /* Quote Card */
 .quoteIcon {
-    color: $accent-dark;
+    color: $accent-darker;
     margin: 0 auto 1rem;
     display: block;
     filter: drop-shadow(0 2px 4px rgba(124, 179, 66, 0.2));
@@ -489,7 +489,7 @@
 }
 
 .dayActive {
-    background: $accent;
+    background: $accent-darker;
 }
 
 .calendarLegend {
@@ -518,7 +518,7 @@
 }
 
 .legendActive {
-    background: $accent;
+    background: $accent-darker;
 }
 
 /* Stats */

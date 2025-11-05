@@ -150,7 +150,7 @@ export default function Preferences() {
                                     <span className={styles.voiceName}>{voice.label}</span>
                                     <span className={styles.voiceDescription}>{voice.description}</span>
                                     {!voice.free && subscription?.plan.toUpperCase() === 'FREE' && (
-                                        <span className={styles.badge}>Premium</span>
+                                        <span className={styles.badge}>Standard</span>
                                     )}
                                 </button>
                             ))}

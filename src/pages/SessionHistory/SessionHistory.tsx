@@ -131,11 +131,6 @@ const SessionHistory = () => {
                             <span>Filter Sessions</span>
                         </div>
                         <div className={styles.filterHeaderActions}>
-                            {(selectedGoal || selectedStatus || selectedPosition || selectedEyes) && (
-                                <button onClick={handleFilterReset} className={styles.resetButton}>
-                                    Clear All
-                                </button>
-                            )}
                             <button
                                 className={styles.toggleFilterButton}
                                 onClick={() => setIsFilterOpen(!isFilterOpen)}
