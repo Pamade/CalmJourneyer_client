@@ -1,0 +1,701 @@
+@import '../../variables/variables.scss';
+
+.page {
+
+    min-height: 100vh;
+    background: $background;
+    position: relative;
+}
+
+.main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.pageTitle {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: $main-text;
+    margin-bottom: 0.5rem;
+}
+
+.pageSubtitle {
+    font-size: 1.125rem;
+    color: $text-light;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: $text-light;
+    font-size: 1.125rem;
+}
+
+/* Layout */
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    @media (min-width: 1024px) {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.mainColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Card */
+.card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid $accent-darker;
+    border-radius: 1.25rem;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+}
+
+.cardHeader {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(124, 179, 66, 0.1);
+}
+
+.cardTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cardIcon {
+    color: #7CB342;
+    stroke-width: 1.5;
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $main-text;
+    margin: 0;
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Profile Fields */
+.profileField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fieldLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fieldValue {
+    font-size: 1rem;
+    color: $main-text;
+    font-weight: 500;
+}
+
+.fieldValueRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.editButton {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid $additional-accent;
+    border-radius: 0.5rem;
+    color: $text-light;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: $additional-accent;
+        border-color: $additional-accent-dark;
+        color: $main-text;
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Edit Name Box */
+.editNameBox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(124, 179, 66, 0.05);
+    border: 1px solid rgba(124, 179, 66, 0.2);
+    border-radius: 0.75rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nameInput {
+    padding: 0.75rem 1rem;
+    border: 1px solid $additional-accent-dark;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: $main-text;
+    font-family: inherit;
+    transition: all 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #7CB342;
+        box-shadow: 0 0 0 3px rgba(124, 179, 66, 0.1);
+    }
+}
+
+.editActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.saveButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.625rem 1rem;
+    background: linear-gradient(135deg, #7CB342 0%, #689F38 100%);
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(124, 179, 66, 0.2);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(124, 179, 66, 0.3);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.cancelButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.625rem 1rem;
+    background: transparent;
+    border: 1px solid $additional-accent-dark;
+    border-radius: 0.5rem;
+    color: $text-light;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: $additional-accent;
+        border-color: $additional-accent-darker;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+/* Subscription */
+.subscriptionInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.planBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, rgba(124, 179, 66, 0.1) 0%, rgba(124, 179, 66, 0.05) 100%);
+    border: 1px solid rgba(124, 179, 66, 0.3);
+    border-radius: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #7CB342;
+    align-self: flex-start;
+}
+
+.subscriptionDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detailRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detailLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-light;
+}
+
+.detailValue {
+    font-size: 0.875rem;
+    color: $main-text;
+    font-weight: 500;
+}
+
+.subscriptionActions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.primaryButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #7CB342 0%, #689F38 100%);
+    border: none;
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.3);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 179, 66, 0.4);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.secondaryButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: transparent;
+    border: 1px solid $additional-accent-dark;
+    border-radius: 0.75rem;
+    color: $text-light;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: $additional-accent;
+        border-color: $additional-accent-darker;
+        color: $main-text;
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Quick Settings */
+.quickSettingsText {
+    font-size: 0.9375rem;
+    color: $text-light;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+}
+
+/* Stats Grid */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background: rgba(124, 179, 66, 0.05);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(124, 179, 66, 0.1);
+}
+
+.statIcon {
+    color: #7CB342;
+    margin-bottom: 0.5rem;
+    stroke-width: 1.5;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $main-text;
+    margin-bottom: 0.25rem;
+}
+
+.statLabel {
+    font-size: 0.75rem;
+    color: $text-light;
+    font-weight: 500;
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+    overflow-y: auto;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.3s ease-out;
+    margin: auto;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(124, 179, 66, 0.1);
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $main-text;
+    margin: 0;
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    color: $text-light;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: $additional-accent;
+        color: $main-text;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inputLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-light;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input {
+    padding: 0.875rem 1rem;
+    border: 1px solid $additional-accent-dark;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: $main-text;
+    font-family: inherit;
+    transition: all 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #7CB342;
+        box-shadow: 0 0 0 3px rgba(124, 179, 66, 0.1);
+    }
+
+    &::placeholder {
+        color: $text-lighter;
+    }
+}
+
+.modalActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.modalCancelButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: transparent;
+    border: 1px solid $additional-accent-dark;
+    border-radius: 0.75rem;
+    color: $text-light;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: $additional-accent;
+        border-color: $additional-accent-darker;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.modalSaveButton {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #7CB342 0%, #689F38 100%);
+    border: none;
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.3);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(124, 179, 66, 0.4);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .main {
+        padding: 2rem 1rem;
+    }
+
+    .pageTitle {
+        font-size: 2rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .editActions,
+    .subscriptionActions,
+    .modalActions {
+        flex-direction: column;
+    }
+
+    .modal {
+        padding: 1.5rem;
+        max-height: 95vh;
+    }
+
+    .modalTitle {
+        font-size: 1.25rem;
+    }
+
+    .input {
+        font-size: 16px; // Prevents zoom on iOS
+    }
+}
+
+@media (max-width: 896px) and (max-height: 414px) and (orientation: landscape) {
+    .modalOverlay {
+        align-items: flex-start;
+        padding: 0.5rem;
+    }
+
+    .modal {
+        max-height: 95vh;
+        padding: 1rem;
+        margin: 0.5rem auto;
+    }
+
+    .modalHeader {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .modalTitle {
+        font-size: 1.125rem;
+    }
+
+    .modalContent {
+        gap: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .inputGroup {
+        gap: 0.375rem;
+    }
+
+    .input {
+        padding: 0.625rem 0.875rem;
+    }
+
+    .modalActions {
+        gap: 0.5rem;
+    }
+
+    .modalCancelButton,
+    .modalSaveButton {
+        padding: 0.625rem 1rem;
+        font-size: 0.9375rem;
+    }
+}

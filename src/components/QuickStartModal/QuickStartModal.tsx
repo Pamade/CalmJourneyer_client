@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Heart, Brain, Zap, Moon, Sparkles, Armchair, BedSingle, UserSquare, Eye, EyeOff } from 'lucide-react';
+import { X, Heart, Brain, Zap, Moon, Sparkles, Armchair, BedSingle, UserSquare, Eye, EyeOff, Play, Square, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import axios from '../../utils/axios';
 import styles from './QuickStartModal.module.scss';
@@ -30,6 +30,7 @@ interface SessionFormData {
     voice: string;
     position: string;
     eyes: string;
+    speed: string;
 }
 
 export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProps) {
@@ -40,9 +41,15 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
         duration: 5,
         voice: 'LUNA',
         position: 'SITTING',
-        eyes: 'CLOSED'
+        eyes: 'CLOSED',
+        speed: '0.0'
     });
     const [loadingData, setLoadingData] = useState(true);
+    const [playingVoice, setPlayingVoice] = useState<string | null>(null);
+    const [loadingVoice, setLoadingVoice] = useState<string | null>(null);
+    const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+
+    const previewText = "Welcome to your meditation. Let's begin this peaceful journey together.";
     useEffect(() => {
         if (isOpen) {
             fetchData();
@@ -71,7 +78,8 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                     duration: prefs.preferredDuration || 5,
                     voice: prefs.preferredVoice || 'LUNA',
                     position: prefs.preferredPosition || 'SITTING',
-                    eyes: prefs.preferredEyes || 'CLOSED'
+                    eyes: prefs.preferredEyes || 'CLOSED',
+                    speed: prefs.preferredSpeed || '0.0'
                 });
             }
         } catch (error) {
@@ -81,9 +89,65 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
         }
     };
     console.log(formData)
+
+    const handlePlayVoicePreview = async (voiceId: string, unrealSpeechId: string) => {
+        const playingAudio = playingVoice !== null;
+
+        if (playingAudio) {
+            audioElement?.pause();
+            setPlayingVoice(null);
+            return;
+        }
+
+        setLoadingVoice(voiceId);
+
+        try {
+            const response = await axios.post('https://api.v8.unrealspeech.com/speech', {
+                Text: previewText,
+                VoiceId: unrealSpeechId,
+                Bitrate: '320k',
+                Speed: formData.speed, // Apply current speed setting
+                AudioFormat: 'mp3',
+                OutputFormat: 'uri',
+                TimestampType: 'sentence',
+                sync: false,
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${import.meta.env.VITE_UNREAL_SPEECH_API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.data) {
+                throw new Error('Failed to generate voice preview');
+            }
+
+            const data = await response.data;
+            const audioUrl = data.OutputUri;
+
+            const audio = new Audio(audioUrl);
+            audio.onended = () => {
+                setPlayingVoice(null);
+            };
+            audio.play();
+            setAudioElement(audio);
+            setPlayingVoice(voiceId);
+        } catch (error) {
+            console.error('Error playing voice preview:', error);
+            alert('Failed to play voice preview. Please try again.');
+        } finally {
+            setLoadingVoice(null);
+        }
+    };
+
     const handleStartSession = () => {
         // Navigate to session page with form data
         // The Session page will handle calling the generate API
+
+        if (subscription?.plan.toUpperCase() === 'FREE' && subscription.remainingFreeSessions === 0) {
+            return navigate("/pricing");
+        }
+
         navigate('/session', {
             state: {
                 sessionData: formData
@@ -168,11 +232,10 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                                     {VOICES.map(voice => {
                                         const isDisabled = !voice.free && subscription?.plan.toUpperCase() === 'FREE';
                                         return (
-                                            <button
+                                            <div
                                                 key={voice.id}
                                                 className={`${styles.voiceCard} ${formData.voice === voice.id ? styles.selected : ''} ${isDisabled ? styles.disabled : ''}`}
                                                 onClick={() => !isDisabled && setFormData({ ...formData, voice: voice.id })}
-                                                disabled={isDisabled}
                                             >
                                                 <div className={styles.voiceHeader}>
                                                     <span className={styles.voiceLabel}>{voice.label}</span>
@@ -181,9 +244,57 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                                                     )}
                                                 </div>
                                                 <span className={styles.voiceDescription}>{voice.description}</span>
-                                            </button>
+                                                <button
+                                                    className={styles.previewButton}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handlePlayVoicePreview(voice.id, voice.unrealSpeechId);
+                                                    }}
+                                                    disabled={loadingVoice === voice.id}
+                                                >
+                                                    {loadingVoice === voice.id ? (
+                                                        <>
+                                                            <Loader className={styles.icon} size={16} />
+                                                            Loading...
+                                                        </>
+                                                    ) : playingVoice === voice.id ? (
+                                                        <>
+                                                            <Square className={styles.icon} size={16} fill="currentColor" />
+                                                            Stop
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Play className={styles.icon} size={16} fill="currentColor" />
+                                                            Preview
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
                                         );
                                     })}
+                                </div>
+                            </div>
+
+                            <div className={styles.section}>
+                                <label className={styles.sectionLabel}>Speech Speed</label>
+                                <div className={styles.speedControl}>
+                                    <input
+                                        type="range"
+                                        min="-0.5"
+                                        max="0.5"
+                                        step="0.1"
+                                        value={formData.speed}
+                                        onChange={(e) => setFormData({ ...formData, speed: e.target.value })}
+                                        className={styles.speedSlider}
+                                    />
+                                    <div className={styles.speedLabels}>
+                                        <span>Slower</span>
+                                        <span className={styles.speedValue}>
+                                            {parseFloat(formData.speed) === 0 ? 'Normal' :
+                                                parseFloat(formData.speed) > 0 ? `+${formData.speed}x` : `${formData.speed}x`}
+                                        </span>
+                                        <span>Faster</span>
+                                    </div>
                                 </div>
                             </div>
 

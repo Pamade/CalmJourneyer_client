@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router';
 import axiosInstance from '../../utils/axios';
 import styles from './SessionComplete.module.scss';
 import publicAxiosInstance from '../../utils/publicAxiosInstance';
+import { Share2 } from 'lucide-react';
+import { toast } from 'sonner';
+
 type Feeling = 'CALM' | 'OKAY' | 'NOT_GREAT';
 
 interface SessionCompleteProps {
@@ -12,6 +15,7 @@ interface SessionCompleteProps {
 
 export default function SessionComplete({ sessionId, userId }: SessionCompleteProps) {
     const [feedbackSent, setFeedbackSent] = useState(false);
+
     const navigate = useNavigate();
 
     const handleFeedback = async (feeling: Feeling) => {
@@ -32,6 +36,30 @@ export default function SessionComplete({ sessionId, userId }: SessionCompletePr
         }, 1500);
     };
 
+    const handleShareSession = async () => {
+        if (!userId) {
+            toast.error('Please log in to share sessions');
+            return;
+        }
+
+        try {
+            const response = await axiosInstance.post(`/sessions/${sessionId}/share`);
+
+            if (response.data.success) {
+                const shareUrl = `${window.location.origin}/session/shared/${sessionId}`;
+
+                // Copy to clipboard
+                await navigator.clipboard.writeText(shareUrl);
+                toast.success('Share link copied to clipboard!');
+            } else {
+                toast.error(response.data.message || 'Failed to share session');
+            }
+        } catch (err) {
+            console.error('Error sharing session:', err);
+            toast.error('Failed to share session');
+        }
+    };
+
     return (
         <div className={styles.completeContainer}>
             {feedbackSent ? (
@@ -43,6 +71,19 @@ export default function SessionComplete({ sessionId, userId }: SessionCompletePr
                 <>
                     <h2 className={styles.title}>Session Complete</h2>
                     <p className={styles.message}>Take a moment to notice how you feel. Your journey to calm continues.</p>
+
+                    {userId && (
+                        <div className={styles.shareSection}>
+                            <button
+                                onClick={handleShareSession}
+                                className={styles.shareButton}
+                            >
+                                <Share2 size={20} />
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    )}
+
                     <div className={styles.feedbackSection}>
                         <p className={styles.feedbackPrompt}>How are you feeling now?</p>
                         <div className={styles.feedbackOptions}>

@@ -30,6 +30,7 @@ export interface SessionData {
     position: Position;
     duration: number;
     voice: Voice;
+    speed?: string; // Speech speed from -0.5 to 1.5
 }
 
 export interface OnboardingData extends SessionData {

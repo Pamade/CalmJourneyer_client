@@ -1,0 +1,17 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow authenticated pages
+Disallow: /dashboard
+Disallow: /session-history
+Disallow: /account
+Disallow: /preferences
+Disallow: /session/*
+Disallow: /verify-email
+
+# Allow shared sessions
+Allow: /session/shared/*
+
+# Sitemap
+Sitemap: https://calmjourneyer.com/sitemap.xml

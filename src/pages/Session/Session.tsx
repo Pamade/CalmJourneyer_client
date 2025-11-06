@@ -58,13 +58,19 @@ function Session() {
     }, [isLoading, meditationQuotes.length]);
 
     useEffect(() => {
-        // Mode 1: Replay existing session (has sessionId in URL)
+        // Mode 1: Shared session (public access)
+        if (location.pathname.startsWith('/session/shared/')) {
+            fetchSharedSession();
+            return;
+        }
+
+        // Mode 2: Replay existing session (has sessionId in URL, requires auth)
         if (sessionId) {
             fetchExistingSession();
             return;
         }
 
-        // Mode 2: Generate new session (has sessionData in state)
+        // Mode 3: Generate new session (has sessionData in state)
         if (!sessionData) {
             navigate('/onboarding');
             return;
@@ -72,6 +78,32 @@ function Session() {
 
         generateNewSession();
     }, [sessionId, sessionData]);
+
+    // Fetch shared session (public access)
+    const fetchSharedSession = async () => {
+        try {
+            setError(null);
+            const response = await axiosInstance.get<GenerateSessionResponse>(`/sessions/shared/${sessionId}`);
+
+            if (response.data.success) {
+                const session = response.data.data;
+
+                // Parse sessionData if it's a string (from DB)
+                if (typeof session.sessionData === 'string') {
+                    session.sessionData = JSON.parse(session.sessionData);
+                }
+
+                setSessionResponse(session);
+            } else {
+                setError(response.data.message || 'This session is not available.');
+            }
+        } catch (err) {
+            console.error('Error fetching shared session:', err);
+            setError('This session is not publicly shared or does not exist.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // Fetch existing session for replay
     const fetchExistingSession = async () => {
@@ -115,6 +147,7 @@ function Session() {
                 voice: sessionData.voice,
                 position: sessionData.position,
                 eyes: sessionData.eyes,
+                speed: sessionData.speed,
             });
 
             if (response.data.success) {
@@ -226,14 +259,15 @@ function Session() {
 
     return (
         <div className={`${styles.sessionContainer} ${getThemeClass(sessionResponse.ambientSound)}`}>
-            {!isComplete && <button
-                className={styles.exitButton}
-                onClick={() => setIsExitModalOpen(true)}
-                title="Exit Session"
-            >
-                <X size={24} />
-            </button>
-            }
+            {!isComplete && (
+                <button
+                    className={styles.exitButton}
+                    onClick={() => setIsExitModalOpen(true)}
+                    title="Exit Session"
+                >
+                    <X size={24} />
+                </button>
+            )}
             <div className={styles.contentWrapper}>
                 {isComplete ? (
                     <SessionComplete

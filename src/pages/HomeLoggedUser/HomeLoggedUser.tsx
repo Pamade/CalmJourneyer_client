@@ -25,6 +25,7 @@ interface SessionResponse {
 interface AnalyticsOverview {
     totalSessions: number;
     totalMinutes: number;
+    totalMinutesActual: number;
     currentStreak: number;
     longestStreak: number;
     lastSessionDate: string | null;
@@ -205,7 +206,7 @@ export default function HomeLoggedUser() {
                     <StatsCards
                         currentStreak={analytics.currentStreak}
                         totalSessions={analytics.totalSessions}
-                        totalMinutes={analytics.totalMinutes}
+                        totalMinutes={analytics.totalMinutesActual}
                         longestStreak={analytics.longestStreak}
                     />
                 )}

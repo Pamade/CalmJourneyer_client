@@ -265,18 +265,22 @@ export default function SessionPlayer({
         return `/sound_themes/${sound}.wav`;
     };
 
+    const isNarrationEvent = (event: SessionEvent | undefined): event is NarrationEvent => {
+        return event?.event_type === 'narration';
+    };
+
+    const isSilenceEvent = (event: SessionEvent | undefined): event is SilenceEvent => {
+        return event?.event_type === 'silence';
+    };
+
+    const isBreathingEvent = (event: SessionEvent | undefined): event is BreathingEvent => {
+        return event?.event_type === 'breathing';
+    };
+
     // Determine what to display based on event type
     const displayBreathingPulse = currentEvent?.event_type === 'breathing';
     const timeIntoEvent = currentItem ? currentTime - currentItem.startTime : 0;
 
-    // Type guard helpers
-    const isBreathingEvent = (event: SessionEvent): event is BreathingEvent => {
-        return event.event_type === 'breathing';
-    };
-
-    const isNarrationEvent = (event: SessionEvent): event is NarrationEvent => {
-        return event.event_type === 'narration';
-    };
 
     // Instruction text based on current event
     const instructionText = useMemo(() => {

@@ -55,8 +55,8 @@ export default function Navigation({ type }: NavigationProps) {
             <Link to="/account" className={styles.link}>
                 Account
             </Link>
-            <Link to="/dashboard" className={styles.profileButton}>
-                Profile
+            <Link to="/dashboard" className={styles.link}>
+                Dashboard
             </Link>
             <Link to="/preferences" className={styles.link} onClick={closeMenu}>
                 Preferences
@@ -101,8 +101,11 @@ export default function Navigation({ type }: NavigationProps) {
             <Link to="/preferences" className={styles.mobileLink} onClick={closeMenu}>
                 Preferences
             </Link>
-            <Link to="/dashboard" className={styles.mobileProfileButton} onClick={closeMenu}>
-                Profile
+            <Link to="/dashboard" className={styles.mobileLink} onClick={closeMenu}>
+                Dashboard
+            </Link>
+            <Link onClick={logout} to="/login" className={styles.mobileLink}>
+                Logout
             </Link>
 
         </>

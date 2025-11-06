@@ -17,6 +17,7 @@ const Onboarding: React.FC = () => {
         position: 'SITTING',
         duration: 10,
         voice: 'LUNA',
+        speed: '0.0', // Default normal speed
     });
 
     const [playingVoice, setPlayingVoice] = useState<Voice | null>(null);

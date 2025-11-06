@@ -61,6 +61,7 @@ function VerifyEmail() {
         try {
             await sendVerificationEmail(user.email);
             setEmailSent(true);
+            setTimeout(() => setEmailSent(false), 3000);
             toast.success('Verification email sent! Please check your inbox.');
         } catch (err: any) {
             toast.error(err.response?.data?.message || 'Failed to send verification email');
