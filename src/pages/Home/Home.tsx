@@ -35,7 +35,6 @@ function Home() {
     const handleLogin = () => {
         navigate("/login");
     };
-    console.log(user)
 
     return (
         <>

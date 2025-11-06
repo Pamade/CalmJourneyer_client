@@ -1,5 +1,3 @@
-import type { AmbientSound } from '../types/session';
-
 interface ThemeColors {
     background: string;
     accent: string;
