@@ -174,7 +174,7 @@
 
 .voiceCard {
     background: white;
-    border: 2px solid #e5e7eb;
+    border: 2px solid $accent;
     border-radius: 12px;
     padding: 1rem;
     cursor: pointer;
@@ -222,8 +222,9 @@
     }
 
     &.disabled {
-        opacity: 0.5;
+        // opacity: 0.5;
         cursor: not-allowed;
+        border-color: #e5e7eb;
 
         &:hover {
             transform: none;
@@ -427,7 +428,6 @@
     border-radius: 5px;
     background: #e5e7eb;
     outline: none;
-    appearance: none;
     -webkit-appearance: none;
     margin: 1rem 0 0.5rem 0;
 
