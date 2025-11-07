@@ -227,6 +227,28 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                             </div>
 
                             <div className={styles.section}>
+                                <label className={styles.sectionLabel}>Speech Speed</label>
+                                <div className={styles.speedControl}>
+                                    <input
+                                        type="range"
+                                        min="-0.5"
+                                        max="0.5"
+                                        step="0.1"
+                                        value={formData.speed}
+                                        onChange={(e) => setFormData({ ...formData, speed: e.target.value })}
+                                        className={styles.speedSlider}
+                                    />
+                                    <div className={styles.speedLabels}>
+                                        <span>Slower</span>
+                                        <span className={styles.speedValue}>
+                                            {parseFloat(formData.speed) === 0 ? 'Normal' :
+                                                parseFloat(formData.speed) > 0 ? `+${formData.speed}x` : `${formData.speed}x`}
+                                        </span>
+                                        <span>Faster</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.section}>
                                 <label className={styles.sectionLabel}>Choose a voice</label>
                                 <div className={styles.voicesGrid}>
                                     {VOICES.map(voice => {
@@ -272,29 +294,6 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                                             </div>
                                         );
                                     })}
-                                </div>
-                            </div>
-
-                            <div className={styles.section}>
-                                <label className={styles.sectionLabel}>Speech Speed</label>
-                                <div className={styles.speedControl}>
-                                    <input
-                                        type="range"
-                                        min="-0.5"
-                                        max="0.5"
-                                        step="0.1"
-                                        value={formData.speed}
-                                        onChange={(e) => setFormData({ ...formData, speed: e.target.value })}
-                                        className={styles.speedSlider}
-                                    />
-                                    <div className={styles.speedLabels}>
-                                        <span>Slower</span>
-                                        <span className={styles.speedValue}>
-                                            {parseFloat(formData.speed) === 0 ? 'Normal' :
-                                                parseFloat(formData.speed) > 0 ? `+${formData.speed}x` : `${formData.speed}x`}
-                                        </span>
-                                        <span>Faster</span>
-                                    </div>
                                 </div>
                             </div>
 

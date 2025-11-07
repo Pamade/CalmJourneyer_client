@@ -79,6 +79,36 @@ export default function SessionPlayer({
     const currentEvent = currentItem?.event;
     const progress = totalDuration > 0 ? (currentTime / totalDuration) * 100 : 0;
 
+    // Show passive breathing indicator for all silence events
+    const shouldShowPassiveBreathing = useMemo(() => {
+        return currentEvent?.event_type === 'silence';
+    }, [currentEvent]);
+
+
+    // ✅ FIX: Custom seamless loop for ambient sound
+    useEffect(() => {
+        const ambientAudio = ambientAudioRef.current;
+        if (!ambientAudio) return;
+
+        const handleTimeUpdate = () => {
+            // When the audio is 0.5s from the end, reset it to the beginning.
+            // This creates a manual, gapless loop.
+            if (ambientAudio.currentTime > ambientAudio.duration - 2) {
+                ambientAudio.currentTime = 0;
+                ambientAudio.play();
+            }
+        };
+
+        // Add the event listener for our custom loop
+        ambientAudio.addEventListener('timeupdate', handleTimeUpdate);
+
+        // Cleanup
+        return () => {
+            ambientAudio.removeEventListener('timeupdate', handleTimeUpdate);
+        };
+    }, [ambientAudioRef.current]); // Rerun only when the audio element is available
+
+
     // Main playback effect
     useEffect(() => {
         if (timerRef.current) clearInterval(timerRef.current);
@@ -93,13 +123,28 @@ export default function SessionPlayer({
         // Handle different event types
         if (currentEvent.event_type === 'narration' && currentEvent.audioUrl) {
             // Narration with audio
-            if (audio && audio.src !== currentEvent.audioUrl) {
-                audio.src = currentEvent.audioUrl;
-            }
-            const timeIntoEvent = currentTime - currentItem.startTime;
             if (audio) {
-                audio.currentTime = timeIntoEvent;
-                audio.play().catch(e => console.error("Narration play failed:", e));
+                // Only set src if it changed
+                if (audio.src !== currentEvent.audioUrl) {
+                    audio.src = currentEvent.audioUrl;
+                    audio.currentTime = 0;
+                }
+
+                // ✅ FIX: Wait for audio to be ready before playing
+                const playAudio = async () => {
+                    try {
+                        // Ensure any previous play promise is settled
+                        await audio.pause();
+                        await audio.play();
+                    } catch (e) {
+                        // Ignore AbortError - it's expected during rapid seeks
+                        if (e instanceof Error && e.name !== 'AbortError') {
+                            console.error("Narration play failed:", e);
+                        }
+                    }
+                };
+
+                playAudio();
             }
         } else {
             // Silence or breathing - use timer
@@ -129,7 +174,7 @@ export default function SessionPlayer({
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
-    }, [isPlaying, currentItemIndex, timeline, currentEvent, currentItem, currentTime]);
+    }, [isPlaying, currentItemIndex, timeline, currentEvent, currentItem]);
 
     // Audio event listeners for narration
     useEffect(() => {
@@ -171,7 +216,7 @@ export default function SessionPlayer({
         } else {
             ambientAudio.pause();
         }
-    }, [isPlaying, currentAmbientSound]);
+    }, [isPlaying]);
 
     // Narration muting
     useEffect(() => {
@@ -220,12 +265,46 @@ export default function SessionPlayer({
         handleSeek(null, newTime);
     };
 
-    const handleSeek = (e: React.MouseEvent<HTMLDivElement> | null, directTime?: number) => {
+    // const handleSeek = (e: React.MouseEvent<HTMLDivElement> | null, directTime?: number) => {
+    //     const narrationAudio = narrationAudioRef.current;
+    //     if (!narrationAudio) return;
+
+    //     narrationAudio.pause();
+
+    //     let newTime: number;
+    //     if (directTime !== undefined) {
+    //         newTime = directTime;
+    //     } else if (e) {
+    //         const progressBar = e.currentTarget;
+    //         const rect = progressBar.getBoundingClientRect();
+    //         const clickX = e.clientX - rect.left;
+    //         newTime = Math.floor((clickX / progressBar.offsetWidth) * totalDuration);
+    //     } else {
+    //         return;
+    //     }
+
+    //     const targetItemIndex = timeline.findIndex(
+    //         item => newTime >= item.startTime && newTime < item.startTime + item.event.duration_seconds
+    //     );
+
+    //     if (targetItemIndex !== -1) {
+    //         setCurrentTime(newTime);
+    //         setCurrentItemIndex(targetItemIndex);
+    //     }
+
+    //     // Brief pause before resuming
+    //     setIsPlaying(false);
+    //     setTimeout(() => {
+    //         setIsPlaying(true);
+    //     }, 100);
+    // };
+
+    const handleSeek = async (e: React.MouseEvent<HTMLDivElement> | null, directTime?: number) => {
         const narrationAudio = narrationAudioRef.current;
         if (!narrationAudio) return;
 
-        narrationAudio.pause();
-
+        // ✅ FIX: Calculate newTime BEFORE any async operations
+        // React synthetic events are nullified after async calls
         let newTime: number;
         if (directTime !== undefined) {
             newTime = directTime;
@@ -238,20 +317,45 @@ export default function SessionPlayer({
             return;
         }
 
+        // Clear any running timers
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+
+        // Await pause to ensure it completes
+        try {
+            await narrationAudio.pause();
+        } catch (e) {
+            // Ignore errors during pause
+        }
+
         const targetItemIndex = timeline.findIndex(
             item => newTime >= item.startTime && newTime < item.startTime + item.event.duration_seconds
         );
 
         if (targetItemIndex !== -1) {
+            const targetItem = timeline[targetItemIndex];
+            const targetEvent = targetItem.event;
+
             setCurrentTime(newTime);
             setCurrentItemIndex(targetItemIndex);
-        }
 
-        // Brief pause before resuming
-        setIsPlaying(false);
-        setTimeout(() => {
-            setIsPlaying(true);
-        }, 100);
+            // If seeking to a narration event with audio, set the correct position
+            if (targetEvent.event_type === 'narration' && targetEvent.audioUrl) {
+                const timeIntoEvent = newTime - targetItem.startTime;
+                narrationAudio.src = targetEvent.audioUrl;
+                narrationAudio.currentTime = timeIntoEvent;
+            }
+
+            // ✅ FIX: For non-narration events (silence/breathing), ensure playback continues
+            // by forcing a state update that triggers the main playback effect
+            if (isPlaying && targetEvent.event_type !== 'narration') {
+                // Temporarily pause and resume to trigger the effect
+                setIsPlaying(false);
+                setTimeout(() => setIsPlaying(true), 0);
+            }
+        }
     };
 
     const formatTime = (seconds: number) => {
@@ -303,7 +407,8 @@ export default function SessionPlayer({
         <div className={styles.playerWrapper}>
             <div className={styles.playerContainer}>
                 <audio ref={narrationAudioRef} />
-                <audio ref={ambientAudioRef} src={getAmbientSoundUrl(currentAmbientSound)} loop />
+                {/* ✅ FIX: Removed the "loop" attribute. We handle it manually. */}
+                <audio ref={ambientAudioRef} src={getAmbientSoundUrl(currentAmbientSound)} />
 
                 <div className={styles.displayArea}>
                     {displayBreathingPulse && isBreathingEvent(currentEvent) ? (
@@ -312,6 +417,14 @@ export default function SessionPlayer({
                             isActive={isPlaying}
                             timeIntoSegment={timeIntoEvent}
                         />
+                    ) : shouldShowPassiveBreathing ? (
+                        <div className={styles.passiveBreathingContainer}>
+                            <div className={styles.passiveBreathingCircle}>
+                                <p className={styles.passiveBreathingText}>
+                                    {currentEvent?.user_instruction || 'Breathe naturally'}
+                                </p>
+                            </div>
+                        </div>
                     ) : (
                         <EventDisplay
                             event={isNarrationEvent(currentEvent) ? currentEvent : undefined}
