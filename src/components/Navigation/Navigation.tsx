@@ -50,6 +50,9 @@ export default function Navigation({ type }: NavigationProps) {
     // Dashboard navigation (on home-logged page)
     const renderDashboardLinks = () => (
         <>
+            <Link to="/pricing" className={styles.link}>
+                Pricing
+            </Link>
             <Link to="/history" className={styles.link}>
                 History
             </Link>
@@ -92,7 +95,11 @@ export default function Navigation({ type }: NavigationProps) {
     );
 
     const renderDashboardMobileLinks = () => (
+
         <>
+            <Link to="/pricing" className={styles.link}>
+                Pricing
+            </Link>
             <Link to="/history" className={styles.mobileLink} onClick={closeMenu}>
                 History
             </Link>
