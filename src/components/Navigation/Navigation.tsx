@@ -97,7 +97,7 @@ export default function Navigation({ type }: NavigationProps) {
     const renderDashboardMobileLinks = () => (
 
         <>
-            <Link to="/pricing" className={styles.link}>
+            <Link to="/pricing" className={styles.mobileLink} onClick={closeMenu}>
                 Pricing
             </Link>
             <Link to="/history" className={styles.mobileLink} onClick={closeMenu}>
