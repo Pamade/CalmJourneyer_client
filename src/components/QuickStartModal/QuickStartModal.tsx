@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { X, Heart, Brain, Zap, Moon, Sparkles, Armchair, BedSingle, UserSquare, Eye, EyeOff, Play, Square, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import axios from '../../utils/axios';
@@ -90,7 +90,7 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
     };
     console.log(formData)
 
-    const handlePlayVoicePreview = async (voiceId: string, unrealSpeechId: string) => {
+    const handlePlayVoicePreview = useCallback(async (voiceId: string, unrealSpeechId: string) => {
         const playingAudio = playingVoice !== null;
 
         if (playingAudio) {
@@ -138,9 +138,9 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
         } finally {
             setLoadingVoice(null);
         }
-    };
+    }, [playingVoice, audioElement, formData.speed]);
 
-    const handleStartSession = () => {
+    const handleStartSession = useCallback(() => {
         // Navigate to session page with form data
         // The Session page will handle calling the generate API
 
@@ -154,7 +154,26 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
             }
         });
         onClose();
-    };
+    }, [subscription, formData, navigate, onClose]);
+
+    const durationOptions = useMemo(() => {
+        return [5, 10, 15, 20, 25, 30].map(duration => {
+            const isFreeDisabled = subscription?.plan.toLowerCase() === 'free' && duration > 5;
+            const isStandardDisabled = subscription?.plan.toLowerCase() === 'standard' && duration > 15;
+            const isDisabled = isFreeDisabled || isStandardDisabled;
+
+            let badge = null;
+            if (isDisabled && subscription?.plan.toLowerCase() !== 'premium') {
+                badge = (subscription?.plan.toLowerCase() === 'free' && duration <= 15) ? 'Standard' : 'Premium';
+            }
+
+            return {
+                duration,
+                isDisabled,
+                badge
+            };
+        });
+    }, [subscription]); // Only recalculate when the subscription changes
 
     if (!isOpen) return null;
 
@@ -202,27 +221,21 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                             <div className={styles.section}>
                                 <label className={styles.sectionLabel}>Duration</label>
                                 <div className={styles.optionsGrid}>
-                                    {[5, 10, 15, 20, 25, 30].map(duration => {
-                                        const isDisabled =
-                                            (subscription?.plan.toLowerCase() === 'free' && duration > 5) ||
-                                            (subscription?.plan.toLowerCase() === 'standard' && duration > 15);
-
-                                        return (
-                                            <button
-                                                key={duration}
-                                                className={`${styles.optionCard} ${formData.duration === duration ? styles.selected : ''} ${isDisabled ? styles.disabled : ''}`}
-                                                onClick={() => !isDisabled && setFormData({ ...formData, duration: duration })}
-                                                disabled={isDisabled}
-                                            >
-                                                <span className={styles.optionLabel}>{duration} min</span>
-                                                {isDisabled && subscription?.plan.toLowerCase() !== 'premium' && (
-                                                    <span className={styles.premiumBadge}>
-                                                        {subscription?.plan.toLowerCase() === 'free' && duration <= 15 ? 'Standard' : 'Premium'}
-                                                    </span>
-                                                )}
-                                            </button>
-                                        );
-                                    })}
+                                    {durationOptions.map(({ duration, isDisabled, badge }) => (
+                                        <button
+                                            key={duration}
+                                            className={`${styles.optionCard} ${formData.duration === duration ? styles.selected : ''} ${isDisabled ? styles.disabled : ''}`}
+                                            onClick={() => !isDisabled && setFormData({ ...formData, duration: duration })}
+                                            disabled={isDisabled}
+                                        >
+                                            <span className={styles.optionLabel}>{duration} min</span>
+                                            {badge && (
+                                                <span className={styles.premiumBadge}>
+                                                    {badge}
+                                                </span>
+                                            )}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
 

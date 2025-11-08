@@ -20,3 +20,15 @@ $additional-accent-darker: mix(black, $additional-accent, 10%);
 
 
 $global-top-padding: 5rem;
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

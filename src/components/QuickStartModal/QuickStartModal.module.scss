@@ -11,7 +11,9 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    animation: fadeIn 0.3s ease forwards;
+
+    animation: fadeIn 1.5s ease forwards;
+    animation: popIn 0.3s ease forwards;
 }
 
 .modal {
@@ -24,11 +26,13 @@
     position: relative;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     transform: scale(0.95);
-    opacity: 0;
-    animation: popIn 0.3s ease forwards;
+    opacity: 1;
+
+    // animation: popIn 0.3s ease forwards;
     animation-delay: 0.1s;
+    min-height: 90vh;
     max-height: 90vh;
-    overflow-y: auto;
+    overflow-y: scroll;
 
     /* Custom scrollbar */
     scrollbar-width: thin;
@@ -36,6 +40,8 @@
 
     &::-webkit-scrollbar {
         width: 8px;
+        animation: fadeIn 1s ease forwards;
+        box-sizing: border-box;
     }
 
     &::-webkit-scrollbar-track {
@@ -322,7 +328,7 @@
         height: 20px;
         border-radius: 50%;
         background: white;
-        border: 3px solid $accent;
+        border: 3px solid $accent-darker;
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
@@ -355,7 +361,7 @@
 
     .speedValue {
         font-weight: 600;
-        color: $accent;
+        color: $accent-darker;
         font-size: 0.95rem;
     }
 }
@@ -512,12 +518,10 @@
 
 @keyframes popIn {
     0% {
-        opacity: 0;
         transform: scale(0.95);
     }
 
     100% {
-        opacity: 1;
         transform: scale(1);
     }
 }

@@ -3,7 +3,10 @@
 .page {
     min-height: 100vh;
     background: $background;
+    animation: fadeInUp 1.5s ease-out;
 }
+
+// animation: fadeInUp 0.8s ease-out forwards;
 
 .container {
     max-width: 900px;

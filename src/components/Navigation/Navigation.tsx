@@ -20,6 +20,7 @@ export default function Navigation({ type }: NavigationProps) {
 
     const closeMenu = () => {
         setIsMenuOpen(false);
+        window.scrollTo(0, 0);
     };
 
     // Public navigation (not logged in)

@@ -78,18 +78,18 @@ export const VOICES: VoiceOption[] = [
         unrealSpeechId: 'Luna'
     },
     {
-        id: 'LAUREN',
-        label: 'Lauren',
-        description: 'Warm and gentle',
-        free: false,
-        unrealSpeechId: 'Lauren'
-    },
-    {
         id: 'CALEB',
         label: 'Caleb',
         description: 'Deep and grounding',
         free: true,
         unrealSpeechId: 'Caleb'
+    },
+    {
+        id: 'LAUREN',
+        label: 'Lauren',
+        description: 'Warm and gentle',
+        free: false,
+        unrealSpeechId: 'Lauren'
     },
     {
         id: 'DANIEL',
