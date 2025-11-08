@@ -155,6 +155,11 @@ function Session() {
                 setSessionResponse(session);
                 if (!user && !isOnBoardingCompleted) {
                     localStorage.setItem('is_onboarding_completed', 'true');
+                    if (typeof window !== 'undefined' && window.gtag) {
+                        window.gtag('event', 'conversion', {
+                            'send_to': 'AW-17674261329/NfkTCIGhtbwbENGm3-tB'
+                        });
+                    }
                 }
                 // Note: Session is already saved to DB by /sessions/generate endpoint
             } else {
