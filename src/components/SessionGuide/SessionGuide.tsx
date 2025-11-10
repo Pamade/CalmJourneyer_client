@@ -28,7 +28,7 @@ const tourSteps = [
         position: 'bottom' as TooltipPosition
     },
     {
-        targetSelector: '.session-guide-theme',
+        targetSelector: '.session-guide-ambient-theme',
         title: 'Change Theme',
         content: 'Change the entire color palette of the session. Each theme is inspired by an ambient sound.',
         position: 'bottom' as TooltipPosition

@@ -485,7 +485,7 @@ export default function SessionPlayer({
                         {isAmbientMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
                     </button>
                     <button
-                        className={`${styles.controlButton} session-guide-ambient session-guide-ambient-theme`}
+                        className={`${styles.controlButton} session-guide-ambient-theme`}
                         onClick={onOpenAmbientSwitcher}
                         title="Ambient Sound"
                     >
