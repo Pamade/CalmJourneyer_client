@@ -88,7 +88,6 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
             setLoadingData(false);
         }
     };
-
     const handlePlayVoicePreview = useCallback(async (voiceId: string, unrealSpeechId: string) => {
         // If an audio is already playing, stop it.
         if (playingVoice !== null) {
@@ -116,6 +115,7 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                     'Authorization': `Bearer ${import.meta.env.VITE_UNREAL_SPEECH_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
+                withCredentials: false, // Important: Do NOT send cookies
             });
 
             if (!response.data?.OutputUri) {
