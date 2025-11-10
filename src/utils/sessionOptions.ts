@@ -97,6 +97,20 @@ export const VOICES: VoiceOption[] = [
         description: 'Clear and focused',
         free: false,
         unrealSpeechId: 'Daniel'
+    },
+    {
+        id: "MELODY",
+        label: "Melody",
+        description: "Soft and melodic",
+        free: false,
+        unrealSpeechId: "Melody"
+    },
+    {
+        id: "JASPER",
+        label: "Jasper",
+        description: "Rich and soothing",
+        free: false,
+        unrealSpeechId: "Jasper"
     }
 ];
 

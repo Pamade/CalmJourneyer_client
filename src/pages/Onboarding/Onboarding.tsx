@@ -66,6 +66,8 @@ const Onboarding: React.FC = () => {
         { id: 'LAUREN', label: 'Lauren', description: 'Warm and gentle', unrealSpeechId: 'Lauren' },
         { id: 'CALEB', label: 'Caleb', description: 'Deep and grounding', unrealSpeechId: 'Caleb' },
         { id: 'DANIEL', label: 'Daniel', description: 'Clear and focused', unrealSpeechId: 'Daniel' },
+        { id: "MELODY", label: "Melody", description: "Soft and melodic", unrealSpeechId: "Melody" },
+        { id: "JASPER", label: "Jasper", description: "Rich and soothing", unrealSpeechId: "Jasper" }
     ];
 
     const eyeOptions = [
