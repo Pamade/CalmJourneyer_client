@@ -95,7 +95,7 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
         if (playingVoice !== null) {
             audioElement?.pause();
             setPlayingVoice(null);
-            // If the user clicks the same button, we just stop. Otherwise, we continue to play the new one.
+            // If the user clicks the same button, we just stop.
             if (playingVoice === voiceId) {
                 return;
             }
@@ -103,30 +103,8 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
 
         setLoadingVoice(voiceId);
 
-        // --- Mobile Audio Unlock Pattern ---
-        // Create audio element and unlock it BEFORE any async operations
-        const audio = audioElement || new Audio();
-
-        // CRITICAL: Set a valid silent audio source BEFORE calling play()
-        // This is required for mobile browsers to unlock the audio context
-        audio.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
-
-        // Play and immediately pause to unlock - must be synchronous in click handler
         try {
-            await audio.play();
-            audio.pause();
-            audio.currentTime = 0;
-        } catch (err) {
-            console.error('Audio unlock failed:', err);
-        }
-
-        audio.onended = () => {
-            setPlayingVoice(null);
-        };
-        setAudioElement(audio);
-
-        try {
-            // Now perform the async API call - audio context is unlocked
+            // Make the API call directly - keep it simple like Onboarding
             const response = await axios.post('https://api.v8.unrealspeech.com/speech', {
                 Text: previewText,
                 VoiceId: unrealSpeechId,
@@ -146,12 +124,17 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                 throw new Error('Failed to generate voice preview URI');
             }
 
-            // Load the real audio and play - the element is already unlocked
-            audio.src = response.data.OutputUri;
-            audio.load(); // Important: explicitly load the new source
-            await audio.play();
+            // Create audio with the real source and play immediately
+            // This works on mobile because it's the same pattern as Onboarding
+            const audio = new Audio(response.data.OutputUri);
+            audio.onended = () => {
+                setPlayingVoice(null);
+            };
 
+            await audio.play();
+            setAudioElement(audio);
             setPlayingVoice(voiceId);
+
         } catch (error) {
             console.error('Error playing voice preview:', error);
             alert('Failed to play voice preview. Please try again.');
