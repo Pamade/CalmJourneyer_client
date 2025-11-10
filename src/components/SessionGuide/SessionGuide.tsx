@@ -24,13 +24,19 @@ const tourSteps = [
     {
         targetSelector: '.session-guide-ambient',
         title: 'Ambient Sound',
-        content: 'Control the background sounds. Mute them, or open the sound menu to change the track and volume.',
+        content: 'Mute ambient sounds while keeping the narrator voice active.',
         position: 'bottom' as TooltipPosition
     },
     {
         targetSelector: '.session-guide-ambient-theme',
+        title: 'Change Ambient',
+        content: 'Change the ambient sound of the session.',
+        position: 'bottom' as TooltipPosition
+    },
+    {
+        targetSelector: '.session-guide-theme',
         title: 'Change Theme',
-        content: 'Change the entire color palette of the session. Each theme is inspired by an ambient sound.',
+        content: 'Change the entire color palette of the session',
         position: 'bottom' as TooltipPosition
     },
     {
