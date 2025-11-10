@@ -88,53 +88,6 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
             setLoadingData(false);
         }
     };
-    console.log(formData)
-
-
-
-    // const handlePlayVoicePreview = async (voiceId: string, unrealSpeechId: string) => {
-    //     if (playingVoice === voiceId) {
-    //         audioElement?.pause();
-    //         setPlayingVoice(null);
-    //         return;
-    //     }
-
-    //     setLoadingVoice(voiceId);
-
-    //     // Stwórz audio już teraz
-    //     const audio = new Audio();
-    //     setAudioElement(audio);
-
-    //     try {
-    //         const response = await axios.post('https://api.v8.unrealspeech.com/speech', {
-    //             Text: previewText,
-    //             VoiceId: unrealSpeechId,
-    //             Bitrate: '320k',
-    //             AudioFormat: 'mp3',
-    //             OutputFormat: 'uri',
-    //             TimestampType: 'sentence',
-    //         }, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${import.meta.env.VITE_UNREAL_SPEECH_API_KEY}`,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         });
-
-    //         audio.src = response.data.OutputUri;
-    //         audio.onended = () => setPlayingVoice(null);
-
-    //         // Wywołanie play w reakcji na kliknięcie
-    //         await audio.play();
-    //         setPlayingVoice(voiceId);
-
-    //     } catch (error) {
-    //         console.error('Error playing voice preview:', error);
-    //         alert('Failed to play voice preview. Please try again.');
-    //     } finally {
-    //         setLoadingVoice(null);
-    //     }
-    // };
-
 
     const handlePlayVoicePreview = useCallback(async (voiceId: string, unrealSpeechId: string) => {
         // If an audio is already playing, stop it.
