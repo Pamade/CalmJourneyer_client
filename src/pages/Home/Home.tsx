@@ -4,12 +4,12 @@ import { Sparkles, Brain, Heart } from "lucide-react";
 import { FiMoon, FiWind, FiTarget, FiZap, FiCircle, FiStar } from "react-icons/fi";
 import Navigation from "../../components/Navigation/Navigation";
 import styles from "./Home.module.scss";
-import { useAuth } from "../../context/AuthContext";
+import { useOptimisticAuth } from "../../context/AuthContext";
 
 function Home() {
     const navigate = useNavigate();
     const jwtToken = localStorage.getItem("access_token");
-    const { user } = useAuth()
+    const { user } = useOptimisticAuth()
     const onboardingCompleted = localStorage.getItem("is_onboarding_completed");
 
     useEffect(() => {

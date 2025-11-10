@@ -173,3 +173,41 @@ export function useAuth() {
     }
     return context;
 }
+
+// 🔧 NEW: Optimistic auth hook for homepage - non-blocking, immediate render
+export function useOptimisticAuth() {
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        // Check auth in background, don't block rendering
+        checkAuthInBackground();
+    }, []);
+
+    const checkAuthInBackground = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+                withCredentials: true,
+                timeout: 3000 // 3 second timeout to prevent hanging
+            });
+
+            if (response.data.success && response.data.data) {
+                const userData = response.data.data;
+                setUser({
+                    id: userData.id,
+                    email: userData.email,
+                    name: userData.name,
+                    emailVerified: userData.emailVerified || false,
+                    onboardingCompleted: userData.onboardingCompleted || false,
+                    provider: userData.provider || 'local'
+                });
+            } else {
+                setUser(null);
+            }
+        } catch (error) {
+            // Silently fail - user stays null (default for public homepage)
+            setUser(null);
+        }
+    };
+
+    return { user };
+}
