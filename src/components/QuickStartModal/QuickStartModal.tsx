@@ -91,26 +91,44 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
     console.log(formData)
 
     const handlePlayVoicePreview = useCallback(async (voiceId: string, unrealSpeechId: string) => {
-        const playingAudio = playingVoice !== null;
-
-        if (playingAudio) {
+        // If an audio is already playing, stop it.
+        if (playingVoice !== null) {
             audioElement?.pause();
             setPlayingVoice(null);
-            return;
+            // If the user clicks the same button, we just stop. Otherwise, we continue to play the new one.
+            if (playingVoice === voiceId) {
+                return;
+            }
         }
 
         setLoadingVoice(voiceId);
 
+        // --- The Fix: Unlock Audio Synchronously ---
+        // 1. Create the audio element immediately.
+        const audio = audioElement || new Audio();
+        audio.onended = () => {
+            setPlayingVoice(null);
+        };
+        setAudioElement(audio);
+
+        // 2. On mobile, a silent play() inside the user gesture "unlocks" the element.
+        //    We do this before any `await`.
+        audio.play().catch(() => {
+            // This initial play might fail on some browsers if there's no source, which is fine.
+            // We just want to signal user intent.
+        });
+        audio.pause(); // Immediately pause it.
+
         try {
+            // 3. Now, perform the async API call.
             const response = await axios.post('https://api.v8.unrealspeech.com/speech', {
                 Text: previewText,
                 VoiceId: unrealSpeechId,
                 Bitrate: '320k',
-                Speed: formData.speed, // Apply current speed setting
+                Speed: formData.speed,
                 AudioFormat: 'mp3',
                 OutputFormat: 'uri',
                 TimestampType: 'sentence',
-                sync: false,
             }, {
                 headers: {
                     'Authorization': `Bearer ${import.meta.env.VITE_UNREAL_SPEECH_API_KEY}`,
@@ -118,19 +136,14 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
                 },
             });
 
-            if (!response.data) {
-                throw new Error('Failed to generate voice preview');
+            if (!response.data?.OutputUri) {
+                throw new Error('Failed to generate voice preview URI');
             }
 
-            const data = await response.data;
-            const audioUrl = data.OutputUri;
+            // 4. Load the real source and play it. The element is already "unlocked".
+            audio.src = response.data.OutputUri;
+            await audio.play(); // This should now work on mobile.
 
-            const audio = new Audio(audioUrl);
-            audio.onended = () => {
-                setPlayingVoice(null);
-            };
-            audio.play();
-            setAudioElement(audio);
             setPlayingVoice(voiceId);
         } catch (error) {
             console.error('Error playing voice preview:', error);
@@ -138,7 +151,7 @@ export default function QuickStartModal({ isOpen, onClose }: QuickStartModalProp
         } finally {
             setLoadingVoice(null);
         }
-    }, [playingVoice, audioElement, formData.speed]);
+    }, [playingVoice, audioElement, formData.speed, previewText]);
 
     const handleStartSession = useCallback(() => {
         // Navigate to session page with form data
