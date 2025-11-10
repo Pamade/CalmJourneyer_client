@@ -6,21 +6,21 @@ export default defineConfig({
   plugins: [react()],
 
 
-  define: {
-    // Define global for browser compatibility
-    global: 'globalThis',
-  },
+  // define: {
+  //   // Define global for browser compatibility
+  //   global: 'globalThis',
+  // },
 
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'buffer'],
-    esbuildOptions: {
-      target: 'esnext',
-      // Node.js global to browser globalThis
-      define: {
-        global: 'globalThis',
-      },
-    }
-  },
+  // optimizeDeps: {
+  //   include: ['react', 'react-dom', 'react-router-dom', 'buffer'],
+  //   esbuildOptions: {
+  //     target: 'esnext',
+  //     // Node.js global to browser globalThis
+  //     define: {
+  //       global: 'globalThis',
+  //     },
+  //   }
+  // },
 
   build: {
     target: 'esnext',
@@ -35,20 +35,20 @@ export default defineConfig({
     },
 
     // CSS optimization
-    cssCodeSplit: true,
-    cssMinify: true,
+    // cssCodeSplit: true,
+    // cssMinify: true,
 
     // Wyłącz sourcemaps w produkcji (mniejszy bundle)
-    sourcemap: false,
+    // sourcemap: false,
 
-    commonjsOptions: {
-      include: [/node_modules/],
-      transformMixedEsModules: true
-    },
+    // commonjsOptions: {
+    //   include: [/node_modules/],
+    //   transformMixedEsModules: true
+    // },
 
 
     // Warning gdy chunk > 1MB
-    chunkSizeWarningLimit: 1000,
+    // chunkSizeWarningLimit: 1000,
 
 
   }
