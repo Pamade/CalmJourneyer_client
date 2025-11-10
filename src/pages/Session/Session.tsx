@@ -10,6 +10,8 @@ import ThemeSwitcher from '../../components/ThemeSwitcher/ThemeSwitcher';
 import AmbientSoundSwitcher from '../../components/AmbientSoundSwitcher/AmbientSoundSwitcher';
 import ExitConfirmationModal from '../../components/ExitConfirmationModal/ExitConfirmationModal';
 import { useAuth } from '../../context/AuthContext';
+import SessionGuide from '../../components/SessionGuide/SessionGuide';
+// import SessionGuide from '../../components/SessionGuide/SessionGuide';
 
 function Session() {
     const location = useLocation();
@@ -41,6 +43,7 @@ function Session() {
     const [currentAmbientSound, setCurrentAmbientSound] = useState<AmbientSound | null>(null);
     const [isExitModalOpen, setIsExitModalOpen] = useState(false);
     const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+    const [showGuide, setShowGuide] = useState(false);
 
     const handleSessionComplete = () => {
         setIsComplete(true);
@@ -74,6 +77,15 @@ function Session() {
         if (!sessionData) {
             navigate('/onboarding');
             return;
+        }
+
+        // Check if this is a new session generation to decide on showing the guide
+        const hasSeenGuide = localStorage.getItem('hasCompletedSessionGuide') === 'true';
+        const isLandscapeMobile = window.innerWidth > window.innerHeight && window.innerWidth < 900;
+
+        if (!sessionId && !hasSeenGuide && !isLandscapeMobile) {
+            // Only show guide for new sessions, not replays, shared ones, or mobile landscape
+            setShowGuide(true);
         }
 
         generateNewSession();
@@ -185,6 +197,11 @@ function Session() {
         setCurrentAmbientSound(newSound);
     };
 
+    const handleGuideComplete = () => {
+        localStorage.setItem('hasCompletedSessionGuide', 'true');
+        setShowGuide(false);
+    };
+
     const handleExitSession = () => {
         navigate('/dashboard');
     };
@@ -264,6 +281,7 @@ function Session() {
 
     return (
         <div className={`${styles.sessionContainer} ${getThemeClass(sessionResponse.ambientSound)}`}>
+            {showGuide && <SessionGuide onComplete={handleGuideComplete} />}
             {!isComplete && (
                 <button
                     className={styles.exitButton}

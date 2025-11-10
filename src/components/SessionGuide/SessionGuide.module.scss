@@ -1,0 +1,198 @@
+@import '../../variables/variables.scss';
+
+.guideOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+    &.visible {
+        opacity: 1;
+    }
+}
+
+.highlightBox {
+    position: absolute;
+    border-radius: 12px;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+    border: 3px solid $accent;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+
+    // Extra glow for better visibility
+    &::after {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        right: -6px;
+        bottom: -6px;
+        border-radius: 14px;
+        border: 1px solid rgba($accent, 0.4);
+        pointer-events: none;
+    }
+}
+
+.tooltip {
+    position: absolute;
+    background-color: $main-text;
+    color: $background;
+    padding: 1.25rem;
+    border-radius: 12px;
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba($background, 0.1);
+    z-index: 1001;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    opacity: 0;
+    transform: scale(0.95);
+    box-sizing: border-box;
+
+    .guideOverlay.visible & {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    &.top {
+        transform: translateY(10px) scale(0.95);
+
+        .guideOverlay.visible & {
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    &.bottom {
+        transform: translateY(-10px) scale(0.95);
+
+        .guideOverlay.visible & {
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    &.left {
+        transform: translateX(10px) scale(0.95);
+
+        .guideOverlay.visible & {
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    &.right {
+        transform: translateX(-10px) scale(0.95);
+
+        .guideOverlay.visible & {
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    &.center {
+        width: auto !important;
+        max-width: calc(100vw - 32px);
+
+        .guideOverlay.visible & {
+            transform: scale(1);
+        }
+    }
+}
+
+.closeButton {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    color: $text-light;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba($background, 0.1);
+    }
+}
+
+.tooltipTitle {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $background;
+}
+
+.tooltipContent {
+    margin: 0 0 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: $accent;
+}
+
+.tooltipFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba($background, 0.1);
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.stepCounter {
+    font-size: 0.85rem;
+    color: $text-light;
+}
+
+.navigation {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.navText {
+    @media (max-width: 480px) {
+        display: none;
+    }
+}
+
+.navButton,
+.navButtonPrimary {
+    background: transparent;
+    border: 1px solid rgba($background, 0.2);
+    // color: $text-light;
+    color: rgb(182, 182, 182);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    @media (max-width: 480px) {
+        padding: 0.5rem;
+        min-width: 40px;
+        justify-content: center;
+    }
+
+    &:hover {
+        background-color: rgba($background, 0.1);
+        color: $background;
+    }
+}
+
+.navButtonPrimary {
+    background-color: $accent-darker;
+    border-color: $accent;
+    color: rgb(10, 10, 10);
+
+    &:hover {
+        background-color: $accent-dark;
+        border-color: $accent-dark;
+        color: $main-text;
+    }
+}

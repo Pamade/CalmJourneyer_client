@@ -448,20 +448,20 @@ export default function SessionPlayer({
 
                 <div className={styles.controls}>
                     <button
-                        className={`${styles.controlButton} ${styles.skipButton}`}
+                        className={`${styles.controlButton} ${styles.skipButton} session-guide-skip`}
                         onClick={() => handleSkip(-10)}
                         title="Rewind 10s"
                     >
                         <Rewind size={22} />
                     </button>
                     <button
-                        className={styles.playButton}
+                        className={`${styles.playButton} session-guide-play-pause`}
                         onClick={handlePlayPause}
                     >
                         {isPlaying ? <Pause size={32} /> : <Play size={32} />}
                     </button>
                     <button
-                        className={`${styles.controlButton} ${styles.skipButton}`}
+                        className={`${styles.controlButton} ${styles.skipButton} session-guide-skip`}
                         onClick={() => handleSkip(15)}
                         title="Forward 15s"
                     >
@@ -471,28 +471,28 @@ export default function SessionPlayer({
 
                 <div className={styles.secondaryControls}>
                     <button
-                        className={styles.controlButton}
+                        className={`${styles.controlButton} session-guide-narration`}
                         onClick={onNarrationMuteToggle}
                         title={isNarrationMuted ? 'Unmute Narrator' : 'Mute Narrator'}
                     >
                         {isNarrationMuted ? <MicOff size={24} /> : <Mic size={24} />}
                     </button>
                     <button
-                        className={styles.controlButton}
+                        className={`${styles.controlButton} session-guide-ambient`}
                         onClick={onAmbientMuteToggle}
                         title={isAmbientMuted ? 'Unmute Ambient' : 'Mute Ambient'}
                     >
                         {isAmbientMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
                     </button>
                     <button
-                        className={styles.controlButton}
+                        className={`${styles.controlButton} session-guide-ambient session-guide-ambient-theme`}
                         onClick={onOpenAmbientSwitcher}
                         title="Ambient Sound"
                     >
                         <AudioLines size={24} />
                     </button>
                     <button
-                        className={styles.controlButton}
+                        className={`${styles.controlButton} session-guide-theme`}
                         onClick={onOpenThemeSwitcher}
                         title="Change Theme"
                     >
