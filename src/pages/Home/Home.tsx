@@ -1,10 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router";
-import { Sparkles, Brain, Heart } from "lucide-react";
-import { FiMoon, FiWind, FiTarget, FiZap, FiCircle, FiStar } from "react-icons/fi";
 import Navigation from "../../components/Navigation/Navigation";
 import styles from "./Home.module.scss";
 import { useOptimisticAuth } from "../../context/AuthContext";
+
+// Lazy load icons to reduce initial bundle size
+const Sparkles = lazy(() => import("lucide-react").then(module => ({ default: module.Sparkles })));
+const Brain = lazy(() => import("lucide-react").then(module => ({ default: module.Brain })));
+const Heart = lazy(() => import("lucide-react").then(module => ({ default: module.Heart })));
+const FiMoon = lazy(() => import("react-icons/fi").then(module => ({ default: module.FiMoon })));
+const FiWind = lazy(() => import("react-icons/fi").then(module => ({ default: module.FiWind })));
+const FiTarget = lazy(() => import("react-icons/fi").then(module => ({ default: module.FiTarget })));
+const FiZap = lazy(() => import("react-icons/fi").then(module => ({ default: module.FiZap })));
+const FiCircle = lazy(() => import("react-icons/fi").then(module => ({ default: module.FiCircle })));
+const FiStar = lazy(() => import("react-icons/fi").then(module => ({ default: module.FiStar })));
+
+// Icon loading placeholder (invisible to maintain layout)
+const IconPlaceholder = () => <span style={{ display: 'inline-block', width: '1em', height: '1em' }} />;
 
 function Home() {
     const navigate = useNavigate();
@@ -62,10 +74,14 @@ function Home() {
 
 
                                 {!user ? (<button className={styles.primaryButton} onClick={handleGetStarted}>
-                                    <Sparkles className={styles.buttonIcon} />
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <Sparkles className={styles.buttonIcon} />
+                                    </Suspense>
                                     Start Free
                                 </button>) : <button className={styles.primaryButton} onClick={() => navigate("/dashboard")}>
-                                    <Sparkles className={styles.buttonIcon} />
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <Sparkles className={styles.buttonIcon} />
+                                    </Suspense>
                                     Go To Dashboard
                                 </button>
                                 }
@@ -79,7 +95,9 @@ function Home() {
                         <div className={styles.heroVisual}>
                             <div className={styles.floatingCard}>
                                 <div className={styles.cardIcon}>
-                                    <Sparkles />
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <Sparkles />
+                                    </Suspense>
                                 </div>
                                 <div className={styles.cardText}>
                                     <div className={styles.cardTitle}>AI Meditation</div>
@@ -96,7 +114,9 @@ function Home() {
                     <div className={styles.featuresGrid}>
                         <div className={styles.featureCard}>
                             <div className={styles.featureIcon}>
-                                <Brain />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <Brain />
+                                </Suspense>
                             </div>
                             <h3 className={styles.featureTitle}>Smart AI Personalization</h3>
                             <p className={styles.featureDescription}>
@@ -107,7 +127,9 @@ function Home() {
 
                         <div className={styles.featureCard}>
                             <div className={styles.featureIcon}>
-                                <Sparkles />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <Sparkles />
+                                </Suspense>
                             </div>
                             <h3 className={styles.featureTitle}>Unique AI-Generated Sessions</h3>
                             <p className={styles.featureDescription}>
@@ -118,7 +140,9 @@ function Home() {
 
                         <div className={styles.featureCard}>
                             <div className={styles.featureIcon}>
-                                <Heart />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <Heart />
+                                </Suspense>
                             </div>
                             <h3 className={styles.featureTitle}>Natural AI Voice Guidance</h3>
                             <p className={styles.featureDescription}>
@@ -138,7 +162,9 @@ function Home() {
                     <div className={styles.goalsGrid}>
                         <div className={styles.goalCard}>
                             <div className={styles.goalIcon}>
-                                <FiMoon />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <FiMoon />
+                                </Suspense>
                             </div>
                             <h4 className={styles.goalTitle}>Sleep Better</h4>
                             <p className={styles.goalDescription}>
@@ -148,7 +174,9 @@ function Home() {
 
                         <div className={styles.goalCard}>
                             <div className={styles.goalIcon}>
-                                <FiWind />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <FiWind />
+                                </Suspense>
                             </div>
                             <h4 className={styles.goalTitle}>Reduce Stress</h4>
                             <p className={styles.goalDescription}>
@@ -158,7 +186,9 @@ function Home() {
 
                         <div className={styles.goalCard}>
                             <div className={styles.goalIcon}>
-                                <FiTarget />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <FiTarget />
+                                </Suspense>
                             </div>
                             <h4 className={styles.goalTitle}>Improve Focus</h4>
                             <p className={styles.goalDescription}>
@@ -168,7 +198,9 @@ function Home() {
 
                         <div className={styles.goalCard}>
                             <div className={styles.goalIcon}>
-                                <FiZap />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <FiZap />
+                                </Suspense>
                             </div>
                             <h4 className={styles.goalTitle}>Boost Energy</h4>
                             <p className={styles.goalDescription}>
@@ -178,7 +210,9 @@ function Home() {
 
                         <div className={styles.goalCard}>
                             <div className={styles.goalIcon}>
-                                <FiCircle />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <FiCircle />
+                                </Suspense>
                             </div>
                             <h4 className={styles.goalTitle}>Sit in Silence</h4>
                             <p className={styles.goalDescription}>
@@ -188,7 +222,9 @@ function Home() {
 
                         <div className={styles.goalCard}>
                             <div className={styles.goalIcon}>
-                                <FiStar />
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <FiStar />
+                                </Suspense>
                             </div>
                             <h4 className={styles.goalTitle}>Know Yourself</h4>
                             <p className={styles.goalDescription}>
@@ -206,7 +242,9 @@ function Home() {
                             Join thousands of people who find peace daily with CalmJourneyer
                         </p>
                         <button className={styles.ctaButton} onClick={handleGetStarted}>
-                            <Sparkles className={styles.buttonIcon} />
+                            <Suspense fallback={<IconPlaceholder />}>
+                                <Sparkles className={styles.buttonIcon} />
+                            </Suspense>
                             Start Now - Free
                         </button>
                     </div>
