@@ -158,7 +158,12 @@ export default function Navigation({ type }: NavigationProps) {
                 </div>
 
                 {/* Mobile Menu Button */}
-                <button className={styles.menuButton} onClick={toggleMenu}>
+                <button
+                    className={styles.menuButton}
+                    onClick={toggleMenu}
+                    aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                    aria-expanded={isMenuOpen}
+                >
                     {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
 

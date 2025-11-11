@@ -59,196 +59,198 @@ function Home() {
             <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
                 <Navigation type={user ? "logged" : "public"} />
 
-                {/* Hero Section */}
-                <section className={styles.hero}>
-                    <div className={styles.heroContent}>
-                        <div className={styles.heroText}>
-                            <h1 className={styles.heroTitle}>
-                                AI Meditation App for Personalized Guided Relaxation
-                            </h1>
-                            <p className={styles.heroSubtitle}>
-                                CalmJourneyer uses artificial intelligence to create personalized
-                                AI voice meditation sessions. Each guided relaxation is unique and tailored to your needs, goals, and mood.
-                            </p>
-                            <div className={styles.heroCta}>
+                <main>
+                    {/* Hero Section */}
+                    <section className={styles.hero}>
+                        <div className={styles.heroContent}>
+                            <div className={styles.heroText}>
+                                <h1 className={styles.heroTitle}>
+                                    AI Meditation App for Personalized Guided Relaxation
+                                </h1>
+                                <p className={styles.heroSubtitle}>
+                                    CalmJourneyer uses artificial intelligence to create personalized
+                                    AI voice meditation sessions. Each guided relaxation is unique and tailored to your needs, goals, and mood.
+                                </p>
+                                <div className={styles.heroCta}>
 
 
-                                {!user ? (<button className={styles.primaryButton} onClick={handleGetStarted}>
-                                    <Suspense fallback={<IconPlaceholder />}>
-                                        <Sparkles className={styles.buttonIcon} />
-                                    </Suspense>
-                                    Start Free
-                                </button>) : <button className={styles.primaryButton} onClick={() => navigate("/dashboard")}>
-                                    <Suspense fallback={<IconPlaceholder />}>
-                                        <Sparkles className={styles.buttonIcon} />
-                                    </Suspense>
-                                    Go To Dashboard
-                                </button>
-                                }
-                                {!user && (
-                                    <button className={styles.secondaryButton} onClick={handleLogin}>
-                                        I Have an Account
+                                    {!user ? (<button className={styles.primaryButton} onClick={handleGetStarted}>
+                                        <Suspense fallback={<IconPlaceholder />}>
+                                            <Sparkles className={styles.buttonIcon} />
+                                        </Suspense>
+                                        Start Free
+                                    </button>) : <button className={styles.primaryButton} onClick={() => navigate("/dashboard")}>
+                                        <Suspense fallback={<IconPlaceholder />}>
+                                            <Sparkles className={styles.buttonIcon} />
+                                        </Suspense>
+                                        Go To Dashboard
                                     </button>
-                                )}
+                                    }
+                                    {!user && (
+                                        <button className={styles.secondaryButton} onClick={handleLogin}>
+                                            I Have an Account
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                            <div className={styles.heroVisual}>
+                                <div className={styles.floatingCard}>
+                                    <div className={styles.cardIcon}>
+                                        <Suspense fallback={<IconPlaceholder />}>
+                                            <Sparkles />
+                                        </Suspense>
+                                    </div>
+                                    <div className={styles.cardText}>
+                                        <div className={styles.cardTitle}>AI Meditation</div>
+                                        <div className={styles.cardSubtitle}>Generated Live</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className={styles.heroVisual}>
-                            <div className={styles.floatingCard}>
-                                <div className={styles.cardIcon}>
+                    </section>
+
+                    {/* Features Section */}
+                    <section className={styles.features}>
+                        <h2 className={styles.sectionTitle}>How AI Meditation Works</h2>
+                        <div className={styles.featuresGrid}>
+                            <div className={styles.featureCard}>
+                                <div className={styles.featureIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <Brain />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.featureTitle}>Smart AI Personalization</h3>
+                                <p className={styles.featureDescription}>
+                                    Our AI meditation app analyzes your goals and preferences, creating guided relaxation
+                                    sessions perfectly tailored to your emotional state and mindfulness needs.
+                                </p>
+                            </div>
+
+                            <div className={styles.featureCard}>
+                                <div className={styles.featureIcon}>
                                     <Suspense fallback={<IconPlaceholder />}>
                                         <Sparkles />
                                     </Suspense>
                                 </div>
-                                <div className={styles.cardText}>
-                                    <div className={styles.cardTitle}>AI Meditation</div>
-                                    <div className={styles.cardSubtitle}>Generated Live</div>
+                                <h3 className={styles.featureTitle}>Unique AI-Generated Sessions</h3>
+                                <p className={styles.featureDescription}>
+                                    Each personalized meditation is generated live with AI. You'll never hear the same
+                                    session twice - always fresh, authentic meditation experiences.
+                                </p>
+                            </div>
+
+                            <div className={styles.featureCard}>
+                                <div className={styles.featureIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <Heart />
+                                    </Suspense>
                                 </div>
+                                <h3 className={styles.featureTitle}>Natural AI Voice Guidance</h3>
+                                <p className={styles.featureDescription}>
+                                    Choose from different AI voice meditation guides. Advanced speech synthesis
+                                    makes them sound natural and soothing for your guided relaxation.
+                                </p>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Features Section */}
-                <section className={styles.features}>
-                    <h2 className={styles.sectionTitle}>How AI Meditation Works</h2>
-                    <div className={styles.featuresGrid}>
-                        <div className={styles.featureCard}>
-                            <div className={styles.featureIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <Brain />
-                                </Suspense>
-                            </div>
-                            <h3 className={styles.featureTitle}>Smart AI Personalization</h3>
-                            <p className={styles.featureDescription}>
-                                Our AI meditation app analyzes your goals and preferences, creating guided relaxation
-                                sessions perfectly tailored to your emotional state and mindfulness needs.
-                            </p>
-                        </div>
-
-                        <div className={styles.featureCard}>
-                            <div className={styles.featureIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <Sparkles />
-                                </Suspense>
-                            </div>
-                            <h3 className={styles.featureTitle}>Unique AI-Generated Sessions</h3>
-                            <p className={styles.featureDescription}>
-                                Each personalized meditation is generated live with AI. You'll never hear the same
-                                session twice - always fresh, authentic meditation experiences.
-                            </p>
-                        </div>
-
-                        <div className={styles.featureCard}>
-                            <div className={styles.featureIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <Heart />
-                                </Suspense>
-                            </div>
-                            <h3 className={styles.featureTitle}>Natural AI Voice Guidance</h3>
-                            <p className={styles.featureDescription}>
-                                Choose from different AI voice meditation guides. Advanced speech synthesis
-                                makes them sound natural and soothing for your guided relaxation.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Goals Section */}
-                <section className={styles.goals}>
-                    <h2 className={styles.sectionTitle}>Achieve Your Meditation Goals</h2>
-                    <p className={styles.sectionSubtitle}>
-                        Whatever you need, our AI meditation app will help you find peace through personalized guided relaxation
-                    </p>
-                    <div className={styles.goalsGrid}>
-                        <div className={styles.goalCard}>
-                            <div className={styles.goalIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <FiMoon />
-                                </Suspense>
-                            </div>
-                            <h4 className={styles.goalTitle}>Sleep Better</h4>
-                            <p className={styles.goalDescription}>
-                                Evening AI meditation sessions help you relax and prepare for peaceful sleep with personalized guided relaxation
-                            </p>
-                        </div>
-
-                        <div className={styles.goalCard}>
-                            <div className={styles.goalIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <FiWind />
-                                </Suspense>
-                            </div>
-                            <h4 className={styles.goalTitle}>Reduce Stress</h4>
-                            <p className={styles.goalDescription}>
-                                AI-powered breathing techniques and mindfulness meditation help you manage tension and anxiety
-                            </p>
-                        </div>
-
-                        <div className={styles.goalCard}>
-                            <div className={styles.goalIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <FiTarget />
-                                </Suspense>
-                            </div>
-                            <h4 className={styles.goalTitle}>Improve Focus</h4>
-                            <p className={styles.goalDescription}>
-                                Personalized meditation sessions strengthen your ability to concentrate and boost productivity
-                            </p>
-                        </div>
-
-                        <div className={styles.goalCard}>
-                            <div className={styles.goalIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <FiZap />
-                                </Suspense>
-                            </div>
-                            <h4 className={styles.goalTitle}>Boost Energy</h4>
-                            <p className={styles.goalDescription}>
-                                Morning AI voice meditation for an energizing start to your day with guided relaxation
-                            </p>
-                        </div>
-
-                        <div className={styles.goalCard}>
-                            <div className={styles.goalIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <FiCircle />
-                                </Suspense>
-                            </div>
-                            <h4 className={styles.goalTitle}>Sit in Silence</h4>
-                            <p className={styles.goalDescription}>
-                                Sometimes mindfulness meditation is simply about being present - without a specific goal
-                            </p>
-                        </div>
-
-                        <div className={styles.goalCard}>
-                            <div className={styles.goalIcon}>
-                                <Suspense fallback={<IconPlaceholder />}>
-                                    <FiStar />
-                                </Suspense>
-                            </div>
-                            <h4 className={styles.goalTitle}>Know Yourself</h4>
-                            <p className={styles.goalDescription}>
-                                Introspective AI meditation sessions leading to deeper self-understanding and awareness
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* CTA Section */}
-                <section className={styles.cta}>
-                    <div className={styles.ctaContent}>
-                        <h2 className={styles.ctaTitle}>Ready for Your First Session?</h2>
-                        <p className={styles.ctaSubtitle}>
-                            Join thousands of people who find peace daily with CalmJourneyer
+                    {/* Goals Section */}
+                    <section className={styles.goals}>
+                        <h2 className={styles.sectionTitle}>Achieve Your Meditation Goals</h2>
+                        <p className={styles.sectionSubtitle}>
+                            Whatever you need, our AI meditation app will help you find peace through personalized guided relaxation
                         </p>
-                        <button className={styles.ctaButton} onClick={handleGetStarted}>
-                            <Suspense fallback={<IconPlaceholder />}>
-                                <Sparkles className={styles.buttonIcon} />
-                            </Suspense>
-                            Start Now - Free
-                        </button>
-                    </div>
-                </section>
+                        <div className={styles.goalsGrid}>
+                            <div className={styles.goalCard}>
+                                <div className={styles.goalIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <FiMoon />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.goalTitle}>Sleep Better</h3>
+                                <p className={styles.goalDescription}>
+                                    Evening AI meditation sessions help you relax and prepare for peaceful sleep with personalized guided relaxation
+                                </p>
+                            </div>
+
+                            <div className={styles.goalCard}>
+                                <div className={styles.goalIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <FiWind />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.goalTitle}>Reduce Stress</h3>
+                                <p className={styles.goalDescription}>
+                                    AI-powered breathing techniques and mindfulness meditation help you manage tension and anxiety
+                                </p>
+                            </div>
+
+                            <div className={styles.goalCard}>
+                                <div className={styles.goalIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <FiTarget />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.goalTitle}>Improve Focus</h3>
+                                <p className={styles.goalDescription}>
+                                    Personalized meditation sessions strengthen your ability to concentrate and boost productivity
+                                </p>
+                            </div>
+
+                            <div className={styles.goalCard}>
+                                <div className={styles.goalIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <FiZap />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.goalTitle}>Boost Energy</h3>
+                                <p className={styles.goalDescription}>
+                                    Morning AI voice meditation for an energizing start to your day with guided relaxation
+                                </p>
+                            </div>
+
+                            <div className={styles.goalCard}>
+                                <div className={styles.goalIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <FiCircle />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.goalTitle}>Sit in Silence</h3>
+                                <p className={styles.goalDescription}>
+                                    Sometimes mindfulness meditation is simply about being present - without a specific goal
+                                </p>
+                            </div>
+
+                            <div className={styles.goalCard}>
+                                <div className={styles.goalIcon}>
+                                    <Suspense fallback={<IconPlaceholder />}>
+                                        <FiStar />
+                                    </Suspense>
+                                </div>
+                                <h3 className={styles.goalTitle}>Know Yourself</h3>
+                                <p className={styles.goalDescription}>
+                                    Introspective AI meditation sessions leading to deeper self-understanding and awareness
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* CTA Section */}
+                    <section className={styles.cta}>
+                        <div className={styles.ctaContent}>
+                            <h2 className={styles.ctaTitle}>Ready for Your First Session?</h2>
+                            <p className={styles.ctaSubtitle}>
+                                Join thousands of people who find peace daily with CalmJourneyer
+                            </p>
+                            <button className={styles.ctaButton} onClick={handleGetStarted}>
+                                <Suspense fallback={<IconPlaceholder />}>
+                                    <Sparkles className={styles.buttonIcon} />
+                                </Suspense>
+                                Start Now - Free
+                            </button>
+                        </div>
+                    </section>
+                </main>
 
                 {/* Footer */}
                 <footer className={styles.footer}>
