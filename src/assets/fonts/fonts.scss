@@ -21,3 +21,8 @@
     font-style: normal;
     font-display: swap;
 }
+
+// Global font stack with system font fallback
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
