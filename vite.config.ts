@@ -35,20 +35,6 @@ export default defineConfig({
       }
     },
 
-    // Optimize chunk splitting to reduce request chain
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Vendor chunk - React and core libraries
-          'vendor-react': ['react', 'react-dom', 'react-router'],
-          // Icons used in Home page - bundle together to reduce requests
-          'vendor-icons': ['lucide-react', 'react-icons/fi'],
-          // Sonner toast library
-          'vendor-toast': ['sonner'],
-        },
-      },
-    },
-
     // CSS optimization
     // cssCodeSplit: true,
     // cssMinify: true,
