@@ -7,11 +7,24 @@ Disallow: /dashboard
 Disallow: /session-history
 Disallow: /account
 Disallow: /preferences
+Disallow: /subscription
 Disallow: /session/*
 Disallow: /verify-email
+Disallow: /verify-email-prompt
+Disallow: /forgot-password
 
 # Allow shared sessions
 Allow: /session/shared/*
+
+# Allow all resources and public pages
+Allow: /resources
+Allow: /resources/*
+Allow: /pricing
+Allow: /login
+Allow: /onboarding
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1
 
 # Sitemap
 Sitemap: https://calmjourneyer.com/sitemap.xml

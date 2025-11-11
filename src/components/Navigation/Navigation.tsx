@@ -26,6 +26,9 @@ export default function Navigation({ type }: NavigationProps) {
     // Public navigation (not logged in)
     const renderPublicLinks = () => (
         <>
+            <Link to="/resources" className={styles.link}>
+                Resources
+            </Link>
             <Link to="/pricing" className={styles.link}>
                 Pricing
             </Link>
@@ -38,6 +41,9 @@ export default function Navigation({ type }: NavigationProps) {
     // Logged navigation (logged in but not on dashboard)
     const renderLoggedLinks = () => (
         <>
+            <Link to="/resources" className={styles.link}>
+                Resources
+            </Link>
             <Link to="/pricing" className={styles.link}>
                 Pricing
             </Link>
@@ -74,6 +80,9 @@ export default function Navigation({ type }: NavigationProps) {
     // Mobile versions
     const renderPublicMobileLinks = () => (
         <>
+            <Link to="/resources" className={styles.mobileLink} onClick={closeMenu}>
+                Resources
+            </Link>
             <Link to="/pricing" className={styles.mobileLink} onClick={closeMenu}>
                 Pricing
             </Link>
@@ -85,6 +94,9 @@ export default function Navigation({ type }: NavigationProps) {
 
     const renderLoggedMobileLinks = () => (
         <>
+            <Link to="/resources" className={styles.mobileLink} onClick={closeMenu}>
+                Resources
+            </Link>
             <Link to="/pricing" className={styles.mobileLink} onClick={closeMenu}>
                 Pricing
             </Link>

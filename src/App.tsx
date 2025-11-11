@@ -2,6 +2,8 @@ import './App.scss'
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import Home from './pages/Home/Home'
+import Resources from './pages/Resources/Resources'
+import ResourcePost from './pages/Resources/ResourcePost'
 import { Toaster } from 'sonner';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
 import LoggedRoute from './components/ProtectedRoute/LoggedRoute'
@@ -49,6 +51,8 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/resources/:slug" element={<ResourcePost />} />
             <Route path="/onboarding" element={<LoggedRoute><Onboarding /></LoggedRoute>} />
             <Route path="/pricing" element={<Pricing />} />
 
