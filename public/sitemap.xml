@@ -30,6 +30,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+    <url>
+    <loc>https://calmjourneyer.com/resources/ai-meditation-benefits</loc>
+    <lastmod>2025-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
   <url>
     <loc>https://calmjourneyer.com/onboarding</loc>
     <lastmod>2025-11-11</lastmod>
