@@ -37,7 +37,7 @@ function Session() {
     const [error, setError] = useState<string | null>(null);
     const [isThemeSwitcherOpen, setIsThemeSwitcherOpen] = useState(false);
     const [isAmbientSwitcherOpen, setIsAmbientSwitcherOpen] = useState(false);
-    const [ambientVolume, setAmbientVolume] = useState(0.1); // Default 10%
+    const [ambientVolume, setAmbientVolume] = useState(0.01); // Default 10%
     const [isAmbientMuted, setIsAmbientMuted] = useState(false);
     const [isNarrationMuted, setIsNarrationMuted] = useState(false);
     const [currentAmbientSound, setCurrentAmbientSound] = useState<AmbientSound | null>(null);
