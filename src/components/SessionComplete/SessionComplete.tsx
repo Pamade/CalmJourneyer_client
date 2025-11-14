@@ -32,8 +32,8 @@ export default function SessionComplete({ sessionId, userId }: SessionCompletePr
         }
 
         setTimeout(() => {
-            userId ? navigate('/dashboard') : navigate('/');
-        }, 1500);
+            userId ? navigate('/dashboard') : navigate('/login');
+        }, 2500);
     };
 
     const handleShareSession = async () => {
@@ -65,7 +65,7 @@ export default function SessionComplete({ sessionId, userId }: SessionCompletePr
             {feedbackSent ? (
                 <>
                     <h2 className={styles.title}>Thank You!</h2>
-                    <p className={styles.message}>Your feedback has been recorded. Redirecting you home...</p>
+                    <p className={styles.message}>Create account to access your personalized meditation journey.</p>
                 </>
             ) : (
                 <>
