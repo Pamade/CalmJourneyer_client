@@ -53,12 +53,12 @@ const Onboarding: React.FC = () => {
     const totalSteps = 5;
 
     const goals = [
-        { id: 'STRESS_RELIEF' as Goal, label: 'Stress Relief', icon: Heart, pattern: '4-0-6-0' },
-        { id: 'FOCUS' as Goal, label: 'Focus & Clarity', icon: Brain, pattern: '4-4-4-4' },
-        { id: 'ENERGY' as Goal, label: 'Energy Boost', icon: Zap, pattern: '4-0-4-0' },
-        { id: 'SLEEP' as Goal, label: 'Better Sleep', icon: Moon, pattern: '4-7-8-0' },
-        // { id: 'ANXIETY' as Goal, label: 'Manage Anxiety', icon: Heart, pattern: '4-0-6-0' },
-        { id: 'SILENCE' as Goal, label: 'Silence.', icon: Sparkles, pattern: '4-4-4-4' },
+        { id: 'STRESS_RELIEF' as Goal, label: 'Stress Relief', icon: Heart, pattern: '4-0-6-0', description: 'Breathe in (4s) • Breathe out (6s)' },
+        { id: 'FOCUS' as Goal, label: 'Focus & Clarity', icon: Brain, pattern: '4-4-4-4', description: 'Breathe in (4s) • Hold (4s) • Breathe out (4s) • Pause (4s)' },
+        { id: 'ENERGY' as Goal, label: 'Energy Boost', icon: Zap, pattern: '4-0-4-0', description: 'Breathe in (4s) • Breathe out (4s)' },
+        { id: 'SLEEP' as Goal, label: 'Better Sleep', icon: Moon, pattern: '4-7-8-0', description: 'Breathe in (4s) • Hold (7s) • Breathe out (8s)' },
+        // { id: 'ANXIETY' as Goal, label: 'Manage Anxiety', icon: Heart, pattern: '4-0-6-0', description: 'Breathe in (4s) • Breathe out (6s)' },
+        { id: 'SILENCE' as Goal, label: 'Silence.', icon: Sparkles, pattern: '4-4-4-4', description: 'Breathe in (4s) • Hold (4s) • Breathe out (4s) • Pause (4s)' },
     ];
 
     const voices: VoiceOption[] = [
@@ -123,6 +123,9 @@ const Onboarding: React.FC = () => {
             audio.play();
             setAudioElement(audio);
             setPlayingVoice(voice.id);
+
+            // Automatically select this voice when preview is played
+            setFormData({ ...formData, voice: voice.id });
         } catch (error) {
             console.error('Error playing voice preview:', error);
             alert('Failed to play voice preview. Please try again.');
@@ -194,7 +197,7 @@ const Onboarding: React.FC = () => {
                 {step === 2 && (
                     <div className={styles.stepContent}>
                         <h1 className={styles.title}>What's your goal today?</h1>
-                        <p className={styles.subtitle}>Choose your primary intention</p>
+                        <p className={styles.subtitle}>Each goal includes a breathing pattern to support your intention</p>
 
                         <div className={styles.goalsGrid}>
                             {goals.map(goal => {
@@ -208,6 +211,7 @@ const Onboarding: React.FC = () => {
                                         <IconComponent className={styles.goalIcon} size={32} />
                                         <span className={styles.goalLabel}>{goal.label}</span>
                                         <span className={styles.goalPattern}>{goal.pattern}</span>
+                                        <span className={styles.goalDescription}>{goal.description}</span>
                                     </button>
                                 );
                             })}
