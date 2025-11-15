@@ -323,7 +323,7 @@ const Onboarding: React.FC = () => {
                                     id="duration"
                                     type="range"
                                     min="5"
-                                    max="30"
+                                    max="15"
                                     step="5"
                                     value={formData.duration}
                                     onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}

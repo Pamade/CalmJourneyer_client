@@ -31,9 +31,18 @@ export default function SessionComplete({ sessionId, userId }: SessionCompletePr
             console.error('Failed to save feedback:', err);
         }
 
-        setTimeout(() => {
-            userId ? navigate('/dashboard') : navigate('/login');
-        }, 2500);
+        if (userId) {
+            setTimeout(() => {
+                return navigate('/dashboard')
+            }, 1500);
+        }
+        else {
+            setTimeout(() => {
+                return navigate('/login')
+            }, 4000);
+        }
+
+
     };
 
     const handleShareSession = async () => {
