@@ -22,6 +22,7 @@ const SubscriptionCanceled = lazy(() => import('./pages/Subscription/Subscriptio
 const SessionHistory = lazy(() => import('./pages/SessionHistory/SessionHistory'))
 const Account = lazy(() => import('./pages/Account/Account'))
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy/PrivacyPolicy'))
 
 // Loading fallback component
 const PageLoader = () => (
@@ -69,6 +70,7 @@ function App() {
             <Route path="/session/:sessionId" element={<ProtectedRoute> <Session /></ProtectedRoute>} />
             <Route path="/subscription/success" element={<ProtectedRoute> <SubscriptionSuccess /></ProtectedRoute>} />
             <Route path="/subscription/canceled" element={<ProtectedRoute> <SubscriptionCanceled /></ProtectedRoute>} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
 
             {/* 404 Catch-all route */}
             <Route path="*" element={<NotFound />} />
