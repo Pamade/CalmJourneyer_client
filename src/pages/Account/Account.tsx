@@ -210,7 +210,7 @@ const Account = () => {
             setShowDeleteModal(false);
             // Logout and redirect
             setTimeout(() => {
-                navigate('/login');
+                window.location.href = '/'
             }, 1000);
         } catch (error: any) {
             toast.error(error.response?.data?.message || 'Failed to delete account');
