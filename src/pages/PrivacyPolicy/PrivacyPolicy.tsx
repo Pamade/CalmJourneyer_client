@@ -15,7 +15,7 @@ const PrivacyPolicy: React.FC = () => {
                     <section className={styles.section}>
                         <h2>1. Introduction</h2>
                         <p>
-                            Welcome to CalmJourneyer ("we," "our," or "us"). We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-powered meditation application and services.
+                            Welcome to CalmJourneyer. We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-powered meditation application and services.
                         </p>
                         <p>
                             By using CalmJourneyer, you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services.
@@ -28,10 +28,10 @@ const PrivacyPolicy: React.FC = () => {
                         <h3>2.1 Personal Information</h3>
                         <p>We collect information that you provide directly to us, including:</p>
                         <ul>
-                            <li><strong>Account Information:</strong> Name, email address, password, and profile preferences</li>
+                            <li><strong>Account Information:</strong> Name, email address, and profile preferences</li>
                             <li><strong>Payment Information:</strong> Billing details, payment card information (processed securely through third-party payment processors)</li>
                             <li><strong>Subscription Data:</strong> Subscription plan, payment history, and renewal information</li>
-                            <li><strong>Profile Data:</strong> Meditation goals, experience level, preferences, and settings</li>
+                            <li><strong>Profile Data:</strong> Meditation goals, preferences, and settings</li>
                         </ul>
 
                         <h3>2.2 Meditation Session Data</h3>
@@ -46,10 +46,7 @@ const PrivacyPolicy: React.FC = () => {
                         <h3>2.3 Automatically Collected Information</h3>
                         <p>When you access our services, we automatically collect:</p>
                         <ul>
-                            <li><strong>Device Information:</strong> Device type, operating system, browser type, and unique device identifiers</li>
-                            <li><strong>Usage Data:</strong> Pages visited, features used, time spent, and interaction patterns</li>
-                            <li><strong>Technical Data:</strong> IP address, cookies, log data, and analytics information</li>
-                            <li><strong>Location Data:</strong> General location based on IP address (not precise geolocation)</li>
+                            <li><strong>Technical Data:</strong> Cookies, log data, and analytics information</li>
                         </ul>
                     </section>
 
@@ -62,7 +59,7 @@ const PrivacyPolicy: React.FC = () => {
                         </p>
                         <ul>
                             <li>Generate personalized meditation scripts and guidance</li>
-                            <li>Adapt meditation content to your experience level and goals</li>
+                            <li>Adapt meditation content to your goals</li>
                             <li>Optimize session timing, pacing, and techniques based on your preferences</li>
                             <li>Improve the relevance and effectiveness of AI-generated content</li>
                             <li>Ensure each meditation session is uniquely tailored to your current state and needs</li>
@@ -78,23 +75,14 @@ const PrivacyPolicy: React.FC = () => {
                             <li>Analyze usage patterns to enhance user experience</li>
                             <li>Develop new features and meditation techniques</li>
                         </ul>
-
-                        <h3>3.3 Communication</h3>
-                        <p>With your consent, we may use your information to:</p>
-                        <ul>
-                            <li>Send meditation reminders and practice encouragement</li>
-                            <li>Share meditation tips, research insights, and wellness content</li>
-                            <li>Notify you about new features, updates, and improvements</li>
-                            <li>Send promotional offers and subscription information (you can opt-out anytime)</li>
-                        </ul>
                     </section>
 
                     <section className={styles.section}>
                         <h2>4. AI Technology and Data Processing</h2>
 
-                        <h3>4.1 How Our AI Works</h3>
+                        <h3>4.1 How are we using AI</h3>
                         <p>
-                            CalmJourneyer uses advanced artificial intelligence to generate unique meditation content for each session. Our AI:
+                            CalmJourneyer uses gemini 2.5 pro model to generate unique meditation content for each session
                         </p>
                         <ul>
                             <li>Analyzes your preferences and meditation history to create personalized content</li>
@@ -103,16 +91,7 @@ const PrivacyPolicy: React.FC = () => {
                             <li>Operates within strict ethical guidelines to ensure appropriate, beneficial content</li>
                         </ul>
 
-                        <h3>4.2 AI Training and Improvement</h3>
-                        <p>
-                            We may use aggregated, anonymized data to improve our AI models. This means:
-                        </p>
-                        <ul>
-                            <li>Your individual meditation sessions are never shared with other users</li>
-                            <li>Personal information is removed before data is used for AI training</li>
-                            <li>Aggregated patterns help us enhance meditation effectiveness for all users</li>
-                            <li>You can opt-out of having your anonymized data used for AI improvement</li>
-                        </ul>
+
                     </section>
 
                     <section className={styles.section}>
@@ -126,7 +105,7 @@ const PrivacyPolicy: React.FC = () => {
                         <h3>5.2 Service Providers</h3>
                         <p>We share information with trusted service providers who assist us in:</p>
                         <ul>
-                            <li><strong>Payment Processing:</strong> Secure payment processors (Stripe, PayPal) to handle subscription payments</li>
+                            <li><strong>Payment Processing:</strong> Secure payment processors (Stripe) to handle subscription payments</li>
                             <li><strong>Cloud Infrastructure:</strong> Hosting providers to store and process data securely</li>
                             <li><strong>Analytics:</strong> Tools to understand usage patterns and improve our service</li>
                             <li><strong>Email Services:</strong> Communication platforms for sending notifications and updates</li>
@@ -143,11 +122,6 @@ const PrivacyPolicy: React.FC = () => {
                             <li>Investigate potential violations of our Terms of Service</li>
                             <li>Prevent fraud, security breaches, or technical issues</li>
                         </ul>
-
-                        <h3>5.4 Business Transfers</h3>
-                        <p>
-                            If CalmJourneyer is involved in a merger, acquisition, or sale of assets, your information may be transferred. We will notify you before your information becomes subject to a different privacy policy.
-                        </p>
                     </section>
 
                     <section className={styles.section}>
@@ -227,7 +201,7 @@ const PrivacyPolicy: React.FC = () => {
 
                         <h3>8.4 Exercising Your Rights</h3>
                         <p>
-                            To exercise these rights, contact us at <a href="mailto:info@calmjourneyer.com">privacy@calmjourneyer.com</a>. We will respond within 30 days.
+                            To exercise these rights, contact us at <a href="mailto:info@calmjourneyer.com">info@calmjourneyer.com</a>. We will respond within 30 days.
                         </p>
                     </section>
 
@@ -266,10 +240,11 @@ const PrivacyPolicy: React.FC = () => {
                     <section className={styles.section}>
                         <h2>11. Children's Privacy</h2>
                         <p>
-                            CalmJourneyer is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If we discover that a child under 13 has provided personal information, we will delete it immediately.
-                        </p>
-                        <p>
-                            If you are a parent or guardian and believe your child has provided us with personal information, please contact us at <a href="mailto:privacy@calmjourneyer.com">privacy@calmjourneyer.com</a>.
+
+                            CalmJourneyer is suitable for users of all ages, including children. The app collects only the following information, when voluntarily provided: name and email address. This information is used solely for account-related purposes and is not shared with third parties except as required to operate basic app functions.
+
+                            We do not knowingly collect this information from children without parental consent. If you are a parent or guardian and believe your child has provided us with their name or email address, you may contact us at info@calmjourneyer.com
+                            , and we will promptly review and delete the information if requested.
                         </p>
                     </section>
 
@@ -281,20 +256,10 @@ const PrivacyPolicy: React.FC = () => {
                     </section>
 
                     <section className={styles.section}>
-                        <h2>13. Third-Party Links</h2>
-                        <p>
-                            Our service may contain links to third-party websites or services. We are not responsible for the privacy practices of these third parties. We encourage you to review their privacy policies before providing any personal information.
-                        </p>
-                    </section>
+                        <h2>13. Changes to This Privacy Policy</h2>
 
-                    <section className={styles.section}>
-                        <h2>14. Changes to This Privacy Policy</h2>
-                        <p>
-                            We may update this Privacy Policy periodically to reflect changes in our practices or legal requirements. We will notify you of significant changes by:
-                        </p>
                         <ul>
                             <li>Posting the updated policy on our website</li>
-                            <li>Updating the "Last Updated" date</li>
                             <li>Sending email notification for material changes</li>
                         </ul>
                         <p>
@@ -308,9 +273,8 @@ const PrivacyPolicy: React.FC = () => {
                             If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
                         </p>
                         <div className={styles.contactInfo}>
-                            <p><strong>Email:</strong> <a href="mailto:info@calmjourneyer.com">privacy@calmjourneyer.com</a></p>
-                            <p><strong>Support:</strong> <a href="mailto:info@calmjourneyer.com">support@calmjourneyer.com</a></p>
-                            <p><strong>Address:</strong> CalmJourneyer<br /></p>
+                            <p><strong>Email:</strong> <a href="mailto:info@calmjourneyer.com">info@calmjourneyer.com</a></p>
+
                         </div>
                     </section>
 

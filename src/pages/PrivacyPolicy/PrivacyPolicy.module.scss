@@ -2,41 +2,44 @@
 
 .privacyPolicy {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 2rem 1rem;
+    background: $background;
+    padding: $global-top-padding 1rem 2rem;
 
     .container {
         max-width: 900px;
         margin: 0 auto;
         background: white;
         border-radius: 16px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         overflow: hidden;
+        animation: fadeInUp 0.6s ease-out;
     }
 
     .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: $accent;
+        color: $main-text;
         padding: 3rem 2rem;
         text-align: center;
+        border-bottom: 3px solid $accent-darker;
 
         h1 {
             font-size: 2.5rem;
             margin: 0 0 1rem 0;
             font-weight: 700;
+            color: $main-text;
         }
 
         .lastUpdated {
             font-size: 0.95rem;
-            opacity: 0.9;
+            color: $text-light;
             margin: 0;
         }
     }
 
     .content {
         padding: 3rem 2rem;
-        line-height: 1.7;
-        color: #333;
+        line-height: 1.8;
+        color: $main-text;
 
         .section {
             margin-bottom: 2.5rem;
@@ -47,26 +50,26 @@
 
             h2 {
                 font-size: 1.75rem;
-                color: #667eea;
+                color: $main-text;
                 margin: 0 0 1rem 0;
-                font-weight: 600;
+                font-weight: 700;
                 padding-bottom: 0.5rem;
-                border-bottom: 2px solid #e0e0e0;
+                border-bottom: 2px solid $additional-accent;
             }
 
             h3 {
                 font-size: 1.3rem;
-                color: #764ba2;
+                color: $text-light;
                 margin: 1.5rem 0 1rem 0;
                 font-weight: 600;
             }
 
             p {
                 margin: 0 0 1rem 0;
-                color: #555;
+                color: $text-light;
 
                 strong {
-                    color: #333;
+                    color: $main-text;
                     font-weight: 600;
                 }
             }
@@ -77,37 +80,39 @@
 
                 li {
                     margin-bottom: 0.75rem;
-                    color: #555;
+                    color: $text-light;
 
                     strong {
-                        color: #333;
+                        color: $main-text;
                         font-weight: 600;
                     }
                 }
             }
 
             a {
-                color: #667eea;
+                color: $accent-darker;
                 text-decoration: none;
                 font-weight: 500;
-                transition: color 0.3s ease;
+                transition: color 0.3s ease, border-bottom 0.3s ease;
+                border-bottom: 1px solid transparent;
 
                 &:hover {
-                    color: #764ba2;
-                    text-decoration: underline;
+                    color: $main-text;
+                    border-bottom: 1px solid $accent-darker;
                 }
             }
         }
 
         .contactInfo {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
+            background: $additional-accent-light;
+            border-left: 4px solid $accent-darker;
             padding: 1.5rem;
             border-radius: 8px;
             margin-top: 1rem;
 
             p {
                 margin: 0.5rem 0;
+                color: $text-light;
 
                 &:first-child {
                     margin-top: 0;
@@ -121,25 +126,24 @@
     }
 
     .footer {
-        background: #f8f9fa;
+        background: $additional-accent;
         padding: 2rem;
         text-align: center;
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid $additional-accent-dark;
 
         p {
             margin: 0;
-            color: #666;
+            color: $text-light;
 
             a {
-                color: #667eea;
+                color: $main-text;
                 text-decoration: none;
-                font-weight: 500;
+                font-weight: 600;
                 margin: 0 0.5rem;
                 transition: color 0.3s ease;
 
                 &:hover {
-                    color: #764ba2;
-                    text-decoration: underline;
+                    color: $text-lighter;
                 }
             }
         }
@@ -149,7 +153,7 @@
 // Responsive design
 @media (max-width: 768px) {
     .privacyPolicy {
-        padding: 1rem 0.5rem;
+        padding: calc(#{$global-top-padding} - 1rem) 0.5rem 1rem;
 
         .header {
             padding: 2rem 1.5rem;
