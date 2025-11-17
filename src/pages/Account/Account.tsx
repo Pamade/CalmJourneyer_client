@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { User, Lock, CreditCard, Settings, Calendar, ArrowRight, Check, X, Edit2, Target, Clock, Flame, Trophy } from 'lucide-react';
+import { User, Lock, CreditCard, Settings, Calendar, ArrowRight, Check, X, Edit2, Target, Clock, Flame, Trophy, AlertTriangle, Trash2 } from 'lucide-react';
 import Navigation from '../../components/Navigation/Navigation';
 import axios from '../../utils/axios';
 import styles from './Account.module.scss';
@@ -54,6 +54,11 @@ const Account = () => {
         confirmPassword: ''
     });
     const [changingPassword, setChangingPassword] = useState(false);
+
+    // Delete account state
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteConfirmation, setDeleteConfirmation] = useState('');
+    const [deletingAccount, setDeletingAccount] = useState(false);
 
     useEffect(() => {
         fetchAccountData();
@@ -190,6 +195,28 @@ const Account = () => {
 
     const handleUpgrade = () => {
         navigate('/pricing');
+    };
+
+    const handleDeleteAccount = async () => {
+        if (deleteConfirmation.toLowerCase() !== 'delete') {
+            toast.error('Please type DELETE to confirm');
+            return;
+        }
+
+        setDeletingAccount(true);
+        try {
+            await axios.delete('/user/account');
+            toast.success('Account deleted successfully');
+            setShowDeleteModal(false);
+            // Logout and redirect
+            setTimeout(() => {
+                navigate('/login');
+            }, 1000);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || 'Failed to delete account');
+        } finally {
+            setDeletingAccount(false);
+        }
     };
 
     const formatDate = (dateString: string) => {
@@ -380,6 +407,28 @@ const Account = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Delete Account Section */}
+                        <div className={styles.card}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.cardTitleRow}>
+                                    <AlertTriangle className={styles.cardIcon} size={24} style={{ color: '#dc2626' }} />
+                                    <h2 className={styles.cardTitle}>Danger Zone</h2>
+                                </div>
+                            </div>
+                            <div className={styles.cardContent}>
+                                <p style={{ color: '#dc2626', marginBottom: '1rem' }}>
+                                    Once you delete your account, there is no going back. This action will permanently delete your account, meditation history, and all associated data.
+                                </p>
+                                <button
+                                    className={styles.deleteButton}
+                                    onClick={() => setShowDeleteModal(true)}
+                                >
+                                    <Trash2 size={18} />
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={styles.sidebar}>
@@ -512,6 +561,78 @@ const Account = () => {
                                 disabled={changingPassword}
                             >
                                 {changingPassword ? 'Changing...' : 'Change Password'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Account Modal */}
+            {showDeleteModal && (
+                <div className={styles.modalOverlay} onClick={() => setShowDeleteModal(false)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h3 className={styles.modalTitle} style={{ color: '#dc2626' }}>
+                                <AlertTriangle size={24} style={{ marginRight: '0.5rem', display: 'inline-block', verticalAlign: 'middle' }} />
+                                Delete Account
+                            </h3>
+                            <button
+                                className={styles.closeButton}
+                                onClick={() => setShowDeleteModal(false)}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className={styles.modalContent}>
+                            <p style={{ marginBottom: '1rem', color: '#dc2626', fontWeight: 600 }}>
+                                This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+                            </p>
+                            <p style={{ marginBottom: '0.5rem' }}>
+                                This includes:
+                            </p>
+                            <ul style={{ marginBottom: '1.5rem', paddingLeft: '1.5rem', color: '#6b7280' }}>
+                                <li>All meditation session history</li>
+                                <li>Your account preferences and settings</li>
+                                <li>Any active subscriptions (will be cancelled)</li>
+                                <li>All personal information</li>
+                            </ul>
+                            <p style={{ marginBottom: '1.5rem', fontSize: '0.875rem', color: '#6b7280' }}>
+                                For more information about data deletion, see our <a href="/privacy" target="_blank" style={{ color: '#7CB342', textDecoration: 'underline' }}>Privacy Policy</a>.
+                            </p>
+                            <p style={{ marginBottom: '1.5rem' }}>
+                                Please type <strong>DELETE</strong> to confirm:
+                            </p>
+
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="text"
+                                    className={styles.input}
+                                    value={deleteConfirmation}
+                                    onChange={(e) => setDeleteConfirmation(e.target.value)}
+                                    placeholder="Type DELETE to confirm"
+                                    autoComplete="off"
+                                />
+                            </div>
+                        </div>
+
+                        <div className={styles.modalActions}>
+                            <button
+                                className={styles.modalCancelButton}
+                                onClick={() => {
+                                    setShowDeleteModal(false);
+                                    setDeleteConfirmation('');
+                                }}
+                                disabled={deletingAccount}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className={styles.modalDeleteButton}
+                                onClick={handleDeleteAccount}
+                                disabled={deletingAccount || deleteConfirmation.toLowerCase() !== 'delete'}
+                            >
+                                {deletingAccount ? 'Deleting...' : 'Delete Account'}
                             </button>
                         </div>
                     </div>

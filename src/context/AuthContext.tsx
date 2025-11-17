@@ -24,6 +24,7 @@ interface AuthContextType {
     verifyToken: (token: string) => Promise<void>;
     verifyEmail: (token: string) => Promise<void>;
     sendVerificationEmail: (email: string) => Promise<void>;
+    deleteAccount: () => Promise<void>;
     isAuthenticated: boolean;
 }
 
@@ -145,6 +146,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     }
 
+    async function deleteAccount() {
+        try {
+            await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/user/account`, {
+                withCredentials: true
+            });
+            setUser(null);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     const value = {
         user,
         loading,
@@ -156,6 +168,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         verifyToken,
         verifyEmail,
         sendVerificationEmail,
+        deleteAccount,
         isAuthenticated: !!user,
     };
 
