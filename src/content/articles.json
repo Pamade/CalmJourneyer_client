@@ -442,8 +442,7 @@
                 },
                 {
                     "type": "link",
-                    "text": "Dr. Weil's 4-7-8 Breathing Technique",
-                    "url": "https://www.drweil.com/health-wellness/body-mind-spirit/stress-anxiety/breathing-three-exercises/"
+                    "text": "Dr. Weil's 4-7-8 Breathing Technique"
                 },
                 {
                     "type": "heading",
@@ -1785,8 +1784,7 @@
                     "type": "paragraph",
                     "text": "Ready to harness meditation for focus and productivity? CalmJourneyer offers AI-powered guided meditation specifically designed to enhance concentration. Each session adapts to your goals and current state, selecting optimal techniques for your specific attention challenges. Unlike repetitive recordings, every practice is unique and targeted. Start training your focus today—your brain's attention networks will strengthen from the very first session."
                 },
-                {
-                },
+                {},
                 {
                     "type": "cta",
                     "text": "Start Your Free Focus Meditation Session",
@@ -1856,8 +1854,7 @@
                 },
                 {
                     "type": "externalLink",
-                    "text": "Stanford Medicine - The Science of Breathing",
-                    "url": "https://med.stanford.edu/news/all-news/2017/01/breathing-technique-may-be-key-to-hacking-your-nervous-system.html"
+                    "text": "Stanford Medicine - The Science of Breathing"
                 },
                 {
                     "type": "heading",
@@ -1883,8 +1880,7 @@
                 },
                 {
                     "type": "externalLink",
-                    "text": "Dr. Andrew Weil - 4-7-8 Breathing Exercise",
-                    "url": "https://www.drweil.com/health-wellness/body-mind-spirit/stress-anxiety/breathing-three-exercises/"
+                    "text": "Dr. Andrew Weil - 4-7-8 Breathing Exercise"
                 },
                 {
                     "type": "heading",
@@ -2082,8 +2078,7 @@
                 },
                 {
                     "type": "externalLink",
-                    "text": "American Psychological Association - Stress Management",
-                    "url": "https://www.apa.org/topics/stress/manage"
+                    "text": "American Psychological Association - Stress Management"
                 },
                 {
                     "type": "heading",
