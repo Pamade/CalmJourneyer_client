@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import styles from './BreathingPulse.module.scss';
 import type { BreathingPattern } from '../../types/session';
 
@@ -11,6 +11,8 @@ interface BreathingPulseProps {
 export default function BreathingPulse({ pattern, isActive, timeIntoSegment }: BreathingPulseProps) {
     const { inhale_seconds, hold_seconds, exhale_seconds, pause_seconds } = pattern;
     const totalCycleDuration = inhale_seconds + hold_seconds + exhale_seconds + pause_seconds;
+    const circleRef = useRef<HTMLDivElement>(null);
+    const [frozenTransform, setFrozenTransform] = useState<string | null>(null);
 
     const phase = useMemo(() => {
         if (!isActive) {
@@ -33,9 +35,22 @@ export default function BreathingPulse({ pattern, isActive, timeIntoSegment }: B
             return 'exhale';
         }
         return 'pause';
-    }, [isActive, timeIntoSegment, pattern, totalCycleDuration]);
+    }, [isActive, timeIntoSegment, pattern, totalCycleDuration, inhale_seconds, hold_seconds, exhale_seconds]);
 
-    const [phaseState, setPhaseState] = useState<'inhale' | 'hold' | 'exhale' | 'pause' | 'idle'>('inhale');
+    const [phaseState, setPhaseState] = useState<'inhale' | 'hold' | 'exhale' | 'pause' | 'idle'>('pause');
+
+    // Freeze animation when paused
+    useEffect(() => {
+        if (!isActive && circleRef.current) {
+            // Capture the current computed transform
+            const computedStyle = window.getComputedStyle(circleRef.current);
+            const currentTransform = computedStyle.transform;
+            setFrozenTransform(currentTransform);
+        } else {
+            // Clear frozen transform when active
+            setFrozenTransform(null);
+        }
+    }, [isActive]);
 
     useEffect(() => {
         setPhaseState(phase);
@@ -52,16 +67,18 @@ export default function BreathingPulse({ pattern, isActive, timeIntoSegment }: B
     const animationStyle = {
         '--inhale-duration': `${inhale_seconds}s`,
         '--exhale-duration': `${exhale_seconds}s`,
+        ...(frozenTransform && { transform: frozenTransform, transition: 'none' }),
     } as React.CSSProperties;
 
     return (
         <div className={styles.breathingContainer}>
             <div
-                className={`${styles.breathingCircle} ${styles[phase]}`}
+                ref={circleRef}
+                className={`${styles.breathingCircle} ${styles[phaseState]}`}
                 style={animationStyle}
             >
                 <span className={styles.phaseLabel}>
-                    {phaseLabels[phase]}
+                    {phaseLabels[phaseState]}
                 </span>
             </div>
         </div>
