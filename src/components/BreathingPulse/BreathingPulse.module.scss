@@ -31,7 +31,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.5s linear;
-    transform: scale(1);
+    transform: scale(0.7);
 
     &::before {
         content: '';
@@ -97,7 +97,7 @@
 
 .exhale {
     transition-duration: var(--exhale-duration);
-    transform: scale(1);
+    transform: scale(0.7);
     background: var(--theme-accent-t1);
 
     .phaseLabel {
@@ -114,6 +114,7 @@
 .pause {
     transition-duration: 0.5s;
     /* Fast transition to pause state */
+    transform: scale(0.7);
 
     .phaseLabel {
         opacity: 0.3;
@@ -122,6 +123,7 @@
 
 .idle {
     opacity: 0.7;
+    transform: scale(0.7);
 
     .phaseLabel {
         opacity: 1;
