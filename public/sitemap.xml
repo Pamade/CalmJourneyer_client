@@ -54,13 +54,18 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-    <url>
+  <url>
     <loc>https://calmjourneyer.com/resources/breathing-exercises-stress-relief-anxiety</loc>
     <lastmod>2025-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
+  <url>
+    <loc>https://calmjourneyer.com/resources/meditation-psychiatry-clinical-integration</loc>
+    <lastmod>2025-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   
   <url>
     <loc>https://calmjourneyer.com/onboarding</loc>
