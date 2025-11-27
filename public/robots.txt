@@ -20,7 +20,8 @@ Allow: /session/shared/*
 Allow: /resources
 Allow: /resources/*
 Allow: /pricing
-Allow: /login
+Allow: /login   
+Allow: /privacy   
 Allow: /onboarding
 
 # Crawl delay (be nice to servers)
