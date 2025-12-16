@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# CalmJourneyer - AI Meditation App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live:** [calmjourneyer.com](https://calmjourneyer.com)
 
-Currently, two official plugins are available:
+A full-stack web application that generates personalized meditation sessions using gemini API
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **AI-Generated Sessions**: Every meditation session is uniquely created in real-time using gemini API
+- **Deep Personalization**: Customize voice, ambient sounds, meditation position, breathing pace, duration (5-30 min), and session goals
+- **Progress Tracking**: Streak analytics, mood tracking, and session history with interactive charts
+- **Subscription Tiers**: Free plan with 3 sessions, Standard (15 min), and Pro (30 min) powered by Stripe
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Core
+- **React 19**
+- **TypeScript**
+- **SCSS Modules**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Key Libraries
+- **React Router 7** - Client-side routing and navigation
+- **Axios** - HTTP client for API communication
+- **Recharts** - Analytics and progress visualization
+- **Lucide React** - Icon system
+- **Sonner** - Toast notifications
+
+---
+
+### Directory Structure
+
+```
+src/
+├── pages/              # Route components 
+├── components/         # Reusable UI 
+├── content/            # Article content management 
+├── context/            # Global state providers 
+├── utils/              # API integration and session configuration
+├── types/              # TypeScript interfaces
+└── variables/          # SCSS theme and design system
+
+public/
+├── sitemap.xml         # SEO sitemap
+├── sound_themes/       # Ambient sound files
+└── robots.txt
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Core Workflows
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**AI Session Generation Pipeline:**
+1. User selects preferences → Session customization (goal, duration, voice, position, breathing, ambient)
+2. Request sent to backend → AI generates unique meditation script
+3. Text-to-speech conversion → Audio playback with synchronized controls
+4. Session tracking → Progress saved to user analytics
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+**User Authentication & Subscriptions:**
+- JWT-based authentication with protected routes
+- Stripe integration for subscription management
+- Tiered access control (Free/Standard/Pro)
+
+---
+
+## Backend Integration
+
+This frontend communicates with a Java Spring Boot backend for:
+- AI meditation content generation (Gemini API integration)
+- User authentication and authorization
+- Subscription and payment processing
+- Session history and analytics storage
