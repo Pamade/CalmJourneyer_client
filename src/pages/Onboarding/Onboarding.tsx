@@ -166,213 +166,216 @@ const Onboarding: React.FC = () => {
     };
 
     return (
-        <div className={styles.onboardingContainer}>
-            <div className={styles.progressBar}>
-                <div
-                    className={styles.progressFill}
-                    style={{ width: `${(step / totalSteps) * 100}%` }}
-                />
-            </div>
+        <>
+            <MetaTags title={"Onboarding - CalmJourneyer"} description={"Personalize your meditation experience with CalmJourneyer"} canonical={"https://calmjourneyer.com/onboarding"} />
+            <div className={styles.onboardingContainer}>
+                <div className={styles.progressBar}>
+                    <div
+                        className={styles.progressFill}
+                        style={{ width: `${(step / totalSteps) * 100}%` }}
+                    />
+                </div>
 
-            <div className={styles.content}>
-                {step === 1 && (
-                    <div className={styles.stepContent}>
-                        <h1 className={styles.title}>Welcome to CalmJourneyer</h1>
-                        <p className={styles.subtitle}>Let's personalize your meditation journey</p>
+                <div className={styles.content}>
+                    {step === 1 && (
+                        <div className={styles.stepContent}>
+                            <h1 className={styles.title}>Welcome to CalmJourneyer</h1>
+                            <p className={styles.subtitle}>Let's personalize your meditation journey</p>
 
-                        <div className={styles.formGroup}>
-                            <label htmlFor="name">What should we call you?</label>
-                            <input
-                                id="name"
-                                type="text"
-                                className={styles.input}
-                                placeholder="Enter your name"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {step === 2 && (
-                    <div className={styles.stepContent}>
-                        <h1 className={styles.title}>What's your goal today?</h1>
-                        <p className={styles.subtitle}>Each goal includes a breathing pattern to support your intention</p>
-
-                        <div className={styles.goalsGrid}>
-                            {goals.map(goal => {
-                                const IconComponent = goal.icon;
-                                return (
-                                    <button
-                                        key={goal.id}
-                                        className={`${styles.goalCard} ${formData.goal === goal.id ? styles.selected : ''}`}
-                                        onClick={() => setFormData({ ...formData, goal: goal.id })}
-                                    >
-                                        <IconComponent className={styles.goalIcon} size={32} />
-                                        <span className={styles.goalLabel}>{goal.label}</span>
-                                        <span className={styles.goalPattern}>{goal.pattern}</span>
-                                        <span className={styles.goalDescription}>{goal.description}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-
-                {step === 3 && (
-                    <div className={styles.stepContent}>
-                        <h1 className={styles.title}>Choose your guide</h1>
-                        <p className={styles.subtitle}>Select the voice that resonates with you</p>
-
-                        <div className={styles.optionsList}>
-                            {voices.map(voice => (
-                                <button
-                                    key={voice.id}
-                                    className={`${styles.optionCard} ${formData.voice === voice.id ? styles.selected : ''}`}
-                                    onClick={() => setFormData({ ...formData, voice: voice.id })}
-                                >
-                                    <div className={styles.optionContent}>
-                                        <div className={styles.optionHeader}>
-                                            <span className={styles.optionLabel}>{voice.label}</span>
-                                        </div>
-                                        <p className={styles.optionDescription}>{voice.description}</p>
-                                    </div>
-                                    <div
-                                        className={styles.previewButton}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handlePlayVoicePreview(voice);
-                                        }}
-                                    // disabled={loadingVoice === voice.id}
-                                    >
-                                        {loadingVoice === voice.id ? (
-                                            <>
-                                                <Loader className={styles.icon} size={16} />
-                                                Loading...
-                                            </>
-                                        ) : playingVoice === voice.id ? (
-                                            <>
-                                                <Square className={styles.icon} size={16} fill="currentColor" />
-                                                Stop
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Play className={styles.icon} size={16} fill="currentColor" />
-                                                Preview
-                                            </>
-                                        )}
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {step === 4 && (
-                    <div className={styles.stepContent}>
-                        <h1 className={styles.title}>Your meditation posture</h1>
-                        <p className={styles.subtitle}>Set your preferred practice style</p>
-
-                        <div className={styles.formGroup}>
-                            <label>Eyes preference</label>
-                            <div className={styles.optionsList}>
-                                {eyeOptions.map(eye => (
-                                    <button
-                                        key={eye.id}
-                                        className={`${styles.optionCard} ${styles.compact} ${formData.eyes === eye.id ? styles.selected : ''}`}
-                                        onClick={() => setFormData({ ...formData, eyes: eye.id })}
-                                    >
-                                        <div className={styles.optionHeader}>
-                                            <span className={styles.optionLabel}>{eye.label}</span>
-                                        </div>
-                                        <p className={styles.optionDescription}>{eye.description}</p>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label>Position preference</label>
-                            <div className={styles.optionsList}>
-                                {positionOptions.map(pos => (
-                                    <button
-                                        key={pos.id}
-                                        className={`${styles.optionCard} ${styles.compact} ${formData.position === pos.id ? styles.selected : ''}`}
-                                        onClick={() => setFormData({ ...formData, position: pos.id })}
-                                    >
-                                        <div className={styles.optionHeader}>
-                                            <span className={styles.optionLabel}>{pos.label}</span>
-                                        </div>
-                                        <p className={styles.optionDescription}>{pos.description}</p>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {step === 5 && (
-                    <div className={styles.stepContent}>
-                        <h1 className={styles.title}>Final preferences</h1>
-                        <p className={styles.subtitle}>Customize your experience</p>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="duration">Session duration</label>
-                            <div className={styles.durationSelector}>
+                            <div className={styles.formGroup}>
+                                <label htmlFor="name">What should we call you?</label>
                                 <input
-                                    id="duration"
-                                    type="range"
-                                    min="5"
-                                    max="15"
-                                    step="5"
-                                    value={formData.duration}
-                                    onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
-                                    className={styles.slider}
+                                    id="name"
+                                    type="text"
+                                    className={styles.input}
+                                    placeholder="Enter your name"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 />
-                                <span className={styles.durationValue}>{formData.duration} minutes</span>
                             </div>
                         </div>
+                    )}
 
-                        <div className={styles.summary}>
-                            <h3>Your personalized journey:</h3>
-                            <ul className={styles.summaryList}>
-                                <li><strong>Goal:</strong> {goals.find(g => g.id === formData.goal)?.label}</li>
-                                <li><strong>Voice:</strong> {voices.find(v => v.id === formData.voice)?.label}</li>
-                                <li><strong>Eyes:</strong> {eyeOptions.find(e => e.id === formData.eyes)?.label}</li>
-                                <li><strong>Position:</strong> {positionOptions.find(p => p.id === formData.position)?.label}</li>
-                                <li><strong>Duration:</strong> {formData.duration} minutes</li>
-                            </ul>
+                    {step === 2 && (
+                        <div className={styles.stepContent}>
+                            <h1 className={styles.title}>What's your goal today?</h1>
+                            <p className={styles.subtitle}>Each goal includes a breathing pattern to support your intention</p>
+
+                            <div className={styles.goalsGrid}>
+                                {goals.map(goal => {
+                                    const IconComponent = goal.icon;
+                                    return (
+                                        <button
+                                            key={goal.id}
+                                            className={`${styles.goalCard} ${formData.goal === goal.id ? styles.selected : ''}`}
+                                            onClick={() => setFormData({ ...formData, goal: goal.id })}
+                                        >
+                                            <IconComponent className={styles.goalIcon} size={32} />
+                                            <span className={styles.goalLabel}>{goal.label}</span>
+                                            <span className={styles.goalPattern}>{goal.pattern}</span>
+                                            <span className={styles.goalDescription}>{goal.description}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
+                    )}
+
+                    {step === 3 && (
+                        <div className={styles.stepContent}>
+                            <h1 className={styles.title}>Choose your guide</h1>
+                            <p className={styles.subtitle}>Select the voice that resonates with you</p>
+
+                            <div className={styles.optionsList}>
+                                {voices.map(voice => (
+                                    <button
+                                        key={voice.id}
+                                        className={`${styles.optionCard} ${formData.voice === voice.id ? styles.selected : ''}`}
+                                        onClick={() => setFormData({ ...formData, voice: voice.id })}
+                                    >
+                                        <div className={styles.optionContent}>
+                                            <div className={styles.optionHeader}>
+                                                <span className={styles.optionLabel}>{voice.label}</span>
+                                            </div>
+                                            <p className={styles.optionDescription}>{voice.description}</p>
+                                        </div>
+                                        <div
+                                            className={styles.previewButton}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handlePlayVoicePreview(voice);
+                                            }}
+                                        // disabled={loadingVoice === voice.id}
+                                        >
+                                            {loadingVoice === voice.id ? (
+                                                <>
+                                                    <Loader className={styles.icon} size={16} />
+                                                    Loading...
+                                                </>
+                                            ) : playingVoice === voice.id ? (
+                                                <>
+                                                    <Square className={styles.icon} size={16} fill="currentColor" />
+                                                    Stop
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Play className={styles.icon} size={16} fill="currentColor" />
+                                                    Preview
+                                                </>
+                                            )}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 4 && (
+                        <div className={styles.stepContent}>
+                            <h1 className={styles.title}>Your meditation posture</h1>
+                            <p className={styles.subtitle}>Set your preferred practice style</p>
+
+                            <div className={styles.formGroup}>
+                                <label>Eyes preference</label>
+                                <div className={styles.optionsList}>
+                                    {eyeOptions.map(eye => (
+                                        <button
+                                            key={eye.id}
+                                            className={`${styles.optionCard} ${styles.compact} ${formData.eyes === eye.id ? styles.selected : ''}`}
+                                            onClick={() => setFormData({ ...formData, eyes: eye.id })}
+                                        >
+                                            <div className={styles.optionHeader}>
+                                                <span className={styles.optionLabel}>{eye.label}</span>
+                                            </div>
+                                            <p className={styles.optionDescription}>{eye.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label>Position preference</label>
+                                <div className={styles.optionsList}>
+                                    {positionOptions.map(pos => (
+                                        <button
+                                            key={pos.id}
+                                            className={`${styles.optionCard} ${styles.compact} ${formData.position === pos.id ? styles.selected : ''}`}
+                                            onClick={() => setFormData({ ...formData, position: pos.id })}
+                                        >
+                                            <div className={styles.optionHeader}>
+                                                <span className={styles.optionLabel}>{pos.label}</span>
+                                            </div>
+                                            <p className={styles.optionDescription}>{pos.description}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 5 && (
+                        <div className={styles.stepContent}>
+                            <h1 className={styles.title}>Final preferences</h1>
+                            <p className={styles.subtitle}>Customize your experience</p>
+
+                            <div className={styles.formGroup}>
+                                <label htmlFor="duration">Session duration</label>
+                                <div className={styles.durationSelector}>
+                                    <input
+                                        id="duration"
+                                        type="range"
+                                        min="5"
+                                        max="15"
+                                        step="5"
+                                        value={formData.duration}
+                                        onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
+                                        className={styles.slider}
+                                    />
+                                    <span className={styles.durationValue}>{formData.duration} minutes</span>
+                                </div>
+                            </div>
+
+                            <div className={styles.summary}>
+                                <h3>Your personalized journey:</h3>
+                                <ul className={styles.summaryList}>
+                                    <li><strong>Goal:</strong> {goals.find(g => g.id === formData.goal)?.label}</li>
+                                    <li><strong>Voice:</strong> {voices.find(v => v.id === formData.voice)?.label}</li>
+                                    <li><strong>Eyes:</strong> {eyeOptions.find(e => e.id === formData.eyes)?.label}</li>
+                                    <li><strong>Position:</strong> {positionOptions.find(p => p.id === formData.position)?.label}</li>
+                                    <li><strong>Duration:</strong> {formData.duration} minutes</li>
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className={styles.navigation}>
+                        {step > 1 && (
+                            <button onClick={handleBack} className={styles.btnSecondary}>
+                                Back
+                            </button>
+                        )}
+
+                        {step < totalSteps ? (
+                            <button
+                                onClick={handleNext}
+                                className={styles.btnPrimary}
+                                disabled={formData.name.trim().length === 0 && step === 1}
+                            >
+                                Continue
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleSubmit}
+                                className={styles.btnPrimary}
+                            // disabled={!canProceed()}
+                            >
+                                Start Your Journey
+                            </button>
+                        )}
                     </div>
-                )}
-
-                <div className={styles.navigation}>
-                    {step > 1 && (
-                        <button onClick={handleBack} className={styles.btnSecondary}>
-                            Back
-                        </button>
-                    )}
-
-                    {step < totalSteps ? (
-                        <button
-                            onClick={handleNext}
-                            className={styles.btnPrimary}
-                            disabled={formData.name.trim().length === 0 && step === 1}
-                        >
-                            Continue
-                        </button>
-                    ) : (
-                        <button
-                            onClick={handleSubmit}
-                            className={styles.btnPrimary}
-                        // disabled={!canProceed()}
-                        >
-                            Start Your Journey
-                        </button>
-                    )}
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

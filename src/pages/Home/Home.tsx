@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router";
 import Navigation from "../../components/Navigation/Navigation";
+import MetaTags from "../../components/MetaTags/MetaTags";
 import styles from "./Home.module.scss";
 import { useOptimisticAuth } from "../../context/AuthContext";
 
@@ -51,10 +52,11 @@ function Home() {
 
     return (
         <>
-            {/* React 19 Native Meta Tags */}
-            <title>CalmJourneyer - AI Meditation App | Personalized Guided Relaxation</title>
-            <meta name="description" content="Experience personalized AI voice meditation with CalmJourneyer. Unique guided relaxation sessions generated live for stress relief, better sleep, focus, and mindfulness. Start free today." />
-            <link rel="canonical" href="https://calmjourneyer.com" />
+            <MetaTags
+                title={"CalmJourneyer - AI Meditation App | Personalized Guided Relaxation"}
+                description={"Experience personalized AI voice meditation with CalmJourneyer. Unique guided relaxation sessions generated live for stress relief, better sleep, focus, and mindfulness. Start free today."}
+                canonical={"https://calmjourneyer.com"}
+            />
 
             <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
                 <Navigation type={user ? "logged" : "public"} />

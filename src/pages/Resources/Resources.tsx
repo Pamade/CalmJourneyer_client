@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import { useState, useRef } from "react";
 import Navigation from "../../components/Navigation/Navigation";
+import MetaTags from "../../components/MetaTags/MetaTags";
 import articlesData from "../../content/articles.json";
 import styles from "./Resources.module.scss";
 import { useOptimisticAuth } from "../../context/AuthContext";
@@ -30,9 +31,11 @@ function Resources() {
 
     return (
         <>
-            <title>Meditation Resources - Guides & Articles | CalmJourneyer</title>
-            <meta name="description" content="Explore our comprehensive meditation guides and articles. Learn techniques for anxiety, sleep, focus, and discover how AI meditation can transform your practice." />
-            <link rel="canonical" href="https://calmjourneyer.com/resources" />
+            <MetaTags
+                title={"Meditation Resources - Guides & Articles | CalmJourneyer"}
+                description={"Explore our comprehensive meditation guides and articles. Learn techniques for anxiety, sleep, focus, and discover how AI meditation can transform your practice."}
+                canonical={"https://calmjourneyer.com/resources"}
+            />
 
             <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
                 <Navigation type={user ? "logged" : "public"} />

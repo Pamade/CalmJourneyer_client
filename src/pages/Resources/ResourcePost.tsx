@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from "react-router";
 import { useEffect } from "react";
 import { ExternalLink, List, CheckCircle } from "lucide-react";
 import Navigation from "../../components/Navigation/Navigation";
+import MetaTags from "../../components/MetaTags/MetaTags";
 import articlesData from "../../content/articles.json";
 import styles from "./ResourcePost.module.scss";
 import { useOptimisticAuth } from "../../context/AuthContext";
@@ -124,39 +125,28 @@ function ResourcePost() {
 
     return (
         <>
-            <title>{article.title} | CalmJourneyer</title>
-            <meta name="description" content={article.metaDescription} />
-            <meta name="keywords" content={article.keywords.join(', ')} />
-            <link rel="canonical" href={`https://calmjourneyer.com/resources/${article.slug}`} />
-
-            {/* Open Graph */}
-            <meta property="og:type" content="article" />
-            <meta property="og:title" content={article.title} />
-            <meta property="og:description" content={article.metaDescription} />
-            <meta property="og:url" content={`https://calmjourneyer.com/resources/${article.slug}`} />
-
-            {/* Article Schema */}
-            <script type="application/ld+json">
-                {JSON.stringify({
+            <MetaTags
+                title={`${article.title} | CalmJourneyer`}
+                description={article.metaDescription}
+                keywords={(article.keywords || []).join(', ')}
+                robots={"index, follow"}
+                canonical={`https://calmjourneyer.com/resources/${article.slug}`}
+                og={{
+                    type: 'article',
+                    title: article.title,
+                    description: article.metaDescription,
+                    url: `https://calmjourneyer.com/resources/${article.slug}`
+                }}
+                ldJson={{
                     "@context": "https://schema.org",
                     "@type": "Article",
-                    "headline": article.title,
-                    "description": article.metaDescription,
-                    "author": {
-                        "@type": "Organization",
-                        "name": article.author
-                    },
-                    "datePublished": article.publishDate,
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "CalmJourneyer",
-                        "logo": {
-                            "@type": "ImageObject",
-                            "url": "https://calmjourneyer.com/favicon.png"
-                        }
-                    }
-                })}
-            </script>
+                    headline: article.title,
+                    description: article.metaDescription,
+                    author: { "@type": "Organization", name: article.author },
+                    datePublished: article.publishDate,
+                    publisher: { "@type": "Organization", name: "CalmJourneyer", logo: { "@type": "ImageObject", url: "https://calmjourneyer.com/favicon.png" } }
+                }}
+            />
 
             <div className={`${styles.page} extra_padding_for_wrapped_nav`}>
                 <Navigation type={user ? "logged" : "public"} />

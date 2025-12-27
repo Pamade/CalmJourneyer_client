@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import Navigation from '../../components/Navigation/Navigation';
+import MetaTags from "../../components/MetaTags/MetaTags";
 import styles from './Pricing.module.scss';
 import axios from '../../utils/axios';
 
@@ -126,10 +127,11 @@ const Pricing = () => {
 
     return (
         <>
-            {/* React 19 Meta Tags */}
-            <title>Pricing - CalmJourneyer AI Meditation App</title>
-            <meta name="description" content="Choose the perfect plan for your personalized meditation journey. Free AI meditation sessions or upgrade to Pro for unlimited access to guided relaxation with custom AI voices." />
-            <link rel="canonical" href="https://calmjourneyer.com/pricing" />
+            <MetaTags
+                title={"Pricing - CalmJourneyer AI Meditation App"}
+                description={"Choose the perfect plan for your personalized meditation journey. Free AI meditation sessions or upgrade to Pro for unlimited access to guided relaxation with custom AI voices."}
+                canonical={"https://calmjourneyer.com/pricing"}
+            />
 
             {/* Structured Data - FAQPage */}
             <script type="application/ld+json">
