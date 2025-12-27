@@ -5,6 +5,7 @@ import styles from "./Onboarding.module.scss";
 import type { SessionData, OnboardingData, Voice, Eyes, Position, Goal, VoiceOption } from "../../types/session";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import MetaTags from "../../components/MetaTags/MetaTags";
 const Onboarding: React.FC = () => {
 
     const navigate = useNavigate();
